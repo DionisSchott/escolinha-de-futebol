@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">EscolinhaJDB</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_back">Bem Vindo</string>
+    <string name="make_login">faça login para continuar</string>
+    <string name="e_mail">E-mail</string>
+    <string name="player_name">nome do jogador</string>
+    <string name="responsible_name">Nome do responsável</string>
+    <string name="obligatory_field">Campo Obrigatório</string>
+</resources>

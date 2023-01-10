@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "133239834203",
+    "project_id": "escolinha-jdb",
+    "storage_bucket": "escolinha-jdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133239834203:android:f14e6da9bbbc966abce17e",
+        "android_client_info": {
+          "package_name": "com.dionis.escolinhajdb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133239834203-oic2pfhliukr2duu2e7jp2sqbttu949f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChix47kHZGB9bTfa6xiWszFPqSHJQlnWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133239834203-oic2pfhliukr2duu2e7jp2sqbttu949f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
