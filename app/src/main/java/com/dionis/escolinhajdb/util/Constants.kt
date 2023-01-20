@@ -4,6 +4,12 @@ object FireStoreCollection{
     val PLAYER = "players"
     val COACH = "coach"
 }
+
+object FirebaseStorageConstants {
+    val ROOT_DIRECTORY = "app"
+    val NOTE_IMAGES = "note"
+}
+
 //
 //object SharedPrefConstants {
 //    val LOCAL_SHARED_PREF = "local_shared_pref"

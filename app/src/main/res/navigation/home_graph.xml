@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_registerPlayerFragment"
             app:destination="@id/registerPlayerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_playerDetailFragment"
+            app:destination="@id/playerDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerPlayerFragment"
@@ -21,6 +24,15 @@
         tools:layout="@layout/fragment_register_player" >
         <action
             android:id="@+id/action_registerPlayerFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playerDetailFragment"
+        android:name="com.dionis.escolinhajdb.presentation.player.PlayerDetailFragment"
+        android:label="fragment_player_detail"
+        tools:layout="@layout/fragment_player_detail" >
+        <action
+            android:id="@+id/action_playerDetailFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

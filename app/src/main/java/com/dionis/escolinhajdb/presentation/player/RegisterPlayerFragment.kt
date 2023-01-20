@@ -1,9 +1,15 @@
 package com.dionis.escolinhajdb.presentation.player
 
+import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -13,15 +19,41 @@ import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentRegisterPlayerBinding
 import com.dionis.escolinhajdb.util.Extensions.toast
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RegisterPlayerFragment : Fragment() {
 
+    val TAG: String = "NoteDetailFragment"
     private lateinit var binding: FragmentRegisterPlayerBinding
     private val viewModel: PlayerViewModel by viewModels()
     var objPlayer: Player? = null
+
+    var imageUris: MutableList<Uri> = arrayListOf()
+
+
+    private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        val resultCode = result.resultCode
+        val data = result.data
+        if (resultCode == Activity.RESULT_OK) {
+            val fileUri = data?.data!!
+            imageUris.add(fileUri)
+//            adapter.updateList(imageUris)
+//            binding.progressBar.hide()
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+//            binding.progressBar.hide()
+            toast(ImagePicker.getError(data))
+        } else {
+//            binding.progressBar.hide()
+            Log.e(TAG, "Task Cancelled")
+        }
+    }
+
+
+
+
 
 
     override fun onCreateView(
@@ -89,13 +121,26 @@ class RegisterPlayerFragment : Fragment() {
     }
 
     private fun getPlayerObj(): Player {
+        imageUris = objPlayer?.images?.map { it.toUri() }?.toMutableList()?: arrayListOf()
+
         return Player(
             id = "",
-            playerName =  binding.edtPlayerName.text.toString(),
+            playerName = binding.edtPlayerName.text.toString(),
             responsibleName = binding.edtresponsibleName.text.toString(),
             playersBirth = binding.edtPlayersBirth.text.toString(),
+            images = getimageUrls()
         )
     }
+
+    private fun getimageUrls(): List<String> {
+        if(imageUris.isNotEmpty()){
+            return imageUris.map { it.toString() }
+        } else {
+          return objPlayer?.images?: arrayListOf()
+        }
+    }
+
+
 
     private fun registerPlayer() {
         viewModel.registerPlayer(

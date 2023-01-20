@@ -1,13 +1,16 @@
 package com.dionis.escolinhajdb.presentation.player
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dionis.escolinhajdb.UiState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dionis.escolinhajdb.States
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.data.repository.PlayerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +24,9 @@ class PlayerViewModel @Inject constructor(
     private val _validateFields: MutableLiveData<States.ValidateRegisterPlayer> = MutableLiveData()
     val validateFields: LiveData<States.ValidateRegisterPlayer> get() = _validateFields
 
+    private val _player = MutableLiveData<UiState<List<Player>>>()
+    val player: LiveData<UiState<List<Player>>> get() = _player
+
 
     fun registerPlayer(player: Player) {
         _registerPlayer.value = UiState.Loading
@@ -28,6 +34,19 @@ class PlayerViewModel @Inject constructor(
         playerRepository.addPlayer(player) { _registerPlayer.value = it }
     }
 
+    fun getPlayers() {
+        _player.value = UiState.Loading
+        playerRepository.getPlayer() {_player.value = it}
+    }
+
+
+    fun uploadImage(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit) {
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            playerRepository.uploadImage(fileUri, onResult)
+        }
+
+    }
 
     fun validateFields(
         playerName: String,

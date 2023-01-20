@@ -1,11 +1,13 @@
 package com.dionis.escolinhajdb.di
 
+import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.data.repository.AuthRepository
 import com.dionis.escolinhajdb.data.repository.AuthRepositoryImpl
 import com.dionis.escolinhajdb.data.repository.PlayerRepository
 import com.dionis.escolinhajdb.data.repository.PlayerRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,8 +35,9 @@ object RepositoryModule {
     @Singleton
     fun providePlayerRepository(
         database: FirebaseFirestore,
+        storageReference: StorageReference,
     ): PlayerRepository {
-        return PlayerRepositoryImpl (database)
+        return PlayerRepositoryImpl (database, storageReference)
     }
 
 

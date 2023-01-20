@@ -1,7 +1,11 @@
 package com.dionis.escolinhajdb.di
 
+import com.dionis.escolinhajdb.util.FirebaseStorageConstants
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +29,16 @@ object FirebaseModule {
         return FirebaseFirestore.getInstance()
     }
 
+    @Provides
+    @Singleton
+    fun provideFirebaseDatabaseInstance(): FirebaseDatabase{
+        return FirebaseDatabase.getInstance()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseStroageInstance(): StorageReference {
+        return FirebaseStorage.getInstance().getReference(FirebaseStorageConstants.ROOT_DIRECTORY)
+    }
 
 }

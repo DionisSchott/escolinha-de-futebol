@@ -9,19 +9,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.databinding.FragmentLoginBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     val viewModel: ViewModel by viewModels()
+    private lateinit var userManager: UserManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +38,9 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userManager = UserManager(requireContext())
+        readDataUser()
+        autoLogin()
         setUp()
     }
 
@@ -42,6 +49,16 @@ class LoginFragment : Fragment() {
         setUpClicks()
     }
 
+
+    private fun autoLogin() {
+        if (!binding.edtEmail.text.isNullOrEmpty() && !binding.edtPassword.text.isNullOrEmpty()) {
+            val email = binding.edtEmail.text.toString()
+            val password = binding.edtPassword.text.toString()
+
+            viewModel.login(email, password)
+            openHomeFragment()
+        }
+    }
 
     private fun setUpClicks() {
         binding.btnLogin.setOnClickListener {
@@ -79,19 +96,20 @@ class LoginFragment : Fragment() {
                 email = binding.edtEmail.text.toString(),
                 password = binding.edtPassword.text.toString()
             )
+            saveDataUserValidate()
 
         }
     }
 
-    private fun observer(){
+    private fun observer() {
         viewModel.login.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is UiState.Loading -> {
 //                    binding.loginProgress.visibility = View.VISIBLE
                 }
                 is UiState.Failure -> {
                     binding.loginProgress.visibility = View.INVISIBLE
-                    Toast.makeText(requireContext(),it.error,Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), it.error, Toast.LENGTH_LONG).show()
                 }
                 is UiState.Success -> {
                     binding.loginProgress.visibility = View.INVISIBLE
@@ -100,6 +118,32 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun saveDataUserValidate() {
+        if (binding.checkBox.isChecked) {
+            saveDataUser()
+        }
+    }
+
+    private fun saveDataUser() {
+
+        val email = binding.edtEmail.text.toString()
+        val password = binding.edtPassword.text.toString()
+        val authenticated = binding.checkBox.isChecked
+
+        lifecycleScope.launch() {userManager.saveDataUser(email,password,authenticated)}
+    }
+
+    private fun readDataUser() {
+        lifecycleScope.launch {
+            val user = userManager.readDataUser()
+
+            binding.edtEmail.setText(user.email)
+            binding.edtPassword.setText(user.password)
+            binding.checkBox.isChecked = user.authenticated
+        }
+
     }
 
 }
