@@ -15,6 +15,7 @@ import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.databinding.FragmentLoginBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -105,11 +106,11 @@ class LoginFragment : Fragment() {
         viewModel.login.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Loading -> {
-//                    binding.loginProgress.visibility = View.VISIBLE
+                    binding.loginProgress.visibility = View.VISIBLE
                 }
                 is UiState.Failure -> {
                     binding.loginProgress.visibility = View.INVISIBLE
-                    Toast.makeText(requireContext(), it.error, Toast.LENGTH_LONG).show()
+                    toast(it.error)
                 }
                 is UiState.Success -> {
                     binding.loginProgress.visibility = View.INVISIBLE

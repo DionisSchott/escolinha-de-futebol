@@ -39,6 +39,7 @@ class HomeFragment : Fragment() {
 
 
         viewModel.getPlayers()
+        coachViewModel.getCoach()
         setUp()
 
     }
@@ -58,14 +59,29 @@ class HomeFragment : Fragment() {
                 is UiState.Failure -> {
                 }
                 is UiState.Loading -> {
+                    binding.progressPlayer.visibility = View.VISIBLE
+                    binding.recyclerView3.visibility = View.INVISIBLE
                 }
                 is UiState.Success -> {
+                    binding.progressPlayer.visibility = View.GONE
+                    binding.recyclerView3.visibility = View.VISIBLE
                     playersAdapter.updateList(it.data)
                 }
             }
         }
-    }
 
+        coachViewModel.coach.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Failure -> {
+                }
+                is UiState.Loading -> {
+                }
+                is UiState.Success -> {
+                    coachAdapter.updateList(it.data)
+                }
+            }
+        }
+    }
 
 
     private fun setUpAdapter() {
@@ -73,10 +89,21 @@ class HomeFragment : Fragment() {
         playersAdapter = PlayersAdapter()
 
         playersAdapter.onItemClicked = {
-            val args = Bundle().apply { putParcelable("player", it) }
+            val args = Bundle().apply { putParcelable(PLAYER, it) }
             findNavController().navigate(R.id.action_homeFragment_to_playerDetailFragment, args)
         }
         binding.recyclerView3.adapter = playersAdapter
+
+
+        coachAdapter = CoachAdapter()
+
+        coachAdapter.onItemClicked = {
+            val args = Bundle().apply { putParcelable(PLAYER, it) }
+            findNavController().navigate(R.id.action_homeFragment_to_playerDetailFragment, args)
+        }
+        binding.recyclerViewCoach.adapter = coachAdapter
+
+
     }
 
 

@@ -2,12 +2,14 @@ package com.dionis.escolinhajdb.data.repository
 
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
+import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.util.FireStoreCollection
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class AuthRepositoryImpl(
     val auth: FirebaseAuth,
@@ -16,6 +18,44 @@ class AuthRepositoryImpl(
 //    val gson: Gson
 
 ) : AuthRepository {
+
+    override fun getCoach(result: (UiState<List<Coach>>) -> Unit) {
+        database.collection(FireStoreCollection.COACH)
+            .orderBy("name", Query.Direction.ASCENDING)
+            .get()
+            .addOnSuccessListener {
+                val coachs = arrayListOf<Coach>()
+                for (document in it) {
+                    val coach = document.toObject(Coach::class.java)
+                    coachs.add(coach)
+                }
+                result.invoke(
+                    UiState.Success(coachs)
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    UiState.Failure(it.localizedMessage)
+                )
+            }
+    }
+
+    override fun storeSession(id: String, result: (Coach?) -> Unit) {
+        database.collection(FireStoreCollection.COACH).document(id)
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful){
+                    val user = it.result.toObject(Coach::class.java)
+//                    appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(user)).apply()
+                    result.invoke(user)
+                }else{
+                    result.invoke(null)
+                }
+            }
+            .addOnFailureListener {
+                result.invoke(null)
+            }
+    }
 
     override fun registerUser(
         email: String,
@@ -106,23 +146,6 @@ class AuthRepositoryImpl(
                         it.localizedMessage
                     )
                 )
-            }
-    }
-
-    override fun storeSession(id: String, result: (Coach?) -> Unit) {
-        database.collection(FireStoreCollection.COACH).document(id)
-            .get()
-            .addOnCompleteListener {
-                if (it.isSuccessful){
-                    val user = it.result.toObject(Coach::class.java)
-//                    appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(user)).apply()
-                    result.invoke(user)
-                }else{
-                    result.invoke(null)
-                }
-            }
-            .addOnFailureListener {
-                result.invoke(null)
             }
     }
 

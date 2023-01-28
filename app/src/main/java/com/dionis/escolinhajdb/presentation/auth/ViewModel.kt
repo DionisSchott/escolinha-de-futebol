@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
+import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.data.repository.AuthRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,13 +15,20 @@ class ViewModel @Inject constructor(
     val authRepository: AuthRepository,
 ) : ViewModel() {
 
-    private val db = FirebaseFirestore.getInstance()
+    private val _coach = MutableLiveData<UiState<List<Coach>>>()
+    val coach: LiveData<UiState<List<Coach>>> get() = _coach
 
     private var _register = MutableLiveData<UiState<String>>()
     val register: LiveData<UiState<String>> get() = _register
 
     private var _login = MutableLiveData<UiState<String>>()
     val login: LiveData<UiState<String>> get() = _login
+
+
+    fun getCoach() {
+        _coach.value = UiState.Loading
+        authRepository.getCoach { _coach.value = it }
+    }
 
 
     fun register(
