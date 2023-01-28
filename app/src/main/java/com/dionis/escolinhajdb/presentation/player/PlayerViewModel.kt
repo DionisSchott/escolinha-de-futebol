@@ -21,6 +21,10 @@ class PlayerViewModel @Inject constructor(
     private var _registerPlayer = MutableLiveData<UiState<Pair<Player, String>>>()
     val playerRegister: LiveData<UiState<Pair<Player, String>>> get() = _registerPlayer
 
+
+    private var _updatePlayer = MutableLiveData<UiState<String>>()
+    val updatePlayer: LiveData<UiState<String>> get() = _updatePlayer
+
     private val _validateFields: MutableLiveData<States.ValidateRegisterPlayer> = MutableLiveData()
     val validateFields: LiveData<States.ValidateRegisterPlayer> get() = _validateFields
 
@@ -39,7 +43,13 @@ class PlayerViewModel @Inject constructor(
         playerRepository.getPlayer() {_player.value = it}
     }
 
+    fun updatePlayer(player: Player) {
+        _updatePlayer.value = UiState.Loading
+        playerRepository.updatePlayer(player) { _updatePlayer.value = it }
+    }
 
+
+ //   lista de imagem
     fun uploadImage(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit) {
         onResult.invoke(UiState.Loading)
         viewModelScope.launch {
@@ -47,6 +57,15 @@ class PlayerViewModel @Inject constructor(
         }
 
     }
+
+    fun uploadSingleImage(fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            playerRepository.uploadSingleFile(fileUri, onResult)
+        }
+
+    }
+
 
     fun validateFields(
         playerName: String,

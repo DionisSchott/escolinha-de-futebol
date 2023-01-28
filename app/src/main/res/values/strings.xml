@@ -8,4 +8,6 @@
     <string name="player_name">nome do jogador</string>
     <string name="responsible_name">Nome do responsável</string>
     <string name="obligatory_field">Campo Obrigatório</string>
+    <string name="new_player">Novo Jogador</string>
+    <string name="observation">observações</string>
 </resources>

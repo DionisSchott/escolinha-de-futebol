@@ -1,29 +1,37 @@
 package com.dionis.escolinhajdb.presentation.home
 
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.databinding.FragmentHomeBinding
+import com.dionis.escolinhajdb.presentation.auth.CoachAdapter
+import com.dionis.escolinhajdb.presentation.auth.ViewModel
+import com.dionis.escolinhajdb.presentation.player.PlayerDetailFragment.Companion.PLAYER
 import com.dionis.escolinhajdb.presentation.player.PlayerViewModel
 import com.dionis.escolinhajdb.presentation.player.PlayersAdapter
 import com.dionis.escolinhajdb.util.Extensions.navTo
+import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModels()
+    private val coachViewModel: ViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var dados: String
     private lateinit var playersAdapter: PlayersAdapter
-
+    private lateinit var coachAdapter: CoachAdapter
 
 
     override fun onCreateView(
@@ -46,8 +54,9 @@ class HomeFragment : Fragment() {
 
     private fun setUp() {
 
-        binding.tvPlayers.setOnClickListener {
-            navTo(R.id.action_homeFragment_to_registerPlayerFragment)
+        binding.floatButton.setOnClickListener {
+            showAlertDialog()
+//            navTo(R.id.action_homeFragment_to_registerPlayerFragment)
         }
         setUpAdapter()
         setObservers()
@@ -103,6 +112,20 @@ class HomeFragment : Fragment() {
         }
         binding.recyclerViewCoach.adapter = coachAdapter
 
+
+    }
+
+    fun showAlertDialog() {
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Adicionar novo")
+            .setIcon(R.drawable.person_)
+            .setNeutralButton("cancelar") { dialog, which -> toast("oi") }
+            .setNegativeButton("novo aluno") {
+                    dialog, which -> findNavController().navigate(R.id.action_homeFragment_to_registerPlayerFragment)
+            }
+            .setPositiveButton("novo treinador") {dialog, wich -> toast("novo treinador")}
+            .show()
 
     }
 

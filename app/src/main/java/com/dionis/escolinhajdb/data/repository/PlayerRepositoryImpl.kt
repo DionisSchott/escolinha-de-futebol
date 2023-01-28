@@ -5,12 +5,9 @@ import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.util.FireStoreCollection
 import com.dionis.escolinhajdb.util.FireStoreCollection.PLAYER
-import com.dionis.escolinhajdb.util.FirebaseStorageConstants.NOTE_IMAGES
 import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -24,7 +21,7 @@ class PlayerRepositoryImpl(
 ) : PlayerRepository {
 
     override fun addPlayer(player: Player, result: (UiState<Pair<Player, String>>) -> Unit) {
-        val document = dataBase.collection(FireStoreCollection.PLAYER).document()
+        val document = dataBase.collection(PLAYER).document()
         player.id = document.id
         document
             .set(player)
@@ -44,9 +41,28 @@ class PlayerRepositoryImpl(
 
     }
 
+
+    override fun updatePlayer (player: Player, result: (UiState<String>) -> Unit)  {
+            val document = dataBase.collection(PLAYER).document(player.id)
+        document
+            .set(player)
+            .addOnSuccessListener {
+                result.invoke(
+                    UiState.Success("Note has been update successfully")
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    UiState.Failure(
+                        it.localizedMessage
+                    )
+                )
+            }
+    }
+
     override fun getPlayer( result: (UiState<List<Player>>) -> Unit) {
         dataBase.collection(FireStoreCollection.PLAYER)
-            .orderBy("playerName", Query.Direction.ASCENDING)
+            .orderBy("playerName", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener {
                 val players = arrayListOf<Player>()
@@ -69,19 +85,15 @@ class PlayerRepositoryImpl(
         fileUri: List<Uri>,
         onResult: (UiState<List<Uri>>) -> Unit,
     ) {
-
-
-
         try {
              val uri: List<Uri> = withContext(Dispatchers.IO) {
                 fileUri.map {
                     async {
-                        storageReference.child(it.lastPathSegment ?: "${System.currentTimeMillis()}")
+                        storageReference.child(PLAYER).child(it.lastPathSegment ?: "${System.currentTimeMillis()}")
                             .putFile(it)
+                            .continueWithTask { storageReference.downloadUrl }
                             .await()
-                            .storage
-                            .downloadUrl
-                            .await()
+
                     }
                 }.awaitAll()
             }
@@ -90,6 +102,26 @@ class PlayerRepositoryImpl(
             onResult.invoke(UiState.Failure(e.message))
         } catch (e: Exception) {
             onResult.invoke((UiState.Failure(e.message)))
+        }
+
+    }
+
+
+    override suspend fun uploadSingleFile(fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
+        try {
+            val uri: Uri = withContext(Dispatchers.IO) {
+                storageReference.child(PLAYER).child(fileUri.lastPathSegment ?: "${System.currentTimeMillis()}")
+                    .putFile(fileUri)
+                    .await()
+                    .storage
+                    .downloadUrl
+                    .await()
+            }
+            onResult.invoke(UiState.Success(uri))
+        } catch (e: FirebaseException) {
+            onResult.invoke(UiState.Failure(e.message))
+        } catch (e: Exception) {
+            onResult.invoke(UiState.Failure(e.message))
         }
     }
 

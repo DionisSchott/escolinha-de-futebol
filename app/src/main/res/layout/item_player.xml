@@ -12,12 +12,13 @@
         
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgPlayer"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="80dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/person_"/>
+            android:src="@drawable/person_"
+            android:layout_margin="4dp"/>
 
         <TextView
             android:id="@+id/tvNamePlayer"

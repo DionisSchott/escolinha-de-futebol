@@ -6,38 +6,304 @@
     android:layout_height="match_parent"
     tools:context=".presentation.player.PlayerDetailFragment">
 
-
-    <ImageView
-        android:id="@+id/playerImg"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_margin="20dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/person_"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imgLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/playerNameTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:textSize="24sp"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:hint="@string/player_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playerImg" />
+        <ImageView
+            android:id="@+id/playerImg"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:src="@drawable/person_"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="save"
-        app:layout_constraintTop_toBottomOf="@id/playerNameTv"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/scrollLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <EditText
+                android:id="@+id/playerNameEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:textAllCaps="true"
+                android:gravity="center"
+                android:text="@string/player_name"
+                android:textColor="@color/black"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/playerPositionEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:hint="Posição"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/playerNameEdt" />
+
+
+            <EditText
+                android:id="@+id/playerWeightEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:background="@color/white"
+                android:hint="0.0"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/tvMeters"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvWeight" />
+
+            <TextView
+                android:id="@+id/tvKg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Kg"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/playerWeightEdt"
+                app:layout_constraintStart_toEndOf="@id/playerWeightEdt"
+                app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
+
+            <TextView
+                android:id="@+id/tvWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="peso"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/playerWeightEdt"
+                app:layout_constraintEnd_toEndOf="@id/tvKg"
+                app:layout_constraintStart_toStartOf="@id/playerWeightEdt"
+                app:layout_constraintTop_toBottomOf="@id/playerPositionEdt" />
+
+
+            <EditText
+                android:id="@+id/playerHeightEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@color/white"
+                android:hint="0.0"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/tvMeters"
+                app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
+
+            <TextView
+                android:id="@+id/tvMeters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="M"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/playerWeightEdt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/playerWeightEdt"
+                app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
+
+            <TextView
+                android:id="@+id/tvHeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="altura"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/tvWeight"
+                app:layout_constraintEnd_toEndOf="@id/tvMeters"
+                app:layout_constraintStart_toStartOf="@id/playerHeightEdt"
+                app:layout_constraintTop_toTopOf="@id/tvWeight" />
+
+
+            <TextView
+                android:id="@+id/tvResponsible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="-4dp"
+                android:text="Responsável"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/responsibleNameEdt"
+                app:layout_constraintStart_toStartOf="@id/responsibleNameEdt"
+                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt" />
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/responsibleNameEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="@string/responsible_name"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvResponsible" />
+
+
+            <EditText
+                android:id="@+id/responsibleTypeEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:hint="grau"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/responsibleNameEdt"
+                app:layout_constraintTop_toTopOf="@id/responsibleNameEdt" />
+
+
+            <TextView
+                android:id="@+id/tvBirth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="-4dp"
+                android:text="Nascimento"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/playerBirthEdt"
+                app:layout_constraintStart_toStartOf="@id/playerBirthEdt"
+                app:layout_constraintTop_toBottomOf="@id/responsibleNameEdt" />
+
+
+            <EditText
+                android:id="@+id/playerBirthEdt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="08021990"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/responsibleNameEdt"
+                app:layout_constraintTop_toBottomOf="@id/tvBirth" />
+
+
+            <TextView
+                android:id="@+id/tvAge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Idade"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/tvBirth"
+                app:layout_constraintStart_toStartOf="@id/playerAgeTv"
+                app:layout_constraintTop_toTopOf="@id/tvBirth" />
+
+
+            <TextView
+                android:id="@+id/playerAgeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="10 anos"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/playerBirthEdt"
+                app:layout_constraintEnd_toEndOf="@id/responsibleTypeEdt"
+                app:layout_constraintTop_toTopOf="@id/playerBirthEdt" />
+
+            <TextView
+                android:id="@+id/tvHealthNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Informações de saúde"
+                app:layout_constraintStart_toStartOf="@id/healthNotesEdt"
+                app:layout_constraintTop_toBottomOf="@id/playerBirthEdt" />
+
+
+            <EditText
+                android:id="@+id/healthNotesEdt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:hint="digite aqui"
+                android:inputType="textMultiLine"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvHealthNotes" />
+
+
+            <TextView
+                android:id="@+id/tvSkillsNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Informações de habilidades"
+                app:layout_constraintStart_toStartOf="@id/healthNotesEdt"
+                app:layout_constraintTop_toBottomOf="@id/healthNotesEdt" />
+
+            <EditText
+                android:id="@+id/SkillsNotesEdt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:hint="digite aqui"
+                android:inputType="textMultiLine"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvSkillsNotes" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="Salvar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/SkillsNotesEdt" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

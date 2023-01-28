@@ -22,6 +22,7 @@ import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class RegisterPlayerFragment : Fragment() {
@@ -69,6 +70,7 @@ class RegisterPlayerFragment : Fragment() {
     }
 
     private fun setUp() {
+        loadImage()
         validateFields()
         setObservers()
 
@@ -81,6 +83,17 @@ class RegisterPlayerFragment : Fragment() {
             val playersBirth = binding.edtPlayersBirth.text.toString()
 
             viewModel.validateFields(playerName, responsibleName, playersBirth)
+        }
+    }
+
+    private fun loadImage() {
+        binding.imgPlayer.setOnClickListener {
+            ImagePicker.with(this)
+                .compress(1024)
+                .galleryOnly()
+                .createIntent { intent ->
+                    startForProfileImageResult.launch(intent)
+                }
         }
     }
 
@@ -121,14 +134,14 @@ class RegisterPlayerFragment : Fragment() {
     }
 
     private fun getPlayerObj(): Player {
-        imageUris = objPlayer?.images?.map { it.toUri() }?.toMutableList()?: arrayListOf()
-
         return Player(
             id = "",
             playerName = binding.edtPlayerName.text.toString(),
             responsibleName = binding.edtresponsibleName.text.toString(),
             playersBirth = binding.edtPlayersBirth.text.toString(),
-            images = getimageUrls()
+            images = getimageUrls(),
+            responsibleType = binding.edtResponsibleType.text.toString(),
+            insertionDate = Date()
         )
     }
 
