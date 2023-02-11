@@ -21,6 +21,8 @@ class PlayerViewModel @Inject constructor(
     private var _registerPlayer = MutableLiveData<UiState<Pair<Player, String>>>()
     val playerRegister: LiveData<UiState<Pair<Player, String>>> get() = _registerPlayer
 
+    private val _deletePlayer = MutableLiveData<UiState<String>>()
+        val deletePlayer: LiveData<UiState<String>> = _deletePlayer
 
     private var _updatePlayer = MutableLiveData<UiState<String>>()
     val updatePlayer: LiveData<UiState<String>> get() = _updatePlayer
@@ -47,6 +49,11 @@ class PlayerViewModel @Inject constructor(
         _updatePlayer.value = UiState.Loading
         playerRepository.updatePlayer(player) { _updatePlayer.value = it }
     }
+    
+    fun deletePlayer(player: Player) {
+        _deletePlayer.value = UiState.Loading
+        playerRepository.deletePlayer(player) {_deletePlayer.value = it}
+    }
 
 
  //   lista de imagem
@@ -71,11 +78,13 @@ class PlayerViewModel @Inject constructor(
         playerName: String,
         responsibleName: String,
         playersBirth: String,
+        playerGenre: String,
     ) {
         if (validateAllFields(
                 playerName,
                 responsibleName,
-                playersBirth
+                playersBirth,
+                playerGenre
             )
         )
             _validateFields.value = States.ValidateRegisterPlayer.FieldsDone
@@ -85,6 +94,7 @@ class PlayerViewModel @Inject constructor(
         playerName: String,
         responsibleName: String,
         playersBirth: String,
+        playerGenre: String,
     ): Boolean {
         if (playerName.isEmpty()) {
             _validateFields.value = States.ValidateRegisterPlayer.PlayerNameEmpty
@@ -98,6 +108,11 @@ class PlayerViewModel @Inject constructor(
             _validateFields.value = States.ValidateRegisterPlayer.PlayersBirthEmpty
             return false
         }
+        if (playerGenre.isEmpty()) {
+            _validateFields.value = States.ValidateRegisterPlayer.PlayerGenreEmpty
+            return false
+        }
+
         return true
     }
 

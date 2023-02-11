@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.data.model.User
 import kotlinx.coroutines.flow.first
 
@@ -18,6 +19,8 @@ class UserManager(val context: Context) {
         private val USER_EMAIL_KEY = stringPreferencesKey("USER_EMAIL")
         private val USER_PASSWORD_KEY = stringPreferencesKey("USER_PASSWORD")
         private val USER_AUTHENTICATED_KEY = booleanPreferencesKey("USER_AUTHENTICATED")
+        private val USER_UID = stringPreferencesKey("USER_UID")
+
     }
 
     suspend fun saveDataUser(email: String, password: String, authenticated: Boolean) {
@@ -38,6 +41,22 @@ class UserManager(val context: Context) {
             password = prefs[USER_PASSWORD_KEY] ?: "",
             authenticated = prefs[USER_AUTHENTICATED_KEY] ?: false
         )
+    }
+
+    suspend fun readUserUid() : Coach {
+        val uid = context.dataUser.data.first()
+
+        return Coach(
+            id = uid[USER_UID] ?: ""
+        )
+
+       }
+
+
+    suspend fun saveUseruid(uid: String) {
+        context.dataUser.edit {
+            it[USER_UID] = uid
+        }
     }
 
     suspend fun clearDataUser() {

@@ -14,5 +14,10 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="DatePickerBackGround.Jdb" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/jdb</item>
+    </style>
+
+
 
 </resources>

@@ -7,6 +7,17 @@
     tools:context=".presentation.player.RegisterPlayerFragment">
 
 
+    <ImageView
+        android:id="@+id/load"
+        android:layout_width="150px"
+        android:layout_height="150px"
+        android:src="@drawable/bola"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgPlayer"
         android:layout_width="180dp"
@@ -25,8 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/imgPlayer"
-        tools:layout_editor_absoluteX="30dp">
+
+        app:layout_constraintTop_toBottomOf="@+id/imgPlayer">
 
 
         <com.google.android.material.textfield.TextInputEditText
@@ -95,8 +106,7 @@
         android:layout_margin="30dp"
         android:hint="Grau do responsável"
         app:layout_constraintStart_toStartOf="@id/edtPlayersBirthLayout"
-        app:layout_constraintTop_toBottomOf="@id/edtPlayersBirthLayout"
-        >
+        app:layout_constraintTop_toBottomOf="@id/edtPlayersBirthLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtResponsibleType"
@@ -104,10 +114,30 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:maxLines="3"
-            android:padding="13dp"
-            />
+            android:padding="13dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvGenre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:visibility="visible"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintCircleRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtResponsibleTypeLayout">
+
+        <Spinner
+            android:id="@+id/spinnerGenre"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </com.google.android.material.card.MaterialCardView>
 
 
     <com.google.android.material.button.MaterialButton
@@ -120,7 +150,7 @@
         android:text="cancelar"
         android:textColor="@color/blue"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtResponsibleTypeLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/cvGenre" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDone"

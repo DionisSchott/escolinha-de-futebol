@@ -3,11 +3,13 @@ package com.dionis.escolinhajdb.data.repository
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.data.model.Player
+import com.dionis.escolinhajdb.data.model.User
 import com.dionis.escolinhajdb.util.FireStoreCollection
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -40,15 +42,30 @@ class AuthRepositoryImpl(
             }
     }
 
+
+    override fun recovery(id: String, result: (UiState<Coach>) -> Unit) {
+
+        database.collection(FireStoreCollection.COACH).document(id)
+            .get()
+            .addOnSuccessListener {
+//                val user = it.data.//.result.toObject(Coach::class.java)
+
+//                result.invoke(
+//                    UiState.Success(user)
+//                )
+            }
+    }
+
+
     override fun storeSession(id: String, result: (Coach?) -> Unit) {
         database.collection(FireStoreCollection.COACH).document(id)
             .get()
             .addOnCompleteListener {
-                if (it.isSuccessful){
+                if (it.isSuccessful) {
                     val user = it.result.toObject(Coach::class.java)
 //                    appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(user)).apply()
                     result.invoke(user)
-                }else{
+                } else {
                     result.invoke(null)
                 }
             }
@@ -61,20 +78,20 @@ class AuthRepositoryImpl(
         email: String,
         password: String,
         coach: Coach,
-        result: (UiState<String>) -> Unit
+        result: (UiState<String>) -> Unit,
     ) {
 
-        auth.createUserWithEmailAndPassword(email,password)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                if (it.isSuccessful){
+                if (it.isSuccessful) {
                     coach.id = it.result.user?.uid ?: ""
                     updateUserInfo(coach) { state ->
-                        when(state){
+                        when (state) {
                             is UiState.Success -> {
                                 storeSession(id = it.result.user?.uid ?: "") {
-                                    if (it == null){
+                                    if (it == null) {
                                         result.invoke(UiState.Failure("User register successfully but session failed to store"))
-                                    }else{
+                                    } else {
                                         result.invoke(
                                             UiState.Success("User register successfully!")
                                         )
@@ -87,7 +104,7 @@ class AuthRepositoryImpl(
                             else -> {}
                         }
                     }
-                }else{
+                } else {
                     try {
                         throw it.exception ?: java.lang.Exception("Invalid authentication")
                     } catch (e: FirebaseAuthWeakPasswordException) {
@@ -114,15 +131,16 @@ class AuthRepositoryImpl(
     override fun login(
         email: String,
         password: String,
-        result: (UiState<String>) -> Unit) {
-        auth.signInWithEmailAndPassword(email,password)
+        result: (UiState<String>) -> Unit,
+    ) {
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    storeSession(id = it.result.user?.uid ?: ""){
-                        if (it == null){
+                    storeSession(id = it.result.user?.uid ?: "") { coach ->
+                        if (coach == null) {
                             result.invoke(UiState.Failure("Failed to store local session"))
-                        }else{
-                            result.invoke(UiState.Success("Login successfully!"))
+                        } else {
+                            result.invoke(UiState.Success(coach.id))
                         }
                     }
                 }

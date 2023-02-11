@@ -11,4 +11,5 @@ interface AuthRepository {
     fun updateUserInfo(coach: Coach, result: (UiState<String>) -> Unit)
     fun login(email: String, password: String, result: (UiState<String>) -> Unit)
     fun storeSession(id: String, result: (Coach?) -> Unit)
+    fun recovery (id: String, result: (UiState<Coach>) -> Unit)
 }

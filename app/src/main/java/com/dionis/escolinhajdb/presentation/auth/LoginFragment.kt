@@ -13,11 +13,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
+import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.databinding.FragmentLoginBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.util.Extensions.navTo
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -40,35 +44,24 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userManager = UserManager(requireContext())
-        readDataUser()
-        autoLogin()
+
+        observer()
         setUp()
     }
 
     private fun setUp() {
+        readDataUser()
         openRegisterScreen()
         setUpClicks()
     }
 
 
-    private fun autoLogin() {
-        if (!binding.edtEmail.text.isNullOrEmpty() && !binding.edtPassword.text.isNullOrEmpty()) {
-            val email = binding.edtEmail.text.toString()
-            val password = binding.edtPassword.text.toString()
-
-            viewModel.login(email, password)
-            openHomeFragment()
-        }
-    }
-
     private fun setUpClicks() {
         binding.btnLogin.setOnClickListener {
             validate(it)
             observer()
-
         }
     }
-
 
     private fun openRegisterScreen() {
         binding.btnRegister.setOnClickListener {
@@ -80,6 +73,7 @@ class LoginFragment : Fragment() {
         val intent = Intent(requireContext(), HomeActivity::class.java)
         startActivity(intent)
         activity?.finish()
+
     }
 
 
@@ -97,7 +91,6 @@ class LoginFragment : Fragment() {
                 email = binding.edtEmail.text.toString(),
                 password = binding.edtPassword.text.toString()
             )
-            saveDataUserValidate()
 
         }
     }
@@ -115,17 +108,34 @@ class LoginFragment : Fragment() {
                 is UiState.Success -> {
                     binding.loginProgress.visibility = View.INVISIBLE
                     openHomeFragment()
-
+                    saveDataUser()
+                    lifecycleScope.launch {
+                        userManager.saveUseruid(it.data)
+                    }
                 }
             }
         }
     }
 
-    private fun saveDataUserValidate() {
-        if (binding.checkBox.isChecked) {
-            saveDataUser()
+    override fun onStart() {
+        super.onStart()
+
+        val userLogged = FirebaseAuth.getInstance().currentUser
+        if (userLogged != null) {
+            openHomeFragment()
+
         }
     }
+
+//    private fun autoLogin() {
+//        if (!binding.edtEmail.text.isNullOrEmpty() && !binding.edtPassword.text.isNullOrEmpty()) {
+//            val email = binding.edtEmail.text.toString()
+//            val password = binding.edtPassword.text.toString()
+//
+//            viewModel.login(email, password)
+//        }
+//    }
+
 
     private fun saveDataUser() {
 
@@ -133,7 +143,7 @@ class LoginFragment : Fragment() {
         val password = binding.edtPassword.text.toString()
         val authenticated = binding.checkBox.isChecked
 
-        lifecycleScope.launch() {userManager.saveDataUser(email,password,authenticated)}
+        lifecycleScope.launch() { userManager.saveDataUser(email, password, authenticated) }
     }
 
     private fun readDataUser() {

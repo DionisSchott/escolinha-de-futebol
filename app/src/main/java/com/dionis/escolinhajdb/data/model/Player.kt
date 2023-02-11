@@ -1,6 +1,7 @@
 package com.dionis.escolinhajdb.data.model
 
 import android.os.Parcelable
+import android.provider.ContactsContract
 import com.google.firebase.firestore.ServerTimestamp
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
@@ -17,11 +18,14 @@ data class Player(
     val responsibleName: String = "",
     val responsibleType: String = "",
     val playersBirth: String = "",
+    val genre: String = "",
     val images: List<String> = arrayListOf(),
     val healthNotes: String = "",
     val skillsNotes: String = "",
     val weight: Float = 0f,
     val height: Float = 0f,
+    val contacts: String = "",
+    val category: String = "",
     @ServerTimestamp
     val insertionDate: Date = Date(),
 ) : Parcelable

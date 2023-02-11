@@ -1,0 +1,88 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_margin="8dp"
+    android:elevation="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradiente">
+
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:src="@drawable/person_"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Bryan Furtado Schott"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@id/imgView"
+            app:layout_constraintTop_toTopOf="@id/imgView" />
+
+        <TextView
+            android:id="@+id/tvAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 anos"
+            android:layout_marginEnd="36dp"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@id/tvName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvName" />
+
+        <TextView
+            android:id="@+id/tvWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23,50 Kg"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@id/tvPosition"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/tvName" />
+
+        <TextView
+            android:id="@+id/tvHeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23,50 Kg"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="@id/tvAge"
+            app:layout_constraintTop_toTopOf="@id/tvWeight"
+            app:layout_constraintBottom_toBottomOf="@id/tvWeight"/>
+
+        <TextView
+            android:id="@+id/tvPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lateral Esquerdo"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/tvWeight"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sub"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="@id/tvAge"
+            app:layout_constraintTop_toBottomOf="@+id/tvHeight"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

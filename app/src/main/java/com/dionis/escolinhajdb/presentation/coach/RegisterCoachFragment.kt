@@ -1,27 +1,21 @@
-package com.dionis.escolinhajdb.presentation.auth
+package com.dionis.escolinhajdb.presentation.coach
 
-import android.app.Activity
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.databinding.FragmentRegisterBinding
 import com.dionis.escolinhajdb.data.model.Coach
+import com.dionis.escolinhajdb.presentation.auth.ViewModel
 import com.dionis.escolinhajdb.util.Extensions.toast
-import com.github.dhaval2404.imagepicker.ImagePicker
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegisterFragment : Fragment() {
+class RegisterCoachFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
     private val viewModel: ViewModel by viewModels()
@@ -63,7 +57,7 @@ class RegisterFragment : Fragment() {
             if (validate()){
                 viewModel.register(
                     email = binding.edtEmail.text.toString(),
-                    password = binding.edtPasswordConfirm.text.toString(),
+                    password = binding.edtPassword.text.toString(),
                     coach = getCoachObj()
                 )
                 findNavController().popBackStack()
@@ -95,7 +89,7 @@ class RegisterFragment : Fragment() {
         return Coach(
             id = "",
             name = binding.edtUserName.text.toString(),
-            category = binding.edtCategory.text.toString(),
+            category = binding.edtFunction.text.toString(),
             email = binding.edtEmail.text.toString(),
         )
     }
@@ -109,7 +103,7 @@ class RegisterFragment : Fragment() {
             toast("digite um nome")
         }
 
-        if (binding.edtCategory.text.isNullOrEmpty()) {
+        if (binding.edtFunction.text.isNullOrEmpty()) {
             isValid = false
             toast("digite a categoria que treina")
         }
@@ -123,11 +117,11 @@ class RegisterFragment : Fragment() {
                 toast("e-mail inválido")
             }
         }
-        if (binding.edtPasswordConfirm.text.isNullOrEmpty()){
+        if (binding.edtPassword.text.isNullOrEmpty()){
             isValid = false
             toast("digite uma senha")
         }else{
-            if (binding.edtPasswordConfirm.text.toString().length < 8){
+            if (binding.edtPassword.text.toString().length < 8){
                 isValid = false
                 toast("senha curta")
             }

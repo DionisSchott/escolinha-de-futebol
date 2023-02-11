@@ -37,13 +37,22 @@ class PlayerRepositoryImpl(
                     )
                 )
             }
+    }
 
-
+    override fun deletePlayer(player: Player, result: (UiState<String>) -> Unit) {
+        dataBase.collection(PLAYER).document(player.id)
+            .delete()
+            .addOnSuccessListener {
+                result.invoke(UiState.Success("Cadastro deletado"))
+            }
+            .addOnFailureListener {
+                result.invoke(UiState.Failure(it.message))
+            }
     }
 
 
-    override fun updatePlayer (player: Player, result: (UiState<String>) -> Unit)  {
-            val document = dataBase.collection(PLAYER).document(player.id)
+    override fun updatePlayer(player: Player, result: (UiState<String>) -> Unit) {
+        val document = dataBase.collection(PLAYER).document(player.id)
         document
             .set(player)
             .addOnSuccessListener {
@@ -60,9 +69,9 @@ class PlayerRepositoryImpl(
             }
     }
 
-    override fun getPlayer( result: (UiState<List<Player>>) -> Unit) {
+    override fun getPlayer(result: (UiState<List<Player>>) -> Unit) {
         dataBase.collection(FireStoreCollection.PLAYER)
-            .orderBy("playerName", Query.Direction.DESCENDING)
+            .orderBy("insertionDate", Query.Direction.ASCENDING)
             .get()
             .addOnSuccessListener {
                 val players = arrayListOf<Player>()
@@ -86,7 +95,7 @@ class PlayerRepositoryImpl(
         onResult: (UiState<List<Uri>>) -> Unit,
     ) {
         try {
-             val uri: List<Uri> = withContext(Dispatchers.IO) {
+            val uri: List<Uri> = withContext(Dispatchers.IO) {
                 fileUri.map {
                     async {
                         storageReference.child(PLAYER).child(it.lastPathSegment ?: "${System.currentTimeMillis()}")
@@ -124,9 +133,6 @@ class PlayerRepositoryImpl(
             onResult.invoke(UiState.Failure(e.message))
         }
     }
-
-
-
 
 
 }

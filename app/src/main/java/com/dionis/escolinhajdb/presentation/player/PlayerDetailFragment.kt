@@ -1,34 +1,46 @@
 package com.dionis.escolinhajdb.presentation.player
 
+import android.R
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.dionis.escolinhajdb.UiState
+import com.dionis.escolinhajdb.R.style
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentPlayerDetailBinding
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class PlayerDetailFragment : Fragment() {
 
-    val TAG: String = "NoteDetailFragment"
     private lateinit var binding: FragmentPlayerDetailBinding
-    private val viewModel: PlayerViewModel by viewModels()
-    var imageUris: MutableList<Uri> = arrayListOf()
-    lateinit var imageUri: Uri
+    private lateinit var dateFormatted: String
     private lateinit var playerDetail: Player
+    private val viewModel: PlayerViewModel by viewModels()
+    private var genreList = listOf("Masculino", "Feminino")
+    private var genre = ""
+    private val myCalendar = Calendar.getInstance()
+//    lateinit var imageUri: Uri
+    val TAG: String = "NoteDetailFragment"
+    var imageUris: MutableList<Uri> = arrayListOf()
+    var age: Int = 0
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         val resultCode = result.resultCode
@@ -60,9 +72,41 @@ class PlayerDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //getPlayerObj()
-        setInfo()
+        clearText()
+        setDatePicker()
         loadImage()
         setUpClicks()
+        setUpSpinner()
+        setInfo()
+    }
+
+
+    private fun setUpSpinner() {
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            R.layout.simple_spinner_item,
+            genreList.map { it })
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        binding.spinnerGenre.adapter = adapter
+        val spinnerPosition = adapter.getPosition(genre)
+        binding.spinnerGenre.setSelection(spinnerPosition)
+
+        binding.spinnerGenre.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemview: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    val selectedGender = genreList[position]
+                    genre = selectedGender
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+            }
     }
 
 
@@ -84,17 +128,34 @@ class PlayerDetailFragment : Fragment() {
         playerDetail.let {
             binding.playerNameEdt.setText(it.playerName)
             binding.playerPositionEdt.setText(it.position)
-            binding.playerWeightEdt.setText(it.weight.toString())
-            binding.playerHeightEdt.setText(it.height.toString())
+
+            if (it.weight > 0.1) {
+                binding.playerWeightEdt.setText(it.weight.toString())
+            }
+            if (it.height > 0.1) {
+                binding.playerHeightEdt.setText(it.height.toString())
+            }
             binding.responsibleNameEdt.setText(it.responsibleName)
             binding.responsibleTypeEdt.setText(it.responsibleType)
             binding.playerBirthEdt.setText(it.playersBirth)
             binding.healthNotesEdt.setText(it.healthNotes)
             binding.SkillsNotesEdt.setText(it.skillsNotes)
+            if (it.genre.isNotEmpty()) {
+                binding.tvGenre.text = it.genre
+                genre = it.genre
+            }
+            if (playerDetail.images.isNotEmpty()) {
+                Picasso.get().load(playerDetail.images[0]).into(binding.playerImg)
+            }
+            binding.playerAgeTv.text = age.toString()
+            binding.mskContact.setText(it.contacts)
+
         }
-        if (playerDetail.images.isNotEmpty()) {
-            Picasso.get().load(playerDetail.images[0]).into(binding.playerImg)
-        }
+
+    }
+
+    private fun clearText() {
+        binding.playerWeightEdt.setOnClickListener {clearText()}
     }
 
     private fun setUpClicks() {
@@ -103,10 +164,67 @@ class PlayerDetailFragment : Fragment() {
             updatePlayer()
             findNavController().popBackStack()
         }
+        binding.tvGenre.setOnClickListener {
+            it.visibility = View.INVISIBLE
+            binding.cvGenre.visibility = View.VISIBLE
+        }
+    }
+
+
+    private fun setDatePicker() {
+
+        val date = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH, month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, day)
+            updateLabel()
+
+        }
+
+        binding.playerBirthEdt.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(
+                requireContext(), style.DatePickerBackGround_Jdb, date, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+            datePickerDialog.show()
+            datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+            datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+        }
 
     }
 
+    private fun updateLabel() {
+
+        val myFormat = "dd/MM/yyyy"
+        val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
+        binding.playerBirthEdt.setText(sdf.format(myCalendar.time).toString())
+        val simpleFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.getDefault())
+        dateFormatted = simpleFormat.format(myCalendar.time)
+
+        val currentDay = Calendar.getInstance()
+        currentDay.time
+        age = (currentDay.get(Calendar.YEAR) - myCalendar.get(Calendar.YEAR))
+        if (myCalendar.get(Calendar.DAY_OF_YEAR) > currentDay.get(Calendar.DAY_OF_YEAR)) {
+            age--
+        }
+
+        binding.playerAgeTv.text = age.toString()
+
+
+    }
+
+
     private fun getPlayerObj(): Player {
+
+        var weight = 0f
+        if(binding.playerWeightEdt.text.isNotEmpty()){
+            weight = binding.playerWeightEdt.text.toString().toFloat()
+        }
+        var height = 0f
+        if(binding.playerHeightEdt.text.isNotEmpty()){
+            height = binding.playerHeightEdt.text.toString().toFloat()
+        }
 
         return Player(
             id = playerDetail.id,
@@ -118,8 +236,11 @@ class PlayerDetailFragment : Fragment() {
             images = getimageUrls(),
             healthNotes = binding.healthNotesEdt.text.toString(),
             skillsNotes = binding.SkillsNotesEdt.text.toString(),
-            weight = binding.playerWeightEdt.text.toString().toFloat(),
-            height = binding.playerHeightEdt.text.toString().toFloat()
+            weight = weight ,
+            height = height,
+            genre = genre,
+            contacts = binding.mskContact.unMasked
+
         )
     }
 
@@ -164,6 +285,7 @@ class PlayerDetailFragment : Fragment() {
 
     companion object {
         const val PLAYER = "player"
+
     }
 
 }

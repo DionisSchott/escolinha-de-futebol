@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".presentation.player.PlayerDetailFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/imgLayout"
         android:layout_width="match_parent"
@@ -14,13 +15,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/playerImg"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:src="@drawable/person_"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:src="@color/jdb"
+            android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@color/white"
-                android:textAllCaps="true"
                 android:gravity="center"
                 android:text="@string/player_name"
                 android:textColor="@color/black"
@@ -52,6 +53,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
             <EditText
                 android:id="@+id/playerPositionEdt"
@@ -76,6 +78,7 @@
                 android:background="@color/white"
                 android:hint="0.0"
                 android:textColor="@color/black"
+                android:clickable="false"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/tvMeters"
@@ -148,6 +151,85 @@
 
 
             <TextView
+                android:id="@+id/tvGenreTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="-4dp"
+                android:text="Sexo"
+                android:textSize="16sp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/tvGenre"
+                app:layout_constraintStart_toStartOf="@id/responsibleNameEdt"
+                app:layout_constraintTop_toBottomOf="@id/tvWeight" />
+
+            <TextView
+                android:id="@+id/tvGenre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Clique para selecionar"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintCircleRadius="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvGenreTitle" />
+
+            <com.santalu.maskara.widget.MaskEditText
+                android:id="@+id/mskContact"
+                style="@style/Widget.AppCompat.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"
+                android:hint="22999999999"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tvGenre"
+                app:layout_constraintStart_toEndOf="@id/tvGenre"
+                app:layout_constraintTop_toTopOf="@id/tvGenre"
+                app:mask="(__) _____-____"
+                app:maskCharacter="_"
+                app:maskStyle="completable" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvGenre"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="1dp"
+                app:layout_constraintBottom_toBottomOf="@id/tvGenre"
+                app:layout_constraintCircleRadius="20dp"
+                app:layout_constraintStart_toStartOf="@id/tvGenre"
+                app:layout_constraintTop_toTopOf="@id/tvGenre">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinnerGenre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/tvGenre"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                android:text="genero"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textSize="24sp"-->
+            <!--                android:layout_marginStart="16dp"/>-->
+
+
+            <TextView
                 android:id="@+id/tvResponsible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -157,7 +239,7 @@
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@id/responsibleNameEdt"
                 app:layout_constraintStart_toStartOf="@id/responsibleNameEdt"
-                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt" />
+                app:layout_constraintTop_toBottomOf="@id/tvGenre" />
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -203,13 +285,13 @@
                 app:layout_constraintTop_toBottomOf="@id/responsibleNameEdt" />
 
 
-            <EditText
+            <TextView
                 android:id="@+id/playerBirthEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center"
-                android:text="08021990"
+                android:hint="selecione"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"

@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.dionis.escolinhajdb.presentation.auth.RegisterFragment"
+        android:name="com.dionis.escolinhajdb.presentation.coach.RegisterCoachFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action

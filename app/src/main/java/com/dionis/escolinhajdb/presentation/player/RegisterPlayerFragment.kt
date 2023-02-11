@@ -7,9 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -22,6 +23,8 @@ import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.awaitAll
 import java.util.*
 
 @AndroidEntryPoint
@@ -31,8 +34,9 @@ class RegisterPlayerFragment : Fragment() {
     private lateinit var binding: FragmentRegisterPlayerBinding
     private val viewModel: PlayerViewModel by viewModels()
     var objPlayer: Player? = null
-
     var imageUris: MutableList<Uri> = arrayListOf()
+    private var genreList = listOf("Masculino", "Feminino")
+    private var genre = ""
 
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -54,9 +58,6 @@ class RegisterPlayerFragment : Fragment() {
 
 
 
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -70,19 +71,49 @@ class RegisterPlayerFragment : Fragment() {
     }
 
     private fun setUp() {
+        setUpSpinner()
         loadImage()
         validateFields()
         setObservers()
+    }
 
+    private fun setUpSpinner() {
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            genreList.map { it })
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerGenre.adapter = adapter
+        val spinnerPosition = adapter.getPosition(genre)
+        binding.spinnerGenre.setSelection(spinnerPosition)
+
+        binding.spinnerGenre.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemview: View,
+                    position: Int,
+                    id: Long,
+                ) {
+                    val selectedGender = genreList[position]
+                    genre = selectedGender
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+            }
     }
 
     private fun validateFields() {
         binding.btnDone.setOnClickListener {
+
             val playerName = binding.edtPlayerName.text.toString()
             val responsibleName = binding.edtresponsibleName.text.toString()
             val playersBirth = binding.edtPlayersBirth.text.toString()
 
-            viewModel.validateFields(playerName, responsibleName, playersBirth)
+
+            viewModel.validateFields(playerName, responsibleName, playersBirth, genre)
         }
     }
 
@@ -110,6 +141,10 @@ class RegisterPlayerFragment : Fragment() {
                 is States.ValidateRegisterPlayer.PlayersBirthEmpty -> {
                     showObligatoryField(binding.edtPlayersBirthLayout, R.string.obligatory_field)
                 }
+                is States.ValidateRegisterPlayer.PlayerGenreEmpty -> {
+                    showObligatoryField(binding.edtPlayersBirthLayout, R.string.obligatory_field)
+                }
+
                 is States.ValidateRegisterPlayer.FieldsDone -> {
                     registerPlayer()
                 }
@@ -119,18 +154,26 @@ class RegisterPlayerFragment : Fragment() {
         viewModel.playerRegister.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Loading -> {
-
+                    binding.load.visibility = View.VISIBLE
                 }
                 is UiState.Failure -> {
+                    binding.load.visibility = View.INVISIBLE
                     toast(it.error)
                 }
                 is UiState.Success -> {
+                    binding.load.visibility = View.INVISIBLE
                     objPlayer = it.data.first
                     findNavController().popBackStack()
                 }
             }
         }
 
+    }
+
+    private fun registerPlayer() {
+        viewModel.registerPlayer(
+            player = getPlayerObj()
+        )
     }
 
     private fun getPlayerObj(): Player {
@@ -141,24 +184,18 @@ class RegisterPlayerFragment : Fragment() {
             playersBirth = binding.edtPlayersBirth.text.toString(),
             images = getimageUrls(),
             responsibleType = binding.edtResponsibleType.text.toString(),
+            genre = genre,
             insertionDate = Date()
         )
     }
 
+
     private fun getimageUrls(): List<String> {
-        if(imageUris.isNotEmpty()){
+        if (imageUris.isNotEmpty()) {
             return imageUris.map { it.toString() }
         } else {
-          return objPlayer?.images?: arrayListOf()
+            return objPlayer?.images ?: arrayListOf()
         }
-    }
-
-
-
-    private fun registerPlayer() {
-        viewModel.registerPlayer(
-            player = getPlayerObj()
-        )
     }
 
     private fun showObligatoryField(edt: TextInputLayout, message: Int) {
