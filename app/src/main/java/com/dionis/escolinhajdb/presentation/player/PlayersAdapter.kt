@@ -2,7 +2,6 @@ package com.dionis.escolinhajdb.presentation.player
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dionis.escolinhajdb.data.model.Player

@@ -1,61 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.player.PlayerDetailFragment">
+    android:layout_width="595dp"
+    android:layout_height="842dp"
+    tools:context=".presentation.pdf.FromPdfSaveFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/imgLayout"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/playerImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"
-            android:scaleType="centerCrop"
-            android:src="@color/jdb"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <ScrollView
-        android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="200dp">
+        android:layout_margin="8dp">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="200dp"
+            android:layout_margin="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
-            <EditText
-                android:id="@+id/playerNameEdt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@color/white"
-                android:gravity="center"
-                android:hint="@string/player_name"
-                android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+            <ImageView
+                android:id="@+id/playerImg"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                android:src="@color/jdb"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/playerNameEdt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@color/white"
+                android:gravity="start"
+                android:hint="@string/player_name"
+                android:maxLines="2"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/tvPlayerPosition"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/playerImg"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -63,55 +57,27 @@
                 android:id="@+id/tvPlayerPosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:gravity="center"
-                android:hint="Posição indefinida"
+                android:hint="Posição"
                 android:textColor="@color/black"
-                android:visibility="visible"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/playerWeightEdt"
+                app:layout_constraintStart_toStartOf="@id/playerNameEdt"
                 app:layout_constraintTop_toBottomOf="@id/playerNameEdt" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvPlayerPosition"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="invisible"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
-                app:layout_constraintEnd_toEndOf="@id/tvPlayerPosition"
-                app:layout_constraintCircleRadius="20dp"
-                app:layout_constraintStart_toStartOf="@id/tvPlayerPosition"
-                app:layout_constraintTop_toTopOf="@id/tvPlayerPosition"
-                app:layout_constraintBottom_toBottomOf="@id/tvPlayerPosition"
-                >
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/spinnerPlayerPosition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-
-                    />
-            </com.google.android.material.card.MaterialCardView>
-
-
-            <EditText
+            <TextView
                 android:id="@+id/playerWeightEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-4dp"
                 android:background="@color/white"
                 android:clickable="false"
                 android:hint="0.0"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/tvMeters"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvWeight" />
+                app:layout_constraintBottom_toTopOf="@id/playerHeightEdt"
+                app:layout_constraintStart_toStartOf="@id/playerNameEdt"
+                app:layout_constraintTop_toBottomOf="@id/tvPlayerPosition" />
 
             <TextView
                 android:id="@+id/tvKg"
@@ -126,31 +92,18 @@
                 app:layout_constraintStart_toEndOf="@id/playerWeightEdt"
                 app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
 
+
             <TextView
-                android:id="@+id/tvWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="peso"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/playerWeightEdt"
-                app:layout_constraintEnd_toEndOf="@id/tvKg"
-                app:layout_constraintStart_toStartOf="@id/playerWeightEdt"
-                app:layout_constraintTop_toBottomOf="@id/tvPlayerPosition" />
-
-
-            <EditText
                 android:id="@+id/playerHeightEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:background="@color/white"
                 android:hint="0.0"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/tvMeters"
-                app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
+                app:layout_constraintBottom_toBottomOf="@+id/playerCategory"
+                app:layout_constraintStart_toStartOf="@id/playerWeightEdt"
+                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt" />
 
             <TextView
                 android:id="@+id/tvMeters"
@@ -161,42 +114,51 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/playerWeightEdt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/playerWeightEdt"
-                app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
+                app:layout_constraintBottom_toBottomOf="@id/playerHeightEdt"
+                app:layout_constraintStart_toEndOf="@id/playerHeightEdt"
+                app:layout_constraintTop_toTopOf="@id/playerHeightEdt" />
 
             <TextView
-                android:id="@+id/tvHeight"
+                android:id="@+id/playerCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="altura"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@id/tvWeight"
-                app:layout_constraintEnd_toEndOf="@id/tvMeters"
+                android:text="Categoria:"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/playerHeightEdt"
-                app:layout_constraintTop_toTopOf="@id/tvWeight" />
+                app:layout_constraintTop_toBottomOf="@id/playerHeightEdt" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/topLayout">
 
 
             <TextView
                 android:id="@+id/tvGenreTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginBottom="-4dp"
                 android:text="Sexo"
                 android:textSize="16sp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/tvGenre"
                 app:layout_constraintStart_toStartOf="@id/responsibleNameEdt"
-                app:layout_constraintTop_toBottomOf="@id/tvWeight" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvGenre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Clique para selecionar"
+                android:text="gênero"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -204,57 +166,6 @@
                 app:layout_constraintCircleRadius="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvGenreTitle" />
-
-            <com.santalu.maskara.widget.MaskEditText
-                android:id="@+id/mskContact"
-                style="@style/Widget.AppCompat.TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:background="@color/white"
-                android:hint="22999999999"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/tvGenre"
-                app:layout_constraintStart_toEndOf="@id/tvGenre"
-                app:layout_constraintTop_toTopOf="@id/tvGenre"
-                app:mask="(__) _____-____"
-                app:maskCharacter="_"
-                app:maskStyle="completable" />
-
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvGenre"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:visibility="invisible"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
-                app:layout_constraintBottom_toBottomOf="@id/tvGenre"
-                app:layout_constraintCircleRadius="20dp"
-                app:layout_constraintStart_toStartOf="@id/tvGenre"
-                app:layout_constraintTop_toTopOf="@id/tvGenre">
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/spinnerGenre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </com.google.android.material.card.MaterialCardView>
-
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/tvGenre"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                android:text="genero"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="24sp"-->
-            <!--                android:layout_marginStart="16dp"/>-->
 
 
             <TextView
@@ -277,11 +188,11 @@
                 android:text="-"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/tvResponsible"
-                app:layout_constraintStart_toEndOf="@id/tvResponsible"
-                app:layout_constraintTop_toTopOf="@id/tvResponsible" />
+                app:layout_constraintBottom_toBottomOf="@+id/responsibleNameEdt"
+                app:layout_constraintStart_toEndOf="@+id/responsibleNameEdt"
+                app:layout_constraintTop_toTopOf="@+id/responsibleNameEdt" />
 
-            <EditText
+            <TextView
                 android:id="@+id/responsibleTypeEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -291,11 +202,11 @@
                 android:hint="grau"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/tvResponsible"
+                app:layout_constraintBottom_toBottomOf="@+id/responsibleNameEdt"
                 app:layout_constraintStart_toEndOf="@id/hyphen"
-                app:layout_constraintTop_toTopOf="@id/tvResponsible" />
+                app:layout_constraintTop_toTopOf="@+id/responsibleNameEdt" />
 
-            <com.google.android.material.textfield.TextInputEditText
+            <TextView
                 android:id="@+id/responsibleNameEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -379,9 +290,11 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@color/white"
-                android:hint="digite aqui"
+                android:gravity="top"
+                android:hint="Sem informações"
                 android:inputType="textMultiLine"
-                android:textSize="24sp"
+                android:lines="6"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvHealthNotes" />
@@ -397,43 +310,41 @@
                 app:layout_constraintTop_toBottomOf="@id/healthNotesEdt" />
 
             <EditText
-                android:id="@+id/SkillsNotesEdt"
+                android:id="@+id/skillsNotesEdt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@color/white"
-                android:hint="digite aqui"
+                android:gravity="top"
+                android:hint="Sem informações"
                 android:inputType="textMultiLine"
-                android:textSize="24sp"
+                android:lines="6"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvSkillsNotes" />
 
-            <Button
-                android:id="@+id/btnSave"
+            <com.santalu.maskara.widget.MaskEditText
+                android:id="@+id/mskContact"
+                style="@style/Widget.AppCompat.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:text="Salvar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/SkillsNotesEdt" />
+                android:background="@color/white"
+                android:hint="22999999999"
+                android:textSize="24sp"
+                android:textStyle="bold"
 
-            <ImageView
-                android:id="@+id/exportPdf"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/person_"
-                app:layout_constraintBottom_toBottomOf="@id/btnSave"
-                app:layout_constraintStart_toEndOf="@id/btnSave"
-                app:layout_constraintTop_toTopOf="@id/btnSave" />
+                app:layout_constraintBottom_toBottomOf="@+id/tvGenre"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:mask="(__) _____-____"
+                app:maskCharacter="_"
+                app:maskStyle="completable" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    </ScrollView>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

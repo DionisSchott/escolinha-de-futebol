@@ -14,6 +14,7 @@ interface PlayerRepository {
 
     suspend fun uploadImage(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit)
     suspend fun uploadSingleFile(fileUri: Uri, onResult: (UiState<Uri>) -> Unit)
+    suspend fun uploadSingleFile2(fileUri: Uri, onResult: (UiState<String>) -> Unit)
 
 
 

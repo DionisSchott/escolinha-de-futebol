@@ -117,26 +117,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        val userLogged = FirebaseAuth.getInstance().currentUser
-        if (userLogged != null) {
-            openHomeFragment()
-
-        }
-    }
-
-//    private fun autoLogin() {
-//        if (!binding.edtEmail.text.isNullOrEmpty() && !binding.edtPassword.text.isNullOrEmpty()) {
-//            val email = binding.edtEmail.text.toString()
-//            val password = binding.edtPassword.text.toString()
-//
-//            viewModel.login(email, password)
-//        }
-//    }
-
-
     private fun saveDataUser() {
 
         val email = binding.edtEmail.text.toString()
@@ -145,6 +125,7 @@ class LoginFragment : Fragment() {
 
         lifecycleScope.launch() { userManager.saveDataUser(email, password, authenticated) }
     }
+
 
     private fun readDataUser() {
         lifecycleScope.launch {
@@ -157,4 +138,23 @@ class LoginFragment : Fragment() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        val userLogged = FirebaseAuth.getInstance().currentUser
+        if (userLogged != null) {
+            openHomeFragment()
+
+        }
+
+//        fun autoLogin() {
+//            if (!binding.edtEmail.text.isNullOrEmpty() && !binding.edtPassword.text.isNullOrEmpty()) {
+//                val email = binding.edtEmail.text.toString()
+//                val password = binding.edtPassword.text.toString()
+//
+//                viewModel.login(email, password)
+//            }
+//        }
+
+    }
 }

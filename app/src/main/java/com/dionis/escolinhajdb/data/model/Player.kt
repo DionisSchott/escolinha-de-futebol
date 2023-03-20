@@ -15,6 +15,7 @@ data class Player(
     var id: String = "",
     val playerName: String = "",
     val position: String = "",
+    val preferredFoot: String = "",
     val responsibleName: String = "",
     val responsibleType: String = "",
     val playersBirth: String = "",
@@ -26,6 +27,7 @@ data class Player(
     val height: Float = 0f,
     val contacts: String = "",
     val category: String = "",
+    val bloodType: String = "",
     @ServerTimestamp
     val insertionDate: Date = Date(),
 ) : Parcelable

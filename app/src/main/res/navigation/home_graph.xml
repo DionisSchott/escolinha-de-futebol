@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_homeFragment_to_playerListFragment"
             app:destination="@id/playerListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_updateUserInfoFragment"
+            app:destination="@id/updateUserInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerPlayerFragment"
@@ -40,6 +43,9 @@
         <action
             android:id="@+id/action_playerDetailFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_playerDetailFragment_to_fromPdfSaveFragment"
+            app:destination="@id/fromPdfSaveFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerCoachFragment"
@@ -56,6 +62,23 @@
         tools:layout="@layout/fragment_player_list" >
         <action
             android:id="@+id/action_playerListFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fromPdfSaveFragment"
+        android:name="com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment"
+        android:label="fragment_from_pdf_save"
+        tools:layout="@layout/fragment_from_pdf_save" >
+        <action
+            android:id="@+id/action_fromPdfSaveFragment_to_playerDetailFragment"
+            app:destination="@id/playerDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateUserInfoFragment"
+        android:name="com.dionis.escolinhajdb.presentation.auth.UpdateUserInfoFragment"
+        android:label="UpdateUserInfoFragment" >
+        <action
+            android:id="@+id/action_updateUserInfoFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

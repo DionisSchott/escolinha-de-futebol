@@ -2,14 +2,11 @@ package com.dionis.escolinhajdb.data.repository
 
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
-import com.dionis.escolinhajdb.data.model.Player
-import com.dionis.escolinhajdb.data.model.User
 import com.dionis.escolinhajdb.util.FireStoreCollection
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -43,16 +40,20 @@ class AuthRepositoryImpl(
     }
 
 
-    override fun recovery(id: String, result: (UiState<Coach>) -> Unit) {
-
+    override fun recoveryCoach(id: String, result: (UiState<Coach>) -> Unit) {
         database.collection(FireStoreCollection.COACH).document(id)
             .get()
-            .addOnSuccessListener {
-//                val user = it.data.//.result.toObject(Coach::class.java)
+            .addOnCompleteListener {
+                val coach = it.result.toObject(Coach::class.java)
 
-//                result.invoke(
-//                    UiState.Success(user)
-//                )
+                result.invoke(
+                    UiState.Success(coach!!)
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    UiState.Failure(it.localizedMessage)
+                )
             }
     }
 
@@ -63,7 +64,6 @@ class AuthRepositoryImpl(
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     val user = it.result.toObject(Coach::class.java)
-//                    appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(user)).apply()
                     result.invoke(user)
                 } else {
                     result.invoke(null)
@@ -127,6 +127,8 @@ class AuthRepositoryImpl(
             }
 
     }
+
+
 
     override fun login(
         email: String,

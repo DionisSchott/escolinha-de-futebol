@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.dionis.escolinhajdb"
-        minSdk 23
+        minSdk 26
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -54,6 +54,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
+    implementation 'androidx.core:core-ktx:1.7.0'
+
     //firebase
     implementation 'com.google.firebase:firebase-common-ktx:20.2.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
@@ -75,7 +77,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
     // LiveData
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    //implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
 
     //fragment
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
@@ -99,5 +101,8 @@ dependencies {
 
     //Maskara - https://github.com/santalu/maskara
     implementation 'com.github.santalu:maskara:1.0.0'
+
+    //PDF
+    implementation 'com.itextpdf:itextpdf:5.5.13'
 
 }

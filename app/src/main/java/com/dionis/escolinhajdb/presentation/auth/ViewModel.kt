@@ -3,10 +3,8 @@ package com.dionis.escolinhajdb.presentation.auth
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dionis.escolinhajdb.States
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
-import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -19,14 +17,17 @@ class ViewModel @Inject constructor(
     private val _coach = MutableLiveData<UiState<List<Coach>>>()
     val coach: LiveData<UiState<List<Coach>>> get() = _coach
 
+    private val _updateInfo = MutableLiveData<UiState<String>>()
+    val updateInfo: LiveData<UiState<String>> get() = _updateInfo
+
     private var _register = MutableLiveData<UiState<String>>()
     val register: LiveData<UiState<String>> get() = _register
 
     private var _login = MutableLiveData<UiState<String>>()
     val login: LiveData<UiState<String>> get() = _login
 
-    private val _recover = MutableLiveData<UiState<Coach>>()
-        val recover: LiveData<UiState<Coach>> = _recover
+    private val _recoveryCoach = MutableLiveData<UiState<Coach>>()
+    val recoveryCoach: LiveData<UiState<Coach>> = _recoveryCoach
 
 
     fun getCoach() {
@@ -34,9 +35,14 @@ class ViewModel @Inject constructor(
         authRepository.getCoach { _coach.value = it }
     }
 
-    fun recovery(id: String) {
-        _recover.value = UiState.Loading
-        authRepository.recovery(id) { _recover.value = it }
+    fun recoveryCoach(id: String) {
+        _recoveryCoach.value = UiState.Loading
+        authRepository.recoveryCoach(id) { _recoveryCoach.value = it }
+    }
+
+    fun updateUserInfo(coach: Coach) {
+        _updateInfo.value = UiState.Loading
+        authRepository.updateUserInfo(coach) { _updateInfo.value = it }
     }
 
 

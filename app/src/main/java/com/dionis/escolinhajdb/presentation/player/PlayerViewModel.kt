@@ -73,6 +73,15 @@ class PlayerViewModel @Inject constructor(
 
     }
 
+    //testando
+    fun uploadSingleImage2(fileUri: Uri, onResult: (UiState<String>) -> Unit) {
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            playerRepository.uploadSingleFile2(fileUri, onResult)
+        }
+
+    }
+
 
     fun validateFields(
         playerName: String,

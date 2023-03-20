@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
@@ -26,9 +28,8 @@ import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import java.util.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -39,6 +40,8 @@ class HomeFragment : Fragment() {
     private lateinit var playersAdapter: PlayersAdapter
     private lateinit var coachAdapter: CoachAdapter
     private lateinit var userManager: UserManager
+    private lateinit var coach: Coach
+
 
 
     override fun onCreateView(
@@ -61,19 +64,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUp() {
-        recovery()
+        recoveryCoach()
         logout()
-        getData()
         setUpClicks()
         setUpAdapter()
         setObservers()
-    }
-
-    private fun getData() {
-        val intent = Intent(requireContext(), LoginActivity::class.java)
-        val id = intent.extras?.getString("coachId")
 
     }
+
 
     private fun setUpClicks() {
         binding.floatButton.setOnClickListener {
@@ -81,6 +79,10 @@ class HomeFragment : Fragment() {
         }
         binding.btnSeeAll.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_playerListFragment)
+        }
+        binding.userEdit.setOnClickListener{
+            val args = Bundle().apply { putParcelable(COACH, coach) }
+            findNavController().navigate(R.id.action_homeFragment_to_updateUserInfoFragment, args)
         }
     }
 
@@ -112,7 +114,28 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
+        coachViewModel.recoveryCoach.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Failure -> {
+                }
+                is UiState.Loading -> {
+                }
+                is UiState.Success -> {
+                    coach = it.data
+                    binding.tvWelcomeName.text = coach.name
+                }
+            }
+        }
     }
+
+
+
+    private fun recoveryCoach() {
+        val uid = FirebaseAuth.getInstance().uid!!
+        coachViewModel.recoveryCoach(uid)
+    }
+
 
     private fun logout() {
         binding.btLogout.setOnClickListener {
@@ -125,6 +148,8 @@ class HomeFragment : Fragment() {
     }
 
 
+
+
     private fun setUpAdapter() {
 
         playersAdapter = PlayersAdapter()
@@ -132,6 +157,7 @@ class HomeFragment : Fragment() {
         playersAdapter.onItemClicked = {
             navigateFromPlayerDetail(it)
         }
+
         playersAdapter.onLongItemClicked = {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("apagar cadastro?")
@@ -146,6 +172,24 @@ class HomeFragment : Fragment() {
         binding.recyclerView3.adapter = playersAdapter
 
 
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        val recyclerView = binding.recyclerViewPlayer
+        recyclerView.adapter = playersAdapter
+        recyclerView.layoutManager = layoutManager
+
+        val snapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerView)
+
+        val timer = Timer()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                if (layoutManager.findLastCompletelyVisibleItemPosition() < (playersAdapter.itemCount - 1) ){
+                    layoutManager.smoothScrollToPosition(recyclerView, RecyclerView.State(), layoutManager.findLastVisibleItemPosition())
+                } else {
+                    layoutManager.smoothScrollToPosition(recyclerView, RecyclerView.State(), 0)
+                }
+            }
+        }, 0, 4500)
 
 
         coachAdapter = CoachAdapter()
@@ -162,8 +206,6 @@ class HomeFragment : Fragment() {
         binding.recyclerViewCoach.adapter = coachAdapter
     }
 
-
-
     private fun navigateFromPlayerDetail(player: Player) {
 
         val args = Bundle().apply { putParcelable(PLAYER, player) }
@@ -172,13 +214,6 @@ class HomeFragment : Fragment() {
 
     private fun deletePlayer(player: Player) {
         viewModel.deletePlayer(player)
-    }
-
-    private fun recovery() {
-        val uid = FirebaseAuth.getInstance().uid!!
-        coachViewModel.recovery(uid)
-
-
     }
 
     private fun showAlertDialog() {

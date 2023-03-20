@@ -71,7 +71,7 @@ class PlayerRepositoryImpl(
 
     override fun getPlayer(result: (UiState<List<Player>>) -> Unit) {
         dataBase.collection(FireStoreCollection.PLAYER)
-            .orderBy("insertionDate", Query.Direction.ASCENDING)
+            .orderBy("insertionDate", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener {
                 val players = arrayListOf<Player>()
@@ -127,6 +127,27 @@ class PlayerRepositoryImpl(
                     .await()
             }
             onResult.invoke(UiState.Success(uri))
+        } catch (e: FirebaseException) {
+            onResult.invoke(UiState.Failure(e.message))
+        } catch (e: Exception) {
+            onResult.invoke(UiState.Failure(e.message))
+        }
+    }
+
+
+    //testando
+    override suspend fun uploadSingleFile2(fileUri: Uri, onResult: (UiState<String>) -> Unit) {
+        try {
+            storageReference.child(PLAYER).child(fileUri.lastPathSegment ?: "${System.currentTimeMillis()}")
+                .putFile(fileUri)
+                .await()
+                .storage
+                .downloadUrl.addOnSuccessListener {
+                    val url = it.toString()
+                    onResult.invoke(UiState.Success(url))
+                }
+                .await()
+
         } catch (e: FirebaseException) {
             onResult.invoke(UiState.Failure(e.message))
         } catch (e: Exception) {
