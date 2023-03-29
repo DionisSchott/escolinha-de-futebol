@@ -21,7 +21,9 @@ import com.dionis.escolinhajdb.R.style
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentPlayerDetailBinding
+import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.KEY
 import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.PLAYERTOPDF
+import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.squareup.picasso.Picasso
@@ -36,14 +38,18 @@ import java.util.*
 class PlayerDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentPlayerDetailBinding
-    private lateinit var dateFormatted: String
+
+
     private lateinit var playerDetail: Player
     private val viewModel: PlayerViewModel by viewModels()
     private var genreList = listOf("Masculino", "Feminino")
     private var playerGenre = ""
-    private var playerPositionList = listOf("Lateral direito", "Lateral esquerdo", "Goleiro", "Centroavante")
+    private var playerPositionList = listOf("Lateral direito", "Lateral esquerdo", "Goleiro", "Centroavante", "--adicionar--")
     private var playerPosition = ""
+    private var bloodTypeList = listOf("A+", "B+", "A-", "B-", "AB+", "AB-", "O+", "O-")
+    private var playerBloodType = ""
     private val myCalendar = Calendar.getInstance()
+
 
     //    lateinit var imageUri: Uri
     val TAG: String = "NoteDetailFragment"
@@ -115,7 +121,7 @@ class PlayerDetailFragment : Fragment() {
             genreList.map { it })
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerGenre.adapter = adapter
-        val spinnerPosition = adapter.getPosition(playerGenre)
+        val spinnerPosition = adapter.getPosition(binding.tvGenre.text.toString())
         binding.spinnerGenre.setSelection(spinnerPosition)
 
 
@@ -137,9 +143,7 @@ class PlayerDetailFragment : Fragment() {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
 
                 }
-
             }
-
     }
 
     private fun playerPositionSpinner() {
@@ -164,10 +168,14 @@ class PlayerDetailFragment : Fragment() {
                     id: Long,
                 ) {
                     val selectedPlayerPosition = playerPositionList[position]
-                    playerPosition = selectedPlayerPosition
-                    binding.tvPlayerPosition.text = playerPosition
-                    binding.tvPlayerPosition.visibility = View.VISIBLE
-                    binding.cvPlayerPosition.visibility = View.INVISIBLE
+                    if (selectedPlayerPosition == playerPositionList.last()) {
+                        toast("clicado")
+                    } else {
+                        playerPosition = selectedPlayerPosition
+                        binding.tvPlayerPosition.text = playerPosition
+                        binding.tvPlayerPosition.visibility = View.VISIBLE
+                        binding.cvPlayerPosition.visibility = View.INVISIBLE
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -178,12 +186,57 @@ class PlayerDetailFragment : Fragment() {
     }
 
 
+    private fun playerBloodSpinner() {
+
+        binding.spinnerBlood.post { binding.spinnerBlood.performClick() }
+
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            bloodTypeList.map { it })
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerBlood.adapter = adapter
+        val spinnerPosition = adapter.getPosition(binding.tvBloodType.text.toString())
+        binding.spinnerBlood.setSelection(spinnerPosition)
+
+
+        binding.spinnerBlood.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemview: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    val selectedBloodType = bloodTypeList[position]
+                    playerBloodType = selectedBloodType
+                    binding.tvBloodType.text = playerBloodType
+                    binding.tvBloodType.visibility = View.VISIBLE
+                    binding.spinnerBlood.visibility = View.INVISIBLE
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
+
+            }
+
+
+    }
+
+
     private fun setUpClicks() {
 
         binding.tvPlayerPosition.setOnClickListener {
             playerPositionSpinner()
             binding.tvPlayerPosition.visibility = View.INVISIBLE
             binding.cvPlayerPosition.visibility = View.VISIBLE
+        }
+
+        binding.tvBloodType.setOnClickListener {
+            playerBloodSpinner()
+            binding.tvBloodType.visibility = View.INVISIBLE
+            binding.spinnerBlood.visibility = View.VISIBLE
         }
 
         binding.btnSave.setOnClickListener {
@@ -199,8 +252,18 @@ class PlayerDetailFragment : Fragment() {
         }
 
 
-        binding.exportPdf.setOnClickListener{
-            val args = Bundle().apply { putParcelable(PLAYERTOPDF, playerDetail) }
+        binding.exportPdf.setOnClickListener {
+            val args = Bundle()
+            args.putParcelable(PLAYERTOPDF, playerDetail)
+            args.putString(KEY, "export")
+            findNavController().navigate(R.id.action_playerDetailFragment_to_fromPdfSaveFragment, args)
+        }
+
+        binding.savePdf.setOnClickListener {
+            val args = Bundle().apply {
+                putParcelable(PLAYERTOPDF, playerDetail)
+                putString(KEY, "save")
+            }
             findNavController().navigate(R.id.action_playerDetailFragment_to_fromPdfSaveFragment, args)
         }
     }
@@ -219,63 +282,48 @@ class PlayerDetailFragment : Fragment() {
     }
 
 
-    private fun setInfo() {
+    private fun setInfo() = binding.apply {
 
         playerDetail.let {
-            binding.playerNameEdt.setText(it.playerName)
-            binding.tvPlayerPosition.text = it.position
+
+            playerNameEdt.setText(it.playerName)
+            tvPlayerPosition.text = it.position
 
             if (it.weight > 0.1) {
-                binding.playerWeightEdt.setText(it.weight.toString())
+                playerWeightEdt.setText(it.weight.toString())
             }
             if (it.height > 0.1) {
-                binding.playerHeightEdt.setText(it.height.toString())
+                playerHeightEdt.setText(it.height.toString())
             }
-            binding.responsibleNameEdt.setText(it.responsibleName)
-            binding.responsibleTypeEdt.setText(it.responsibleType)
+            responsibleNameEdt.setText(it.responsibleName)
+            responsibleTypeEdt.setText(it.responsibleType)
 
-            binding.playerBirthEdt.text = it.playersBirth
+            playerBirthEdt.setText(it.playersBirth)
 
-            binding.playerAgeTv.text = age.toString()
+            playerAgeTv.text = age.toString().plus(" Anos")
 
-            binding.healthNotesEdt.setText(it.healthNotes)
-            binding.SkillsNotesEdt.setText(it.skillsNotes)
+            tvBloodType.text = it.bloodType
+
+            healthNotesEdt.setText(it.healthNotes)
+            SkillsNotesEdt.setText(it.skillsNotes)
             if (it.genre.isNotEmpty()) {
-                binding.tvGenre.text = it.genre
+                tvGenre.text = it.genre
                 playerGenre = it.genre
             }
             if (playerDetail.images.isNotEmpty()) {
                 Picasso.get().load(playerDetail.images[0]).into(binding.playerImg)
             }
-            binding.playerAgeTv.text = age.toString()
-            binding.mskContact.setText(it.contacts)
+            mskContact.setText(it.contacts)
 
         }
 
     }
 
 
-
     private fun setDatePicker() {
 
-        val date = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            myCalendar.set(Calendar.YEAR, year)
-            myCalendar.set(Calendar.MONTH, month)
-            myCalendar.set(Calendar.DAY_OF_MONTH, day)
-            updateLabel()
+        datePicker(playerDetail.playersBirth, binding.playerBirthEdt)
 
-        }
-
-        binding.playerBirthEdt.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(
-                requireContext(), style.DatePickerBackGround_Jdb, date, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
-            datePickerDialog.show()
-            datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
-            datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-        }
 
     }
 
@@ -284,11 +332,10 @@ class PlayerDetailFragment : Fragment() {
         val myFormat = "dd/MM/yyyy"
         val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
         binding.playerBirthEdt.setText(sdf.format(myCalendar.time).toString())
-        val simpleFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.getDefault())
-        dateFormatted = simpleFormat.format(myCalendar.time)
+//        val simpleFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.getDefault())
+//        dateFormatted = simpleFormat.format(myCalendar.time)
 
         val currentDay = Calendar.getInstance()
-        currentDay.time
 
         age = (
                 currentDay.get(Calendar.YEAR) -
@@ -327,7 +374,8 @@ class PlayerDetailFragment : Fragment() {
             weight = weight,
             height = height,
             genre = playerGenre,
-            contacts = binding.mskContact.unMasked
+            contacts = binding.mskContact.unMasked,
+            bloodType = binding.tvBloodType.text.toString()
 
         )
     }

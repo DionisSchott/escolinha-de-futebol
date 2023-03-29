@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.auth.UpdateUserInfoFragment">
+        tools:context=".presentation.coach.UpdateUserInfoFragment">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -29,6 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
+            app:endIconDrawable="@drawable/ic_baseline_exit_24"
+            app:endIconMode="custom"
             app:layout_constraintTop_toBottomOf="@+id/imgLogo"
             tools:layout_editor_absoluteX="30dp">
 
@@ -37,7 +39,7 @@
                 android:id="@+id/edtUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nome de Usuário"
+                android:hint="@string/name"
                 android:inputType="text"
                 android:maxLines="1"
                 android:padding="13dp"
@@ -51,19 +53,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            app:layout_constraintTop_toBottomOf="@+id/edtUserNameLayout"
-            tools:layout_editor_absoluteX="30dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtUserNameLayout">
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtEmail"
+            <com.santalu.maskara.widget.MaskEditText
+                android:id="@+id/mskContact"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="E-mail"
-                android:inputType="text"
-                android:maxLines="1"
-                android:padding="13dp"
-                app:layout_constraintTop_toBottomOf="@+id/edtPlayerNameLayout" />
+                android:layout_height="match_parent"
+                android:hint="Celular"
+                app:mask="(__) _____-____"
+                app:maskCharacter="_"
+                app:maskStyle="persistent" />
+
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,25 +77,53 @@
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:hint="Função"
-            app:layout_constraintTop_toBottomOf="@+id/edtEmailLayout"
-            tools:layout_editor_absoluteX="30dp">
+            android:visibility="visible"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_baseline_exit_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtEmailLayout">
 
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtFunction"
+                android:id="@+id/tvFunction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="none"
                 android:maxLines="1"
                 android:padding="13dp"
                 app:layout_constraintTop_toBottomOf="@+id/edtPlayerNameLayout"
-
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvFunctionSpinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/edtFunctionLayout"
+            app:layout_constraintEnd_toEndOf="@id/edtFunctionLayout"
+            app:layout_constraintStart_toStartOf="@id/edtFunctionLayout"
+            app:layout_constraintTop_toTopOf="@id/edtFunctionLayout">
+
+            <Spinner
+                android:id="@+id/edtFunctionSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/edtFunctionLayout"
+                app:layout_constraintEnd_toEndOf="@id/edtFunctionLayout"
+                app:layout_constraintStart_toStartOf="@id/edtFunctionLayout"
+                app:layout_constraintTop_toTopOf="@id/edtFunctionLayout" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/edtCategoryLayout"
+            android:id="@+id/edtSubFunctionLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,14 +133,13 @@
             app:layout_constraintTop_toBottomOf="@id/edtFunctionLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtCategory"
+                android:id="@+id/edtSubFunction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:padding="13dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -118,19 +148,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:hint="idade"
-            app:layout_constraintStart_toStartOf="@id/edtCategoryLayout"
-            app:layout_constraintTop_toBottomOf="@id/edtCategoryLayout">
+            android:hint="@string/birth"
+            app:layout_constraintStart_toStartOf="@id/edtSubFunctionLayout"
+            app:layout_constraintTop_toBottomOf="@id/edtSubFunctionLayout">
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/tvBirth"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="none"
+                android:clickable="true"
+                android:focusable="false"
+                android:longClickable="false"
+                android:cursorVisible="false"
                 android:padding="13dp" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
 
         <com.google.android.material.button.MaterialButton
@@ -140,9 +173,8 @@
             android:layout_marginTop="30dp"
             android:text="salvar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edtBirthLayout"
             app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@id/edtBirthLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

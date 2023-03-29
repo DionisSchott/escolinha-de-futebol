@@ -169,7 +169,7 @@ class HomeFragment : Fragment() {
                 }
                 .show()
         }
-        binding.recyclerView3.adapter = playersAdapter
+
 
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

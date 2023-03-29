@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentFromPdfSaveBinding
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class FromPdfSaveFragment : Fragment() {
@@ -21,11 +24,13 @@ class FromPdfSaveFragment : Fragment() {
     private lateinit var binding: FragmentFromPdfSaveBinding
     private lateinit var exportPdf: ExportPdf
     private lateinit var playerDetail: Player
+    private lateinit var keyForAction: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentFromPdfSaveBinding.inflate(inflater, container, false)
 
         playerDetail = arguments?.getParcelable(PLAYERTOPDF)!!
+        keyForAction = arguments?.getString(KEY)!!
         return binding.root
     }
 
@@ -36,9 +41,15 @@ class FromPdfSaveFragment : Fragment() {
         exportPdf = ExportPdf()
         setInfo()
         click()
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            savePdf(binding.layout)
-//        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(50)
+            if (keyForAction == "save") {
+                savePdf(view)
+            } else if (keyForAction == "export") {
+                exportPdf(view)
+            }
+        }
     }
 
 
@@ -109,7 +120,7 @@ class FromPdfSaveFragment : Fragment() {
     private fun click() {
 
         binding.bottomLayout.setOnClickListener { onSaveClick() }
-        binding.playerImg.setOnClickListener { onExportClick()}
+        binding.playerImg.setOnClickListener { onExportClick() }
     }
 
     private fun onExportClick() {
@@ -147,6 +158,7 @@ class FromPdfSaveFragment : Fragment() {
 
     companion object {
         const val PLAYERTOPDF = "playerToPdf"
+        const val KEY = "key"
         const val REQUEST_PERMISSION_CODE = 57
 
 

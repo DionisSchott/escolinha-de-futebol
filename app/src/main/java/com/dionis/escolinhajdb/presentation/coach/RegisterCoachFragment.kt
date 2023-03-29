@@ -89,7 +89,7 @@ class RegisterCoachFragment : Fragment() {
         return Coach(
             id = "",
             name = binding.edtUserName.text.toString(),
-            category = binding.edtFunction.text.toString(),
+            subFunction = binding.edtFunction.text.toString(),
             email = binding.edtEmail.text.toString(),
         )
     }

@@ -15,31 +15,28 @@ import java.io.FileOutputStream
 
 class ExportPdf {
 
-    // Cria um novo documento PDF
+
     val document = PdfDocument()
 
     fun createPdf(layout: View) {
 
 
-        // Cria uma página do tamanho do layout
         val pageInfo = PdfDocument.PageInfo.Builder(
             layout.measuredWidth,
             layout.measuredHeight,
             1).create()
 
 
-        // Cria uma nova página no documento
         val page = document.startPage(pageInfo)
 
-        // Desenha o layout na página usando um Canvas
+
         val canvas = page.canvas
         val paint = layout.background?.let { Paint().apply { color = Color.WHITE } } ?: Paint().apply { color = Color.WHITE }
         canvas.drawPaint(paint)
         layout.draw(canvas)
 
-        // Finaliza a página
-        document.finishPage(page)
 
+        document.finishPage(page)
 
     }
 

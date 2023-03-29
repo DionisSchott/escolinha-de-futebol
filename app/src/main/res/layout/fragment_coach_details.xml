@@ -2,93 +2,137 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/jdb_light"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:cardBackgroundColor="@color/jdb_light"
-        app:cardCornerRadius="20dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
-        <ImageView
-            android:id="@+id/imgExit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/ic_baseline_exit_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imgCoach"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_margin="20dp"
-            android:src="@drawable/person_"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/imgExit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/ic_baseline_exit_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        <EditText
-            android:id="@+id/tvCoachName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="treinador"
-            android:background="@color/transparent"
-            android:textColor="@color/white"
-            android:textSize="36sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imgCoach" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgCoach"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/person_"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvCoachFunction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="função"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCoachName" />
+            <TextView
+                android:id="@+id/imgGenre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="m"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/imgCoach"
+                app:layout_constraintStart_toStartOf="@id/imgCoach" />
 
-        <TextView
-            android:id="@+id/tvCategoriTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="categoria"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCoachFunction" />
 
-        <TextView
-            android:id="@+id/tvCoachCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="Sub 10"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCategoriTitle" />
+            <EditText
+                android:id="@+id/tvCoachName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/transparent"
+                android:text="@string/name"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imgCoach" />
+
+            <TextView
+                android:id="@+id/tvCoachFunction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="função"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCoachName" />
+
+
+            <TextView
+                android:id="@+id/tvCoachSubFunction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-5dp"
+                android:text="Sub 10"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCoachFunction" />
+
+            <TextView
+                android:id="@+id/tvContactTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/contact"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@id/mskContact"
+                app:layout_constraintTop_toBottomOf="@id/tvCoachSubFunction" />
+
+            <com.santalu.maskara.widget.MaskEditText
+                android:id="@+id/mskContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:hint="(22) 99999-9999"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
+                app:mask="(__) _____-____"
+                app:maskCharacter="_"
+                app:maskStyle="completable" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:hint="membro desde:"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/mskContact"
+                app:layout_constraintTop_toBottomOf="@id/mskContact" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -75,7 +75,7 @@
     </fragment>
     <fragment
         android:id="@+id/updateUserInfoFragment"
-        android:name="com.dionis.escolinhajdb.presentation.auth.UpdateUserInfoFragment"
+        android:name="com.dionis.escolinhajdb.presentation.coach.UpdateUserInfoFragment"
         android:label="UpdateUserInfoFragment" >
         <action
             android:id="@+id/action_updateUserInfoFragment_to_homeFragment"

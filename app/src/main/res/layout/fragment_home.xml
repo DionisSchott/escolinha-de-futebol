@@ -7,10 +7,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradiente2">
 
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradiente2">
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout"
@@ -18,15 +22,6 @@
             android:layout_height="wrap_content"
             tools:context=".presentation.home.HomeFragment">
 
-            <ProgressBar
-                android:id="@+id/progressPlayer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/falseToolbar"
@@ -67,6 +62,16 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ProgressBar
+                android:id="@+id/progressPlayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView

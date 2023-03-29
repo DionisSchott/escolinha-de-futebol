@@ -13,21 +13,23 @@ import java.util.*
 @Parcelize
 data class Player(
     var id: String = "",
+    val images: List<String> = arrayListOf(),
     val playerName: String = "",
-    val position: String = "",
-    val preferredFoot: String = "",
-    val responsibleName: String = "",
-    val responsibleType: String = "",
     val playersBirth: String = "",
     val genre: String = "",
-    val images: List<String> = arrayListOf(),
-    val healthNotes: String = "",
+    val responsibleName: String = "",
+    val responsibleType: String = "",
+    val contacts: String = "",
+    val position: String = "",
+
+    val preferredFoot: String = "",
     val skillsNotes: String = "",
+    val category: String = "",
+
     val weight: Float = 0f,
     val height: Float = 0f,
-    val contacts: String = "",
-    val category: String = "",
     val bloodType: String = "",
+    val healthNotes: String = "",
     @ServerTimestamp
     val insertionDate: Date = Date(),
 ) : Parcelable

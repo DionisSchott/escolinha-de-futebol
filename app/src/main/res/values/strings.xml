@@ -10,4 +10,21 @@
     <string name="obligatory_field">Campo Obrigatório</string>
     <string name="new_player">Novo Jogador</string>
     <string name="observation">observações</string>
+    <string name="age">idade</string>
+    <string name="weight">peso</string>
+    <string name="kg">Kg</string>
+    <string name="height">altura</string>
+    <string name="m">M</string>
+    <string name="genre">Sexo</string>
+    <string name="click_for_select">Selecionar</string>
+    <string name="indefined_position">Posição indefinida</string>
+    <string name="responsible">Responsável</string>
+    <string name="responsible_type">grau</string>
+    <string name="name">Nome</string>
+    <string name="contact">contato</string>
+    <string name="birth">Nascimento</string>
+    <string name="healt_notes">Informações de saúde:</string>
+    <string name="skills_notes">Informações de habilidades:</string>
+    <string name="type_here">digite aqui</string>
+    <string name="save">Salvar</string>
 </resources>
