@@ -49,7 +49,10 @@ class PlayersAdapter : RecyclerView.Adapter<PlayersAdapter.Holder>() {
             if (playerInfo.images.isNotEmpty()) {
                 Picasso.get().load(playerInfo.images[0]).into(binding.image)
             }
-            binding.tvName.text = playerInfo.playerName
+            val fullName = playerInfo.preferredName
+            val firstName = fullName.split(" ")[0]
+            binding.tvName.text = firstName
+
             binding.root.setOnClickListener {
                 onItemClicked.invoke(playerInfo)
             }

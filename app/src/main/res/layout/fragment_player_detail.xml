@@ -62,12 +62,13 @@
             android:layout_height="wrap_content">
 
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/playerNameEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@color/white"
+                android:clickable="false"
                 android:gravity="center"
                 android:hint="@string/player_name"
                 android:textColor="@color/black"
@@ -171,17 +172,38 @@
                 app:layout_constraintStart_toEndOf="@id/playerWeightEdt"
                 app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
 
+            <com.google.android.material.slider.Slider
+                android:id="@+id/slider"
+                style="@style/ShapeAppearance.Material3.Tooltip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:stepSize="0.1"
+                android:valueFrom="0.00"
+                android:valueTo="100.00"
+                android:visibility="gone"
+                app:haloRadius="20dp"
+                app:labelBehavior="visible"
+                app:layout_constraintBottom_toBottomOf="@id/playerWeightEdt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvWeight"
+                app:thumbRadius="16dp" />
+
             <TextView
                 android:id="@+id/tvGenreTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/genre"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/tvGenre"
-                app:layout_constraintStart_toStartOf="@id/responsibleNameEdt"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/playerWeightEdt" />
 
             <TextView
@@ -189,9 +211,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:hint="@string/click_for_select"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:visibility="visible"
                 app:layout_constraintCircleRadius="20dp"
@@ -200,22 +223,24 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvGenre"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:visibility="invisible"
                 app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
+                app:cardElevation="20dp"
                 app:layout_constraintBottom_toBottomOf="@id/tvGenre"
                 app:layout_constraintCircleRadius="20dp"
                 app:layout_constraintEnd_toEndOf="@id/tvGenre"
                 app:layout_constraintStart_toStartOf="@id/tvGenre"
                 app:layout_constraintTop_toTopOf="@id/tvGenre">
 
-                <Spinner
+                <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinnerGenre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -224,12 +249,11 @@
                 android:id="@+id/tvBloodTypeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
                 android:text="tipo sanguineo"
-                app:layout_constraintBottom_toBottomOf="@id/tvGenreTitle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvGenreTitle"
-                app:layout_constraintTop_toTopOf="@id/tvGenreTitle" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvGenre" />
 
             <TextView
                 android:id="@+id/tvBloodType"
@@ -237,44 +261,48 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/click_for_select"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="@id/tvBloodTypeTitle"
                 app:layout_constraintTop_toBottomOf="@id/tvBloodTypeTitle" />
 
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvBloodType"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/tvBloodType"
+                app:layout_constraintEnd_toEndOf="@id/tvBloodType"
+                app:layout_constraintStart_toStartOf="@id/tvBloodType"
+                app:layout_constraintTop_toTopOf="@id/tvBloodType">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinnerBlood"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="24sp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
             <TextView
                 android:id="@+id/tvPositionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="Posição"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvGenre" />
+                app:layout_constraintTop_toBottomOf="@+id/tvBloodType" />
 
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cvBloodType"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:visibility="invisible"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="5dp"
-                app:layout_constraintStart_toStartOf="@id/tvBloodTypeTitle"
-                app:layout_constraintTop_toBottomOf="@id/tvBloodTypeTitle">
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/spinnerBlood"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="24sp" />
-
-            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/tvPlayerPosition"
@@ -284,7 +312,7 @@
                 android:gravity="start"
                 android:hint="@string/indefined_position"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="@id/tvPositionTitle"
@@ -292,11 +320,13 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvPlayerPosition"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:visibility="invisible"
                 app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
+                app:cardElevation="20dp"
                 app:layout_constraintBottom_toBottomOf="@id/tvPlayerPosition"
                 app:layout_constraintCircleRadius="20dp"
                 app:layout_constraintEnd_toEndOf="@id/tvPlayerPosition"
@@ -305,42 +335,12 @@
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinnerPlayerPosition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
 
                     />
             </com.google.android.material.card.MaterialCardView>
-
-
-            <com.santalu.maskara.widget.MaskEditText
-                android:id="@+id/mskContact"
-                style="@style/Widget.AppCompat.TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="@color/white"
-                android:hint="(22) 99999-9999"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
-                app:mask="(__) _____-____"
-                app:maskCharacter="_"
-                app:maskStyle="completable" />
-
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/tvGenre"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                android:text="genero"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="24sp"-->
-            <!--                android:layout_marginStart="16dp"/>-->
 
 
             <TextView
@@ -353,7 +353,7 @@
                 android:text="@string/responsible"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/responsibleNameEdt"
+                app:layout_constraintBottom_toTopOf="@id/cvResponsibleName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvPlayerPosition" />
 
@@ -384,19 +384,48 @@
                 app:layout_constraintStart_toEndOf="@id/hyphen"
                 app:layout_constraintTop_toTopOf="@+id/hyphen" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/responsibleNameEdt"
-                android:layout_width="wrap_content"
+
+            <TextView
+                android:id="@+id/tvResponsibleName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="@color/white"
-                android:gravity="center"
-                android:hint="@string/name"
+                android:hint="@string/responsible_name"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvResponsible" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvResponsibleName"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvResponsible">
+
+                <EditText
+                    android:id="@+id/responsibleNameEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@color/white"
+                    android:gravity="start"
+                    android:hint="@string/name"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/tvContactTitle"
@@ -408,11 +437,59 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/responsibleNameEdt" />
+                app:layout_constraintTop_toBottomOf="@id/cvResponsibleName" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvContact"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="20dp"
+                android:background="@color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvContactTitle">
+
+                <com.santalu.maskara.widget.MaskEditText
+                    android:id="@+id/contactEdt"
+                    style="@style/Widget.AppCompat.TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@color/white"
+                    android:hint="(22) 99999-9999"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
+                    app:mask="(__) _____-____"
+                    app:maskCharacter="_"
+                    app:maskStyle="completable" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.santalu.maskara.widget.MaskEditText
+                android:id="@+id/tvContact"
+                style="@style/Widget.AppCompat.TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@color/white"
+                android:hint="(22) 99999-9999"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
+                app:mask="(__) _____-____"
+                app:maskCharacter="_" />
 
 
             <TextView
-                android:id="@+id/tvBirth"
+                android:id="@+id/tvBirthTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -420,25 +497,53 @@
                 android:text="@string/birth"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/playerBirthEdt"
+                app:layout_constraintBottom_toTopOf="@id/cvBirth"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/mskContact" />
+                app:layout_constraintTop_toBottomOf="@id/tvContact" />
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/playerBirthEdt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvBirth"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvBirthTitle">
+
+                <TextView
+                    android:id="@+id/playerBirthEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="start"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/click_for_select"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    />
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <TextView
+                android:id="@+id/tvPlayerBirth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="start"
                 android:hint="@string/click_for_select"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvBirth" />
-
+                app:layout_constraintStart_toStartOf="@id/cvBirth"
+                app:layout_constraintTop_toTopOf="@id/cvBirth"
+                app:layout_constraintBottom_toBottomOf="@id/cvBirth"
+                app:layout_constraintEnd_toEndOf="@id/cvBirth"/>
 
             <TextView
                 android:id="@+id/tvHealthNotes"
@@ -448,8 +553,9 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/healt_notes"
                 android:textColor="@color/black"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playerBirthEdt" />
+                app:layout_constraintTop_toBottomOf="@id/cvBirth" />
 
 
             <androidx.cardview.widget.CardView
@@ -486,6 +592,7 @@
                 android:layout_marginTop="24dp"
                 android:text="@string/skills_notes"
                 android:textColor="@color/black"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/healthNotesCv" />
 

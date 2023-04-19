@@ -21,6 +21,7 @@ import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentRegisterPlayerBinding
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.dynamic.SupportFragmentWrapper
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.android.awaitFrame
@@ -70,6 +71,7 @@ class RegisterPlayerFragment : Fragment() {
         setUp()
     }
 
+
     private fun setUp() {
         setUpSpinner()
         loadImage()
@@ -91,7 +93,7 @@ class RegisterPlayerFragment : Fragment() {
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parentView: AdapterView<*>?,
-                    selectedItemview: View,
+                    selectedItemview: View?,
                     position: Int,
                     id: Long,
                 ) {

@@ -1,12 +1,16 @@
 package com.dionis.escolinhajdb.data.repository
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
+import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.util.FireStoreCollection
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -39,6 +43,69 @@ class AuthRepositoryImpl(
             }
     }
 
+    override fun getlists(result: (UiState<Lists>) -> Unit) {
+
+        database.collection(FireStoreCollection.LISTS).document("1UT4NrbDvK1cZkwAb3Ex")
+            .get()
+            .addOnCompleteListener {
+                val lists = it.result.toObject(Lists::class.java)
+
+                result.invoke(
+                    UiState.Success(lists!!)
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    UiState.Failure(it.localizedMessage)
+                )
+            }
+
+    }
+
+    override fun updateLists(newFunction: String, result: (UiState<String>) -> Unit) {
+        database.collection(FireStoreCollection.LISTS).document("1UT4NrbDvK1cZkwAb3Ex")
+            .update("function", FieldValue.arrayUnion(newFunction) )
+            .addOnSuccessListener {
+                result.invoke(
+                    UiState.Success("feito")
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    UiState.Failure(it.localizedMessage)
+                )
+            }
+    }
+
+    fun removeListItem(itemId: String) {
+        database.collection("lists").document("1UT4NrbDvK1cZkwAb3Ex")
+
+            .update("position", FieldValue.arrayRemove(itemId))
+            .addOnSuccessListener {
+                Log.d(TAG, "Item removed from list")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error removing item from list", e)
+            }
+    }
+
+    override fun updateUserInfo(coach: Coach, result: (UiState<String>) -> Unit) {
+        val document = database.collection(FireStoreCollection.COACH).document(coach.id)
+        document
+            .set(coach)
+            .addOnSuccessListener {
+                result.invoke(
+                    UiState.Success("User has been update successfully")
+                )
+            }
+            .addOnFailureListener {
+                result.invoke(
+                    UiState.Failure(
+                        it.localizedMessage
+                    )
+                )
+            }
+    }
 
     override fun recoveryCoach(id: String, result: (UiState<Coach>) -> Unit) {
         database.collection(FireStoreCollection.COACH).document(id)
@@ -128,8 +195,6 @@ class AuthRepositoryImpl(
 
     }
 
-
-
     override fun login(
         email: String,
         password: String,
@@ -148,24 +213,6 @@ class AuthRepositoryImpl(
                 }
             }.addOnFailureListener {
                 result.invoke(UiState.Failure("Authentication failed, Check email and password"))
-            }
-    }
-
-    override fun updateUserInfo(coach: Coach, result: (UiState<String>) -> Unit) {
-        val document = database.collection(FireStoreCollection.COACH).document(coach.id)
-        document
-            .set(coach)
-            .addOnSuccessListener {
-                result.invoke(
-                    UiState.Success("User has been update successfully")
-                )
-            }
-            .addOnFailureListener {
-                result.invoke(
-                    UiState.Failure(
-                        it.localizedMessage
-                    )
-                )
             }
     }
 

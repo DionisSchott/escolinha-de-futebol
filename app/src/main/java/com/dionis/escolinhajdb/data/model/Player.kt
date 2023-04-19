@@ -15,6 +15,7 @@ data class Player(
     var id: String = "",
     val images: List<String> = arrayListOf(),
     val playerName: String = "",
+    val preferredName: String = "",
     val playersBirth: String = "",
     val genre: String = "",
     val responsibleName: String = "",

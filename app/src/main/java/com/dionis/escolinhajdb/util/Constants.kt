@@ -3,6 +3,7 @@ package com.dionis.escolinhajdb.util
 object FireStoreCollection{
     val PLAYER = "players"
     val COACH = "coach"
+    val LISTS = "lists"
 }
 
 object FirebaseStorageConstants {

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
+import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -16,6 +17,12 @@ class ViewModel @Inject constructor(
 
     private val _coach = MutableLiveData<UiState<List<Coach>>>()
     val coach: LiveData<UiState<List<Coach>>> get() = _coach
+
+    private val _lists = MutableLiveData<UiState<Lists>>()
+    val lists: LiveData<UiState<Lists>> get() = _lists
+
+    private val _updateLists = MutableLiveData<UiState<String>>()
+    val updateLists: LiveData<UiState<String>> get() = _updateLists
 
     private val _updateInfo = MutableLiveData<UiState<String>>()
     val updateInfo: LiveData<UiState<String>> get() = _updateInfo
@@ -45,6 +52,15 @@ class ViewModel @Inject constructor(
         authRepository.updateUserInfo(coach) { _updateInfo.value = it }
     }
 
+    fun getLists() {
+        _lists.value = UiState.Loading
+        authRepository.getlists { _lists.value = it }
+    }
+
+    fun updateLists(newFunction: String) {
+        _updateLists.value = UiState.Loading
+        authRepository.updateLists(newFunction) {_updateLists.value = it}
+    }
 
     fun register(
         email: String,

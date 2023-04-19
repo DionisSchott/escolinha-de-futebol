@@ -45,7 +45,6 @@ class CoachAdapter : RecyclerView.Adapter<CoachAdapter.Holder>() {
 
         fun bind(info: Coach) {
             binding.tvName.text = info.name
-            binding.tvCategory.visibility = View.GONE
 
             binding.root.setOnClickListener {
                 onItemClicked.invoke(info)

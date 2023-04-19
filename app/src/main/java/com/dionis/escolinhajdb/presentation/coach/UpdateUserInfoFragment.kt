@@ -12,11 +12,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
+import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.databinding.FragmentUpdateUserInfoBinding
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
 import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.android.awaitFrame
 import java.util.*
 
 @AndroidEntryPoint
@@ -26,8 +28,12 @@ class UpdateUserInfoFragment : Fragment() {
     private lateinit var coach: Coach
     private val viewModel: ViewModel by viewModels()
     private val myCalendar = Calendar.getInstance()
-    private val functionList = listOf("Presidente", "Treinador(a)", "Auxiliar")
+
+    // private val functionList = listOf("Presidente", "Treinador(a)", "Auxiliar")
+    private lateinit var position: List<String>
+    private var functionList = listOf<String>()
     private var function = ""
+    private lateinit var lists: Lists
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,10 +47,12 @@ class UpdateUserInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         coach = arguments?.getParcelable(COACH)!!
+        viewModel.getLists()
         setData()
         setUpClicks()
         endIconClick()
         setDatePicker()
+        setObserver()
     }
 
     private fun setData() = binding.apply {
@@ -55,6 +63,36 @@ class UpdateUserInfoFragment : Fragment() {
         edtBirth.setText(coach.birth)
     }
 
+    private fun setObserver() {
+
+        viewModel.lists.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Failure -> {
+                }
+                is UiState.Loading -> {
+                }
+                is UiState.Success -> {
+                    lists = it.data
+                    functionList = lists.function
+                }
+            }
+        }
+
+        viewModel.updateLists.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Success -> {
+
+                }
+                is UiState.Failure -> {
+                    toast(it.error)
+                }
+                is UiState.Loading -> {
+
+                }
+            }
+        }
+    }
+
 
     private fun getCoachObject(): Coach {
 
@@ -63,7 +101,7 @@ class UpdateUserInfoFragment : Fragment() {
             name = binding.edtUserName.text.toString(),
             email = coach.email,
             photo = coach.photo,
-            function = coach.function,
+            function = binding.tvFunction.text.toString(),
             subFunction = binding.edtSubFunction.text.toString(),
             birth = binding.edtBirth.text.toString(),
             genre = coach.genre,
@@ -72,10 +110,13 @@ class UpdateUserInfoFragment : Fragment() {
         )
     }
 
+
+
     private fun setUpClicks() {
         binding.btnDone.setOnClickListener {
             observer()
             updateUserInfo()
+            updateLists()
 
         }
     }
@@ -98,8 +139,14 @@ class UpdateUserInfoFragment : Fragment() {
         viewModel.updateUserInfo(getCoachObject())
     }
 
+    private fun updateLists() {
+        viewModel.updateLists(binding.tvFunction.text.toString())
+    }
+
+
 
     private fun coachFunctionSpinner() {
+
 
         binding.edtFunctionLayout.visibility = View.INVISIBLE
         binding.cvFunctionSpinner.visibility = View.VISIBLE
@@ -109,7 +156,7 @@ class UpdateUserInfoFragment : Fragment() {
         val adapter: ArrayAdapter<String> = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            functionList.map { it })
+            this.functionList.map { it })
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.edtFunctionSpinner.adapter = adapter
         val spinnerPosition = adapter.getPosition(binding.tvFunction.text.toString())

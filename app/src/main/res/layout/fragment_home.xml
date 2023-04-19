@@ -5,15 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradiente2">
-
+    >
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradiente2">
-
+        android:background="@color/jdb_ultra_light">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,8 +57,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ProgressBar
@@ -103,10 +99,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="editar"
-                app:layout_constraintTop_toTopOf="@id/tvWelcomeName"
-                app:layout_constraintStart_toEndOf="@id/tvWelcomeName"
+                android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="@id/tvWelcomeName"
-                android:textSize="16dp"/>
+                app:layout_constraintStart_toEndOf="@id/tvWelcomeName"
+                app:layout_constraintTop_toTopOf="@id/tvWelcomeName" />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -141,13 +137,14 @@
                 android:id="@+id/btnSeeAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:background="#00000000"
                 android:text="ver todos"
                 android:textAllCaps="false"
                 android:textColor="@color/blue"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@id/tvPlayers"
-                app:layout_constraintEnd_toEndOf="@id/recyclerView3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tvPlayers" />
 
 
@@ -163,24 +160,23 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvPlayers"
-                app:spanCount="3"
-                tools:itemCount="2"
+                tools:itemCount="6"
                 tools:listitem="@layout/item_player" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView3"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recyclerViewPlayer"
-                tools:listitem="@layout/item_player" />
+            <!--            <androidx.recyclerview.widget.RecyclerView-->
+            <!--                android:id="@+id/recyclerView3"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:layout_marginStart="16dp"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:layout_marginEnd="16dp"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/recyclerViewPlayer"-->
+            <!--                tools:listitem="@layout/item_player" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -188,15 +184,19 @@
 
     </ScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:backgroundTint="@color/jdb"
-        android:contentDescription="addPlayer"
-        android:onClick="showAlertDialog"
-        android:src="@drawable/person_"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/floatButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@color/jdb"-->
+<!--        android:contentDescription="addPlayer"-->
+<!--        android:onClick="showAlertDialog"-->
+<!--        android:src="@drawable/ic_baseline_add_24"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        />-->
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

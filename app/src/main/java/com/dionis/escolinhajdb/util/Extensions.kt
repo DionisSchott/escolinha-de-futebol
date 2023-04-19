@@ -1,6 +1,11 @@
 package com.dionis.escolinhajdb.util
 
+import android.content.Context
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
@@ -21,7 +26,7 @@ object Extensions {
     fun Fragment.navTo(@IdRes dest: Int, args: Bundle) = findNavController().navigate(dest, args)
     fun Fragment.navTo(@IdRes dest: Int) = findNavController().navigate(dest)
 
-    fun Fragment.datePicker(birth: String, editText: TextInputEditText) {
+    fun Fragment.datePicker(birth: String, editText: TextView) {
 
 
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -43,6 +48,14 @@ object Extensions {
             editText.setText(dateFormat.format(Date(it)))
         }
     }
+
+    fun Fragment.openKeyboard(view: View) {
+
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+
+    }
+
 
 
 
