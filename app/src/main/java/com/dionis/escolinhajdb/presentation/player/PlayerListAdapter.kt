@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.ItemPlayer2Binding
+import com.dionis.escolinhajdb.databinding.ItemPlayerBinding
 import com.squareup.picasso.Picasso
 
 class PlayersListAdapter : RecyclerView.Adapter<PlayersListAdapter.Holder>() {
@@ -23,6 +24,7 @@ class PlayersListAdapter : RecyclerView.Adapter<PlayersListAdapter.Holder>() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(list: List<Player>) {
+        playerList.clear()
         playerList.addAll(list)
         notifyDataSetChanged()
     }
@@ -47,15 +49,11 @@ class PlayersListAdapter : RecyclerView.Adapter<PlayersListAdapter.Holder>() {
             this.playerInfo = information
 
             if (playerInfo.images.isNotEmpty()) {
-                Picasso.get().load(playerInfo.images[0]).into(binding.imgView)
+                Picasso.get().load(playerInfo.images[0]).into(binding.image)
             }
 
-            binding.tvName.text = playerInfo.playerName
-            binding.tvAge.text = playerInfo.playersBirth
-            binding.tvWeight.text = playerInfo.weight.toString() + "Kg"
-            (playerInfo.height.toString() + "M").also { binding.tvHeight.text = it }
-            binding.tvPosition.text = playerInfo.position
-            binding.tvCategory.text = playerInfo.category
+            binding.tvName.text = playerInfo.preferredName
+
             binding.root.setOnClickListener {
                 onItemClicked.invoke(playerInfo)
             }

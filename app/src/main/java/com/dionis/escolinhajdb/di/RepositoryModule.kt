@@ -24,10 +24,11 @@ object RepositoryModule {
     fun provideAuthRepository(
         database: FirebaseFirestore,
         auth: FirebaseAuth,
+        storageReference: StorageReference
 //        appPreferences: SharedPreferences,
 //        gson: Gson
     ): AuthRepository {
-        return AuthRepositoryImpl(auth, database//,appPreferences,gson
+        return AuthRepositoryImpl(auth, database, storageReference//,appPreferences,gson
         )
     }
 

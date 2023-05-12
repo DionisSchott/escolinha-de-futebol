@@ -45,10 +45,15 @@ class DialogCoachDetailFragment() : DialogFragment() {
 
     }
 
-    private fun setData() {
-        binding.imgExit.setOnClickListener { dismiss() }
-        binding.tvCoachName.setText(coach.name)
-      //  binding.tvCoachCategory.text = coach.subFunction
+    private fun setData() = binding.apply {
+        imgExit.setOnClickListener { dismiss() }
+        coach.let {
+            tvCoachName.setText(it.name)
+            tvCoachFunction.text = it.function
+            tvCoachSubFunction.text = it.subFunction
+            mskContact.setText(it.contact)
+            tvMemberSince.text = it.memberSince
+        }
     }
 
     companion object {

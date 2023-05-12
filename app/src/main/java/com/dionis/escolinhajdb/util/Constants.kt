@@ -11,6 +11,15 @@ object FirebaseStorageConstants {
     val NOTE_IMAGES = "note"
 }
 
+object Genre {
+    val GENRE = listOf<String>("Masculino", "Feminino")
+
+}
+
+object ListSelector {
+    val KEY = "key"
+}
+
 //
 //object SharedPrefConstants {
 //    val LOCAL_SHARED_PREF = "local_shared_pref"

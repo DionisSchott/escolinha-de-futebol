@@ -43,17 +43,15 @@ class UserManager(val context: Context) {
         )
     }
 
-    suspend fun readUserUid() : Coach {
+    suspend fun readUserUid() : String {
         val uid = context.dataUser.data.first()
-
-        return Coach(
-            id = uid[USER_UID] ?: ""
+        return (
+            uid[USER_UID] ?: ""
         )
-
        }
 
 
-    suspend fun saveUseruid(uid: String) {
+    suspend fun saveUserUid(uid: String) {
         context.dataUser.edit {
             it[USER_UID] = uid
         }

@@ -1,9 +1,11 @@
 package com.dionis.escolinhajdb.data.repository
 
+import android.net.Uri
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.data.model.Player
+import com.google.firebase.auth.FirebaseUser
 
 interface AuthRepository {
 
@@ -17,4 +19,8 @@ interface AuthRepository {
 
     fun getlists(result: (UiState<Lists>) -> Unit)
     fun updateLists(newFunction: String, result: (UiState<String>) -> Unit)
+
+    suspend fun uploadImage(fileUri: Uri, onResult: (UiState<Uri>) -> Unit)
+
+    suspend fun changePassword(user: FirebaseUser?, newPassword: String, onResult: (UiState<String>) -> Unit)
 }

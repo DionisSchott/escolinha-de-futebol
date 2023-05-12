@@ -7,21 +7,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
-import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.databinding.FragmentLoginBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
-import com.dionis.escolinhajdb.util.Extensions.navTo
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -51,7 +47,6 @@ class LoginFragment : Fragment() {
 
     private fun setUp() {
         readDataUser()
-        openRegisterScreen()
         setUpClicks()
     }
 
@@ -61,13 +56,12 @@ class LoginFragment : Fragment() {
             validate(it)
             observer()
         }
+//        binding.btnRegister.setOnClickListener {
+//            findNavController().navigate(R.id.action_loginFragment_to_registerCoachFragment3)
+//        }
     }
 
-    private fun openRegisterScreen() {
-        binding.btnRegister.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-        }
-    }
+
 
     private fun openHomeFragment() {
         val intent = Intent(requireContext(), HomeActivity::class.java)
@@ -110,7 +104,7 @@ class LoginFragment : Fragment() {
                     openHomeFragment()
                     saveDataUser()
                     lifecycleScope.launch {
-                        userManager.saveUseruid(it.data)
+                        userManager.saveUserUid(it.data)
                     }
                 }
             }

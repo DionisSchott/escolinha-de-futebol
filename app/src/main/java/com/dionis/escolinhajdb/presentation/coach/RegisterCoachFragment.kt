@@ -1,25 +1,59 @@
 package com.dionis.escolinhajdb.presentation.coach
 
+import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.databinding.FragmentRegisterBinding
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
+import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.util.Extensions.datePicker
+import com.dionis.escolinhajdb.util.Extensions.loadImage
 import com.dionis.escolinhajdb.util.Extensions.toast
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class RegisterCoachFragment : Fragment() {
 
+    val TAG: String = "UserUpdateFragment"
     private lateinit var binding: FragmentRegisterBinding
     private val viewModel: ViewModel by viewModels()
+    private val myCalendar = Calendar.getInstance()
 
+    var imageUri: Uri? = null
+    var image: String = ""
+
+    private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        val resultCode = result.resultCode
+        val data = result.data
+        if (resultCode == Activity.RESULT_OK) {
+            imageUri = data?.data!!
+            Picasso.get().load(imageUri).into(binding.coachImg)
+
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+
+            toast(ImagePicker.getError(data))
+        } else {
+
+            Log.e(TAG, "Task Cancelled")
+        }
+    }
 
 
     override fun onCreateView(
@@ -36,43 +70,51 @@ class RegisterCoachFragment : Fragment() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as HomeActivity).showBottomNavigation(true)
+    }
+
     private fun setUp() {
+        setDatePicker()
         setUpClicks()
+        (activity as HomeActivity).showBottomNavigation(false)
     }
 
-    private fun setUpClicks() {
-
-        register()
-
+    private fun setDatePicker() {
+        datePicker("", binding.tvBirth)
     }
 
+    private fun setUpClicks() = binding.apply {
 
-
+        coachImg.setOnClickListener { loadImage() }
+        btnBack.setOnClickListener { findNavController().popBackStack() }
+        btnDone.setOnClickListener { uploadImage() }
+    }
 
 
     private fun register() {
-        binding.btnDone.setOnClickListener {
- //           validate(it)
-            observer()
-            if (validate()){
-                viewModel.register(
-                    email = binding.edtEmail.text.toString(),
-                    password = binding.edtPassword.text.toString(),
-                    coach = getCoachObj()
-                )
-                findNavController().popBackStack()
-            }
+
+        observer()
+        if (validate()) {
+            viewModel.register(
+                email = binding.edtEmail.text.toString(),
+                password = binding.edtPassword.text.toString(),
+                coach = getCoachObj()
+            )
+            findNavController().popBackStack()
         }
+
     }
 
     private fun observer() {
         viewModel.register.observe(viewLifecycleOwner) { state ->
-            when(state){
+            when (state) {
                 is UiState.Loading -> {
                     binding.btnDone.setText("")
                 }
                 is UiState.Failure -> {
-                    binding.btnDone.setText("Register")
+                    binding.btnDone.setText("Erro")
                     toast(state.error)
                 }
                 is UiState.Success -> {
@@ -84,13 +126,23 @@ class RegisterCoachFragment : Fragment() {
         }
     }
 
-
     private fun getCoachObj(): Coach {
+
+        val user = FirebaseAuth.getInstance().currentUser?.uid
+
         return Coach(
             id = "",
+            photo = image,
             name = binding.edtUserName.text.toString(),
-            subFunction = binding.edtFunction.text.toString(),
             email = binding.edtEmail.text.toString(),
+            function = binding.edtFunction.text.toString(),
+            subFunction = binding.edtCategory.text.toString(),
+            birth = binding.tvBirth.text.toString(),
+            addedBy = user!!,
+            memberSince = myCalendar.time.toString()
+
+
+
         )
     }
 
@@ -117,23 +169,45 @@ class RegisterCoachFragment : Fragment() {
                 toast("e-mail inválido")
             }
         }
-        if (binding.edtPassword.text.isNullOrEmpty()){
+        if (binding.edtPassword.text.isNullOrEmpty()) {
             isValid = false
             toast("digite uma senha")
-        }else{
-            if (binding.edtPassword.text.toString().length < 8){
+        } else {
+            if (binding.edtPassword.text.toString().length < 8) {
                 isValid = false
                 toast("senha curta")
             }
         }
-
         return isValid
-
 
     }
 
+    private fun loadImage () {
+        loadImage(startForProfileImageResult)
+    }
 
+    private fun uploadImage() {
+        if (imageUri != null) {
+            viewModel.uploadImage(imageUri!!) {
+                when (it) {
+                    is UiState.Loading -> {
+                    }
+                    is UiState.Failure -> {
+                        toast(it.error)
+                    }
+                    is UiState.Success -> {
+                        image = it.data.toString()
+                        register()
+                        toast(getString(R.string.successfully_added))
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+        } else {
+            register()
+        }
 
+    }
 
 
     private fun String.isValidEmail() =

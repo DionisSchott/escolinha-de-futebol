@@ -7,8 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="jdb">#FF0000</color>
-    <color name="jdb_light">#FF3737</color>
+    <color name="jdb">#7C0D0D</color>
+    <color name="jdb_light">#7A2222</color>
     <color name="jdb_ultra_light">#FF7A7A</color>
     <color name="jdb_transparent">#33FF0000</color>
     <color name="blue">#002AFF</color>

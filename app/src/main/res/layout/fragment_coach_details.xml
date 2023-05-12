@@ -35,24 +35,12 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_margin="20dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/person_"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/imgGenre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="m"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textSize="36sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/imgCoach"
-                app:layout_constraintStart_toStartOf="@id/imgCoach" />
-
 
             <EditText
                 android:id="@+id/tvCoachName"
@@ -119,19 +107,30 @@
                 app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
                 app:mask="(__) _____-____"
                 app:maskCharacter="_"
-                app:maskStyle="completable" />
+                app:maskStyle="normal" />
 
             <TextView
+                android:id="@+id/tvMemberSinceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/member_since"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@id/mskContact"
+                app:layout_constraintTop_toBottomOf="@id/mskContact" />
+
+            <TextView
+                android:id="@+id/tvMemberSince"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
                 android:hint="membro desde:"
                 android:textSize="24sp"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/mskContact"
-                app:layout_constraintTop_toBottomOf="@id/mskContact" />
+                app:layout_constraintTop_toBottomOf="@id/tvMemberSinceTitle" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

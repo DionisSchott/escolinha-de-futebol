@@ -15,6 +15,7 @@ data class Coach(
     val genre: String = "",
     val contact: String = "",
     val memberSince: String = "",
+    val addedBy: String = "",
 
     val email: String = "",
 

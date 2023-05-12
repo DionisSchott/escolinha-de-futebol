@@ -5,35 +5,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
-import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentHomeBinding
 import com.dionis.escolinhajdb.presentation.auth.LoginActivity
-import com.dionis.escolinhajdb.presentation.coach.CoachAdapter
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
-import com.dionis.escolinhajdb.presentation.coach.DialogCoachDetailFragment
+import com.dionis.escolinhajdb.presentation.coach.CoachAdapter
 import com.dionis.escolinhajdb.presentation.coach.DialogCoachDetailFragment.Companion.COACH
 import com.dionis.escolinhajdb.presentation.player.PlayerDetailFragment.Companion.PLAYER
 import com.dionis.escolinhajdb.presentation.player.PlayerViewModel
 import com.dionis.escolinhajdb.presentation.player.PlayersAdapter
-import com.dionis.escolinhajdb.util.Extensions.toast
-import com.dionis.escolinhajdb.util.FireStoreCollection
+import com.dionis.escolinhajdb.util.Extensions.firstName
 import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -42,9 +42,10 @@ class HomeFragment : Fragment() {
     private val coachViewModel: ViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
     private lateinit var playersAdapter: PlayersAdapter
-//    private lateinit var coachAdapter: CoachAdapter
+    private lateinit var coachAdapter: CoachAdapter
     private lateinit var userManager: UserManager
     private lateinit var coach: Coach
+    private var userUid: String = ""
 
 
     override fun onCreateView(
@@ -61,32 +62,32 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userManager = UserManager(requireContext())
-        viewModel.getPlayers()
+        viewModel.getPlayers("")
         coachViewModel.getCoach()
+
         setUp()
     }
 
+
     private fun setUp() {
-        recoveryCoach()
-        logout()
         setUpClicks()
         setUpAdapter()
         setObservers()
+        setOnRefreshListener()
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(50)
+            recoveryCoach()
+        }
 
     }
 
 
     private fun setUpClicks() {
-//        binding.floatButton.setOnClickListener {
-//            showAlertDialog()
-//        }
-        binding.btnSeeAll.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_playerListFragment)
-        }
         binding.userEdit.setOnClickListener {
             val args = Bundle().apply { putParcelable(COACH, coach) }
             findNavController().navigate(R.id.action_homeFragment_to_updateUserInfoFragment, args)
         }
+        binding.btLogout.setOnClickListener { logout() }
     }
 
     private fun setObservers() {
@@ -95,13 +96,14 @@ class HomeFragment : Fragment() {
                 is UiState.Failure -> {
                 }
                 is UiState.Loading -> {
-                    binding.progressPlayer.visibility = View.VISIBLE
+                    binding.progressBarPlayer.visibility = View.VISIBLE
 //                    binding.recyclerView3.visibility = View.INVISIBLE
                 }
                 is UiState.Success -> {
-                    binding.progressPlayer.visibility = View.GONE
+                    binding.progressBarPlayer.visibility = View.GONE
 //                    binding.recyclerView3.visibility = View.VISIBLE
                     playersAdapter.updateList(it.data)
+
                 }
             }
         }
@@ -123,39 +125,39 @@ class HomeFragment : Fragment() {
                 is UiState.Failure -> {
                 }
                 is UiState.Loading -> {
+                    binding.progressBarCoach.visibility = View.VISIBLE
+                    binding.coachName.visibility = View.INVISIBLE
                 }
                 is UiState.Success -> {
+                    binding.progressBarCoach.visibility = View.GONE
+                    binding.coachName.visibility = View.VISIBLE
+
                     coach = it.data
-                    val fullName = coach.name
-                    val firstName = fullName.split(" ")[0]
-                    binding.tvWelcomeName.text = firstName
+                    binding.tvWelcomeName.text = firstName(coach.name)
+                    binding.coachName.text = firstName(coach.name)
+                    if (it.data.photo.isNotEmpty()) {
+                        Picasso.get().load(it.data.photo).into(binding.coachImg)
+//            }
+                    }
                 }
             }
+//        coachViewModel.recoveryCoach.observe(viewLifecycleOwner) {
+//            coach = it
+//            val fullName = coach.name
+//            val firstName = fullName.split(" ")[0]
+//            binding.tvWelcomeName.text = firstName
+//            binding.coachName.text = firstName
+//            if (it.photo.isNotEmpty()) {
+//                Picasso.get().load(it.photo).into(binding.coachImg)
+//            }
+
         }
     }
-
-
-    private fun recoveryCoach() {
-        val uid = FirebaseAuth.getInstance().uid!!
-        coachViewModel.recoveryCoach(uid)
-    }
-
-    private fun logout() {
-        binding.btLogout.setOnClickListener {
-
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(requireContext(), LoginActivity::class.java)
-            startActivity(intent)
-            activity?.finish()
-        }
-    }
-
 
     private fun setUpAdapter() {
 
         playersAdapter = PlayersAdapter()
 
-//        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val layoutManager = GridLayoutManager(requireContext(), 2, LinearLayoutManager.HORIZONTAL, false)
 
         val recyclerView = binding.recyclerViewPlayer
@@ -172,13 +174,12 @@ class HomeFragment : Fragment() {
                 .setNegativeButton("Sim")
                 { dialog, which ->
                     deletePlayer(it)
+
                 }
                 .setNeutralButton("cancelar") { dialog, wich ->
                 }
                 .show()
         }
-
-
 
 
 //        val snapHelper = LinearSnapHelper()
@@ -210,6 +211,42 @@ class HomeFragment : Fragment() {
 //        binding.recyclerViewCoach.adapter = coachAdapter
     }
 
+    private fun setOnRefreshListener() {
+        val refresh = binding.refreshListener
+
+        refresh.setOnRefreshListener {
+            viewModel.getPlayers("")
+            coachViewModel.getCoach()
+            setUpAdapter()
+            refresh.isRefreshing = false
+        }
+
+    }
+
+    private fun recoveryCoach() {
+        lifecycleScope.launch {
+            userUid = userManager.readUserUid()
+        }
+        if (userUid.isNotEmpty()) {
+            coachViewModel.recoveryCoach(userUid)
+        } else {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser != null) {
+                coachViewModel.recoveryCoach(currentUser.uid)
+            }
+        }
+    }
+
+    private fun logout() {
+        FirebaseAuth.getInstance().signOut()
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        startActivity(intent)
+        activity?.finish()
+        lifecycleScope.launch {
+            userManager.clearDataUser()
+        }
+    }
+
     private fun navigateFromPlayerDetail(player: Player) {
 
         val args = Bundle().apply { putParcelable(PLAYER, player) }
@@ -218,23 +255,10 @@ class HomeFragment : Fragment() {
 
     private fun deletePlayer(player: Player) {
         viewModel.deletePlayer(player)
+        viewModel.getPlayers("")
+        coachViewModel.getCoach()
+        setUpAdapter()
     }
 
-//    private fun showAlertDialog() {
-//
-//        MaterialAlertDialogBuilder(requireContext())
-//            .setTitle("adicionar")
-//            .setIcon(R.drawable.person_)
-//            .setNeutralButton("cancelar") { dialog, which -> toast("oi") }
-//            .setNegativeButton("novo aluno")
-//            { dialog, which ->
-//                findNavController().navigate(R.id.action_homeFragment_to_registerPlayerFragment)
-//            }
-//            .setPositiveButton("novo treinador") { dialog, wich ->
-//                findNavController().navigate(R.id.action_homeFragment_to_hilt_RegisterFragment)
-//            }
-//
-//            .show()
-//
-//    }
+
 }

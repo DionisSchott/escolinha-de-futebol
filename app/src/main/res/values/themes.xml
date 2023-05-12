@@ -6,9 +6,9 @@
         <item name="colorPrimaryVariant">@color/jdb_light</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/jdb_light</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/jdb_light</item>
+        <item name="colorSecondaryVariant">@color/jdb_ultra_light</item>
+        <item name="colorOnSecondary">#000000</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
@@ -16,6 +16,22 @@
 
     <style name="DatePickerBackGround.Jdb" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/jdb</item>
+    </style>
+
+
+    <style name="MaterialAlertDialogBuilderBackGround.Jdb" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/jdb</item>
+    </style>
+
+
+    <style name="AlertDialogStyle" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:textColor">@color/jdb</item>
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AlertDialogButton</item>
+    </style>
+
+    <style name="AlertDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/jdb</item>
     </style>
 
 

@@ -37,7 +37,7 @@ object FirebaseModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseStroageInstance(): StorageReference {
+    fun provideFirebaseStorageInstance(): StorageReference {
         return FirebaseStorage.getInstance().getReference(FirebaseStorageConstants.ROOT_DIRECTORY)
     }
 

@@ -1,6 +1,8 @@
 package com.dionis.escolinhajdb.data.repository
 
+import android.content.ContentValues.TAG
 import android.net.Uri
+import android.util.Log
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.util.FireStoreCollection
@@ -8,12 +10,14 @@ import com.dionis.escolinhajdb.util.FireStoreCollection.PLAYER
 import com.google.firebase.FirebaseException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class PlayerRepositoryImpl(
     val dataBase: FirebaseFirestore,
@@ -69,10 +73,15 @@ class PlayerRepositoryImpl(
             }
     }
 
-    override fun getPlayer(result: (UiState<List<Player>>) -> Unit) {
-        dataBase.collection(FireStoreCollection.PLAYER)
-            .orderBy("insertionDate", Query.Direction.DESCENDING)
-            .get()
+    override fun getPlayer(filter: String, result: (UiState<List<Player>>) -> Unit) {
+        val query = dataBase.collection(PLAYER)
+
+//            .whereEqualTo("category", "sub10")
+            .orderBy("playerName", Query.Direction.DESCENDING)
+        //.startAt(filter)
+        // .endAt(filter)
+
+        query.get()
             .addOnSuccessListener {
                 val players = arrayListOf<Player>()
                 for (document in it) {
@@ -90,10 +99,7 @@ class PlayerRepositoryImpl(
             }
     }
 
-    override suspend fun uploadImage(
-        fileUri: List<Uri>,
-        onResult: (UiState<List<Uri>>) -> Unit,
-    ) {
+    override suspend fun uploadImage(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit) {
         try {
             val uri: List<Uri> = withContext(Dispatchers.IO) {
                 fileUri.map {
@@ -134,6 +140,40 @@ class PlayerRepositoryImpl(
         }
     }
 
+    override suspend fun updateImage(imageUrl: String, fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
+        try {
+            val uri: Uri = withContext(Dispatchers.IO) {
+                storageReference.child(PLAYER).child(fileUri.lastPathSegment ?: "${System.currentTimeMillis()}")
+                    .putFile(fileUri)
+                    .await()
+                    .storage
+                    .downloadUrl
+                    .await()
+            }
+            onResult.invoke(UiState.Success(uri))
+        } catch (e: FirebaseException) {
+            onResult.invoke(UiState.Failure(e.message))
+        } catch (e: Exception) {
+            onResult.invoke(UiState.Failure(e.message))
+        }
+
+        deleteImage(imageUrl)
+
+    }
+
+
+    override suspend fun deleteImage(imageUrl: String) {
+        if (imageUrl.isNotEmpty()) {
+            val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
+            storageRef.delete()
+                .addOnSuccessListener {
+
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "Erro")
+                }
+        }
+    }
 
     //testando
     override suspend fun uploadSingleFile2(fileUri: Uri, onResult: (UiState<String>) -> Unit) {

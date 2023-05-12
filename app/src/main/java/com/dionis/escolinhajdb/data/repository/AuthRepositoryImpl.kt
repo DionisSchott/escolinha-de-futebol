@@ -1,22 +1,28 @@
 package com.dionis.escolinhajdb.data.repository
 
 import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.util.FireStoreCollection
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.dionis.escolinhajdb.util.UserManager
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.*
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.auth.User
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class AuthRepositoryImpl(
     val auth: FirebaseAuth,
     val database: FirebaseFirestore,
+    var storageReference: StorageReference,
 //    val appPreferences: SharedPreferences,
 //    val gson: Gson
 
@@ -62,9 +68,11 @@ class AuthRepositoryImpl(
 
     }
 
-    override fun updateLists(newFunction: String, result: (UiState<String>) -> Unit) {
-        database.collection(FireStoreCollection.LISTS).document("1UT4NrbDvK1cZkwAb3Ex")
-            .update("function", FieldValue.arrayUnion(newFunction) )
+
+    //função para adicionar item à lista, como por exemplo lsita de posição de jogador. falta terminar.
+    override fun updateLists(newItem: String, result: (UiState<String>) -> Unit) {
+        database.collection(FireStoreCollection.LISTS).document("")
+            .update("function", FieldValue.arrayUnion(newItem))
             .addOnSuccessListener {
                 result.invoke(
                     UiState.Success("feito")
@@ -77,6 +85,7 @@ class AuthRepositoryImpl(
             }
     }
 
+    //função para remover item da lista, como por exemplo lsita de posição de jogador. falta terminar.
     fun removeListItem(itemId: String) {
         database.collection("lists").document("1UT4NrbDvK1cZkwAb3Ex")
 
@@ -155,15 +164,23 @@ class AuthRepositoryImpl(
                     updateUserInfo(coach) { state ->
                         when (state) {
                             is UiState.Success -> {
-                                storeSession(id = it.result.user?.uid ?: "") {
-                                    if (it == null) {
-                                        result.invoke(UiState.Failure("User register successfully but session failed to store"))
-                                    } else {
-                                        result.invoke(
-                                            UiState.Success("User register successfully!")
-                                        )
-                                    }
+                                if (it == null) {
+                                    result.invoke(UiState.Failure("User register successfully but session failed to store"))
+                                } else {
+                                    result.invoke(
+                                        UiState.Success("User register successfully!")
+                                    )
                                 }
+
+//                                storeSession(id = it.result.user?.uid ?: "") {
+//                                    if (it == null) {
+//                                        result.invoke(UiState.Failure("User register successfully but session failed to store"))
+//                                    } else {
+//                                        result.invoke(
+//                                            UiState.Success("User register successfully!")
+//                                        )
+//                                    }
+//                                }
                             }
                             is UiState.Failure -> {
                                 result.invoke(UiState.Failure(state.error))
@@ -215,5 +232,34 @@ class AuthRepositoryImpl(
                 result.invoke(UiState.Failure("Authentication failed, Check email and password"))
             }
     }
+
+    override suspend fun uploadImage(fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
+        try {
+            val uri: Uri = withContext(Dispatchers.IO) {
+                storageReference.child(FireStoreCollection.COACH).child(fileUri.lastPathSegment ?: "${System.currentTimeMillis()}")
+                    .putFile(fileUri)
+                    .await()
+                    .storage
+                    .downloadUrl
+                    .await()
+            }
+            onResult.invoke(UiState.Success(uri))
+        } catch (e: FirebaseException) {
+            onResult.invoke(UiState.Failure(e.message))
+        } catch (e: Exception) {
+            onResult.invoke(UiState.Failure(e.message))
+        }
+    }
+
+    override suspend fun changePassword(user: FirebaseUser?, newPassword: String, onResult: (UiState<String>) -> Unit) {
+        try {
+            user?.updatePassword(newPassword)
+            onResult.invoke(UiState.Success("Senha alterada com sucesso!"))
+        } catch (e: FirebaseException) {
+            onResult.invoke(UiState.Failure(e.message))
+        }
+
+    }
+
 
 }

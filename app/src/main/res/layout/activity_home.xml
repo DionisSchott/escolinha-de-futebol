@@ -4,27 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/jdb_ultra_light"
     tools:context=".presentation.home.HomeActivity">
 
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/jdb_ultra_light"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="match_parent">
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_home"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="70dp"
             app:defaultNavHost="true"
-            app:layout_constraintBottom_toTopOf="@id/coordinator"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navGraph="@navigation/home_graph" />
@@ -35,9 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:backgroundTint="@color/jdb"
-            app:fabCradleMargin="8dp"
-            app:fabCradleRoundedCornerRadius="20dp"
-            >
+            app:fabCradleMargin="5dp"
+            app:fabCradleRoundedCornerRadius="20dp">
 
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -46,9 +40,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/transparent_background"
-                app:menu="@menu/botton_navigation_menu"
                 app:itemIconTint="@color/mtrl_navigation_bar_colored_item_tint"
-                app:itemTextColor="@color/white" />
+                app:itemTextColor="@color/white"
+                app:menu="@menu/botton_navigation_menu" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -56,10 +50,12 @@
             android:id="@+id/floatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/jdb"
             android:contentDescription="addPlayer"
             android:onClick="showAlertDialog"
             android:src="@drawable/ic_baseline_add"
-            app:layout_anchor="@id/bottomAppView" />
+            app:layout_anchor="@id/bottomAppView"
+            app:tint="@color/white" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

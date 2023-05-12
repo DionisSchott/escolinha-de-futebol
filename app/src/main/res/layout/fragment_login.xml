@@ -105,30 +105,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:text="salvar dados"
+        android:layout_marginTop="20dp"
+        android:text="manter conectado"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edtPassLayout" />
 
-
-    <Button
-        android:id="@+id/btnRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20sp"
-        android:layout_marginTop="10dp"
-        android:background="#00000000"
-        android:text="cadastrar-se"
-        android:textColor="@color/blue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:text="entrar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnRegister" />
+        app:layout_constraintTop_toBottomOf="@id/edtPassLayout"
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

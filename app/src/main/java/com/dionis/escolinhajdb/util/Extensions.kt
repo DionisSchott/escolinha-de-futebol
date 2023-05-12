@@ -1,16 +1,17 @@
 package com.dionis.escolinhajdb.util
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.net.Uri
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.dionis.escolinhajdb.R
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
@@ -25,12 +26,58 @@ object Extensions {
 
     fun Fragment.navTo(@IdRes dest: Int, args: Bundle) = findNavController().navigate(dest, args)
     fun Fragment.navTo(@IdRes dest: Int) = findNavController().navigate(dest)
+    fun Fragment.firstName(name: String): String {  return name.split(" ")[0]  }
 
-    fun Fragment.datePicker(birth: String, editText: TextView) {
+    fun Fragment.spinnerAutoComplete(text: AutoCompleteTextView, list: List<String>) {
 
+        val itemsAdapter = ArrayAdapter(requireContext(), R.layout.items_list,
+            list)
+        text.setAdapter(itemsAdapter)
+        text.onItemClickListener = object : AdapterView.OnItemClickListener {
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long,
+            ) {
+            }
+        }
+    }
+
+    fun Fragment.spinner(text: Spinner, list: List<String>) {
+
+        val itemsAdapter = ArrayAdapter(requireContext(), R.layout.items_list,
+            list)
+        text.setAdapter(itemsAdapter)
+        text.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long,
+            ) {
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+    }
+
+    fun Fragment.datePicker(birth: String, editText: TextInputEditText) {
+
+        var currentDate = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val formattedDate = formatter.format(currentDate)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val date = sdf.parse(birth)
+
+        val date = if (birth.isNotEmpty()) {
+            sdf.parse(birth)
+        } else {
+            sdf.parse(formattedDate)
+        }
+
         val dateInMillis = date?.time
 
 
@@ -45,6 +92,7 @@ object Extensions {
 
         datePicker.addOnPositiveButtonClickListener {
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            currentDate = Date(it)
             editText.setText(dateFormat.format(Date(it)))
         }
     }
@@ -56,6 +104,14 @@ object Extensions {
 
     }
 
+    fun Fragment.loadImage(launcher: ActivityResultLauncher<Intent>) {
+        ImagePicker.with(this)
+            .compress(1024)
+            .galleryOnly()
+            .createIntent { intent ->
+                launcher.launch(intent)
+            }
+    }
 
 
 

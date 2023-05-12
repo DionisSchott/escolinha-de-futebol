@@ -1,13 +1,17 @@
 package com.dionis.escolinhajdb.presentation.auth
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.data.repository.AuthRepository
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +40,9 @@ class ViewModel @Inject constructor(
     private val _recoveryCoach = MutableLiveData<UiState<Coach>>()
     val recoveryCoach: LiveData<UiState<Coach>> = _recoveryCoach
 
+//    private val _recoveryCoach = MutableLiveData<Coach>()
+//    val recoveryCoach: LiveData<Coach> = _recoveryCoach
+
 
     fun getCoach() {
         _coach.value = UiState.Loading
@@ -47,6 +54,10 @@ class ViewModel @Inject constructor(
         authRepository.recoveryCoach(id) { _recoveryCoach.value = it }
     }
 
+//    fun recoveryCoach(id: String) {
+//        authRepository.storeSession(id) { _recoveryCoach.value = it  }
+//    }
+
     fun updateUserInfo(coach: Coach) {
         _updateInfo.value = UiState.Loading
         authRepository.updateUserInfo(coach) { _updateInfo.value = it }
@@ -57,10 +68,25 @@ class ViewModel @Inject constructor(
         authRepository.getlists { _lists.value = it }
     }
 
-    fun updateLists(newFunction: String) {
-        _updateLists.value = UiState.Loading
-        authRepository.updateLists(newFunction) {_updateLists.value = it}
+    fun uploadImage(fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            authRepository.uploadImage(fileUri, onResult)
+        }
     }
+
+    fun changePassword(user: FirebaseUser?, newPassword: String, onResult: (UiState<String>) -> Unit) {
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            authRepository.changePassword(user, newPassword, onResult)
+        }
+    }
+
+
+//    fun updateLists(newItem: String) {
+//        _updateLists.value = UiState.Loading
+//        authRepository.updateLists(newFunction) {_updateLists.value = it}
+//    }
 
     fun register(
         email: String,

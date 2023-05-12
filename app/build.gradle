@@ -6,6 +6,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
 //    id 'com.google.firebase.crashlytics'
     id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs'
+
 }
 
 android {
@@ -48,6 +50,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     implementation 'com.google.android.gms:play-services-cast-framework:20.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
     testImplementation 'junit:junit:4.13.2'
@@ -104,5 +107,9 @@ dependencies {
 
     //PDF
     implementation 'com.itextpdf:itextpdf:5.5.13'
+
+    //swiperefreshlayout
+    'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
 
 }

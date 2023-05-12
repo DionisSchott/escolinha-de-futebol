@@ -22,7 +22,7 @@ class PlayerViewModel @Inject constructor(
     val playerRegister: LiveData<UiState<Pair<Player, String>>> get() = _registerPlayer
 
     private val _deletePlayer = MutableLiveData<UiState<String>>()
-        val deletePlayer: LiveData<UiState<String>> = _deletePlayer
+    val deletePlayer: LiveData<UiState<String>> = _deletePlayer
 
     private var _updatePlayer = MutableLiveData<UiState<String>>()
     val updatePlayer: LiveData<UiState<String>> get() = _updatePlayer
@@ -40,27 +40,27 @@ class PlayerViewModel @Inject constructor(
         playerRepository.addPlayer(player) { _registerPlayer.value = it }
     }
 
-    fun getPlayers() {
+    fun getPlayers(filter: String) {
         _player.value = UiState.Loading
-        playerRepository.getPlayer() {_player.value = it}
+        playerRepository.getPlayer(filter) { _player.value = it }
     }
 
     fun updatePlayer(player: Player) {
         _updatePlayer.value = UiState.Loading
         playerRepository.updatePlayer(player) { _updatePlayer.value = it }
     }
-    
+
     fun deletePlayer(player: Player) {
         _deletePlayer.value = UiState.Loading
-        playerRepository.deletePlayer(player) {_deletePlayer.value = it}
+        playerRepository.deletePlayer(player) { _deletePlayer.value = it }
     }
 
 
- //   lista de imagem
-    fun uploadImage(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit) {
+    //   lista de imagem
+    fun updateImage(imageUrl: String, fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
         onResult.invoke(UiState.Loading)
         viewModelScope.launch {
-            playerRepository.uploadImage(fileUri, onResult)
+            playerRepository.updateImage(imageUrl, fileUri, onResult)
         }
 
     }

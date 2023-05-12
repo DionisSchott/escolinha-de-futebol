@@ -4,12 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.player.PlayerListFragment">
+    tools:context=".presentation.coach.CoachListFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -53,59 +52,58 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/playerFindLayout"
+                android:id="@+id/coachFindLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                app:startIconDrawable="@drawable/ic_baseline_search_24"
-                app:layout_constraintTop_toBottomOf="@id/falseToolbar"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_baseline_search_24"
+                app:layout_constraintEnd_toStartOf="@id/imgFilter"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/imgSearch">
+                app:layout_constraintTop_toBottomOf="@id/falseToolbar"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/playerFindEdt"
-                    android:hint="digite para procurar"
+                    android:id="@+id/coachFindEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="digite para procurar"
                     android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <ImageButton
-                android:id="@+id/imgSearch"
+                android:id="@+id/imgFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_filter_alt_24"
+                android:layout_margin="16dp"
                 android:background="@color/transparent"
-                app:layout_constraintTop_toTopOf="@id/playerFindLayout"
-                app:layout_constraintBottom_toBottomOf="@id/playerFindLayout"
-                app:layout_constraintStart_toEndOf="@id/playerFindLayout"
+                android:src="@drawable/ic_baseline_filter_alt_24"
+                app:layout_constraintBottom_toBottomOf="@id/coachFindLayout"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_margin="16dp"/>
-
-
-
+                app:layout_constraintStart_toEndOf="@id/coachFindLayout"
+                app:layout_constraintTop_toTopOf="@id/coachFindLayout" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewPlayerList"
+                android:id="@+id/recyclerViewCoachList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_margin="8dp"
+                android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playerFindLayout"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/coachFindLayout"
                 app:spanCount="3"
                 tools:itemCount="10"
-                tools:listitem="@layout/item_player" />
+                tools:listitem="@layout/item_player_2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

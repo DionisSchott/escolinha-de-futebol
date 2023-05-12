@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.databinding.ActivityHomeBinding
+import com.dionis.escolinhajdb.util.ListSelector
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,6 +20,7 @@ class HomeActivity : AppCompatActivity() {
 
     private var navHostFragment: NavHostFragment? = null
     private var navController: NavController? = null
+    private lateinit var key: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +44,16 @@ class HomeActivity : AppCompatActivity() {
         binding.bottonNavigationView.setOnNavigationItemReselectedListener {
             when (it.itemId) {
                 R.id.homeFragment -> {
+
                     navController!!.navigate(R.id.homeFragment)
                 }
                 R.id.playerListFragment -> {
                     navController!!.navigate(R.id.playerListFragment)
                 }
+                R.id.coachListFragment -> {
+                    navController!!.navigate(R.id.coachListFragment)
+                }
+
             }
         }
 
@@ -60,6 +67,7 @@ class HomeActivity : AppCompatActivity() {
             .setNeutralButton("cancelar") { dialog, which -> Toast.makeText(this, "oi", Toast.LENGTH_SHORT).show()}
             .setNegativeButton("novo aluno")
             { dialog, which ->
+
                 navController!!.navigate(R.id.registerPlayerFragment)
             }
             .setPositiveButton("novo treinador") { dialog, wich ->
@@ -67,6 +75,17 @@ class HomeActivity : AppCompatActivity() {
             }
             .show()
     }
+
+    fun showBottomNavigation(show: Boolean) {
+        if (show) {
+            binding.bottomAppView.visibility = View.VISIBLE
+            binding.floatButton.visibility = View.VISIBLE
+        } else {
+            binding.bottomAppView.visibility = View.GONE
+            binding.floatButton.visibility = View.GONE
+        }
+    }
+
 
 
 }

@@ -9,80 +9,150 @@
     tools:context=".presentation.player.PlayerDetailFragment">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/imgLayout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="-25dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/playerImg"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"
-            android:scaleType="centerCrop"
-            android:src="@color/jdb"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="230dp"
+            android:layout_gravity="bottom"
+            android:background="@color/jdb">
 
-        <ImageView
-            android:id="@+id/savePdf"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_baseline_save_alt_24"
-            app:layout_constraintEnd_toStartOf="@id/exportPdf"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/playerImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/person_"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvPreferredPlayerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/tvPreferredPlayerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/jdb"
+                    android:gravity="center"
+                    android:text="Apelido"
+                    android:textColor="@color/white"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/preferredPlayerNameEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/jdb"
+                    android:gravity="center"
+                    android:text="Apelido"
+                    android:visibility="invisible"
+                    android:textColor="@color/white"
+                    android:textSize="32sp"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
 
-        <ImageView
-            android:id="@+id/exportPdf"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/ic_baseline_share_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            </com.google.android.material.card.MaterialCardView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--        <de.hdodenhof.circleimageview.CircleImageView-->
+            <!--            android:id="@+id/playerImg"-->
+            <!--            android:layout_width="0dp"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            android:padding="5dp"-->
+            <!--            android:scaleType="centerCrop"-->
+            <!--            android:src="@color/jdb"-->
+            <!--            app:layout_constraintEnd_toEndOf="parent"-->
+            <!--            app:layout_constraintStart_toStartOf="parent"-->
+            <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+            <ImageView
+                android:id="@+id/btnEdit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_baseline_edit_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/savePdf"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_baseline_save_alt_24"
+                app:layout_constraintEnd_toStartOf="@id/exportPdf"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/exportPdf"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_baseline_share_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
     <ScrollView
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="200dp">
+        android:layout_marginTop="225dp"
+        app:layout_constraintTop_toBottomOf="@id/imgLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/playerNameEdt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@color/white"
-                android:clickable="false"
-                android:gravity="center"
-                android:hint="@string/player_name"
-                android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <!--            <com.google.android.material.textfield.TextInputEditText-->
+            <!--                android:id="@+id/preferredPlayerNameEdt"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp"-->
+            <!--                android:background="@color/white"-->
+            <!--                android:gravity="center"-->
+            <!--                android:hint="@string/preferred_name"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textSize="32sp"-->
+            <!--                android:textStyle="bold"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent" />-->
 
 
             <TextView
                 android:id="@+id/playerAgeTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@color/white"
                 android:gravity="center"
                 android:hint="@string/age"
@@ -91,7 +161,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playerNameEdt" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvWeight"
@@ -111,11 +181,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:clickable="false"
                 android:hint="0.0"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                app:circularflow_radiusInDP="2dp"
+                app:layout_constraintCircleRadius="2dp"
                 app:layout_constraintEnd_toStartOf="@id/tvMeters"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvWeight" />
@@ -152,6 +225,8 @@
                 android:layout_marginEnd="4dp"
                 android:background="@color/white"
                 android:hint="0.0"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -192,6 +267,65 @@
                 app:layout_constraintTop_toTopOf="@id/tvWeight"
                 app:thumbRadius="16dp" />
 
+
+            <TextView
+                android:id="@+id/tvPlayerNameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="-4dp"
+                android:text="@string/full_name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/cvPlayerName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt" />
+
+
+            <TextView
+                android:id="@+id/tvPlayerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white"
+                android:hint="@string/player_name"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPlayerNameTitle" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvPlayerName"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPlayerNameTitle">
+
+                <EditText
+                    android:id="@+id/playerNameEdt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@color/white"
+                    android:gravity="start"
+                    android:hint="@string/name"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+
             <TextView
                 android:id="@+id/tvGenreTitle"
                 android:layout_width="wrap_content"
@@ -204,7 +338,7 @@
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/tvGenre"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playerWeightEdt" />
+                app:layout_constraintTop_toBottomOf="@+id/tvPlayerName" />
 
             <TextView
                 android:id="@+id/tvGenre"
@@ -446,10 +580,10 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:background="@color/transparent"
                 android:visibility="invisible"
                 app:cardCornerRadius="2dp"
                 app:cardElevation="20dp"
-                android:background="@color/transparent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvContactTitle">
 
@@ -467,7 +601,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
                     app:mask="(__) _____-____"
                     app:maskCharacter="_"
-                    app:maskStyle="completable" />
+                    app:maskStyle="normal" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -514,18 +648,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvBirthTitle">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/playerBirthEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:gravity="start"
                     android:layout_marginStart="8dp"
+                    android:background="@color/white"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:gravity="start"
                     android:hint="@string/click_for_select"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -540,10 +675,10 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/cvBirth"
-                app:layout_constraintTop_toTopOf="@id/cvBirth"
                 app:layout_constraintBottom_toBottomOf="@id/cvBirth"
-                app:layout_constraintEnd_toEndOf="@id/cvBirth"/>
+                app:layout_constraintEnd_toEndOf="@id/cvBirth"
+                app:layout_constraintStart_toStartOf="@id/cvBirth"
+                app:layout_constraintTop_toTopOf="@id/cvBirth" />
 
             <TextView
                 android:id="@+id/tvHealthNotes"
@@ -579,6 +714,7 @@
                     android:inputType="textMultiLine"
                     android:lines="7"
                     android:padding="4dp"
+                    android:textColor="@color/black"
                     android:textSize="16sp" />
 
             </androidx.cardview.widget.CardView>

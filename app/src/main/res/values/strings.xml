@@ -21,10 +21,19 @@
     <string name="responsible">Responsável</string>
     <string name="responsible_type">grau</string>
     <string name="name">Nome</string>
-    <string name="contact">contato</string>
+    <string name="contact">Contato</string>
     <string name="birth">Nascimento</string>
     <string name="healt_notes">Informações de saúde:</string>
     <string name="skills_notes">Informações de habilidades:</string>
     <string name="type_here">digite aqui</string>
     <string name="save">Salvar</string>
+    <string name="attention">ATENÇÂO: não deixe de inserir outras informaçõs importantes na tela de detalhes do jogador.</string>
+    <string name="success_add_player">Jogador adicionado com sucesso!</string>
+    <string name="back">voltar</string>
+    <string name="successfully_updated">Atualizado com Sucesso</string>
+    <string name="successfully_added">Adicionado com Sucesso</string>
+    <string name="coach">Treinador</string>
+    <string name="member_since">Membro desde</string>
+    <string name="full_name">Nome completo</string>
+    <string name="preferred_name">Apelido</string>
 </resources>

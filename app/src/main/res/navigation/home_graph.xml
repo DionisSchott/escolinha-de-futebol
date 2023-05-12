@@ -5,6 +5,7 @@
     android:id="@+id/home_graph"
     app:startDestination="@id/homeFragment">
 
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.dionis.escolinhajdb.presentation.home.HomeFragment"
@@ -25,7 +26,18 @@
         <action
             android:id="@+id/action_homeFragment_to_updateUserInfoFragment"
             app:destination="@id/updateUserInfoFragment" />
+
+        <argument
+            android:name="destination"
+            app:argType="integer"
+            android:defaultValue="2" />
+        <action
+            android:id="@+id/action_homeFragment_to_coachListFragment"
+            app:destination="@id/coachListFragment" />
+
+
     </fragment>
+
     <fragment
         android:id="@+id/registerPlayerFragment"
         android:name="com.dionis.escolinhajdb.presentation.player.RegisterPlayerFragment"
@@ -46,6 +58,9 @@
         <action
             android:id="@+id/action_playerDetailFragment_to_fromPdfSaveFragment"
             app:destination="@id/fromPdfSaveFragment" />
+        <action
+            android:id="@+id/action_playerDetailFragment_to_playerListFragment"
+            app:destination="@id/playerListFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerCoachFragment"
@@ -63,6 +78,9 @@
         <action
             android:id="@+id/action_playerListFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_playerListFragment_to_playerDetailFragment"
+            app:destination="@id/playerDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/fromPdfSaveFragment"
@@ -80,5 +98,26 @@
         <action
             android:id="@+id/action_updateUserInfoFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_updateUserInfoFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/coachListFragment"
+        android:name="com.dionis.escolinhajdb.presentation.coach.CoachListFragment"
+        android:label="fragment_coach_list"
+        tools:layout="@layout/fragment_coach_list" >
+        <action
+            android:id="@+id/action_coachListFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.dionis.escolinhajdb.presentation.auth.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" >
+        <action
+            android:id="@+id/action_changePasswordFragment_to_updateUserInfoFragment"
+            app:destination="@id/updateUserInfoFragment" />
     </fragment>
 </navigation>

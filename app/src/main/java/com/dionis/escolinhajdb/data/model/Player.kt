@@ -21,8 +21,8 @@ data class Player(
     val responsibleName: String = "",
     val responsibleType: String = "",
     val contacts: String = "",
-    val position: String = "",
 
+    val position: String = "",
     val preferredFoot: String = "",
     val skillsNotes: String = "",
     val category: String = "",

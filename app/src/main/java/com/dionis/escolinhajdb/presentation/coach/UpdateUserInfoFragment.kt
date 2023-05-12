@@ -1,39 +1,70 @@
 package com.dionis.escolinhajdb.presentation.coach
 
 
+import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.databinding.FragmentUpdateUserInfoBinding
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
+import com.dionis.escolinhajdb.presentation.home.HomeActivity
 import com.dionis.escolinhajdb.util.Extensions.datePicker
+import com.dionis.escolinhajdb.util.Extensions.loadImage
+import com.dionis.escolinhajdb.util.Extensions.spinner
+import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
 class UpdateUserInfoFragment : Fragment() {
 
+    val TAG: String = "UserUpdateFragment"
     private lateinit var binding: FragmentUpdateUserInfoBinding
     private lateinit var coach: Coach
-    private val viewModel: ViewModel by viewModels()
+    private val viewModel: ViewModel by activityViewModels()
     private val myCalendar = Calendar.getInstance()
-
-    // private val functionList = listOf("Presidente", "Treinador(a)", "Auxiliar")
     private lateinit var position: List<String>
     private var functionList = listOf<String>()
+    private var categoryList = listOf<String>()
     private var function = ""
     private lateinit var lists: Lists
+    var imageUri: Uri? = null
+    var image: String = ""
+
+    private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        val resultCode = result.resultCode
+        val data = result.data
+        if (resultCode == Activity.RESULT_OK) {
+            imageUri = data?.data!!
+            Picasso.get().load(imageUri).into(binding.coachImg)
+
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+
+            toast(ImagePicker.getError(data))
+        } else {
+
+            Log.e(TAG, "Task Cancelled")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,17 +79,36 @@ class UpdateUserInfoFragment : Fragment() {
 
         coach = arguments?.getParcelable(COACH)!!
         viewModel.getLists()
+        setup()
+
+    }
+
+    private fun setup() {
         setData()
         setUpClicks()
         endIconClick()
         setDatePicker()
         setObserver()
+        lifecycleScope.launch {
+            delay(500)
+            setupSpinner()
+        }
+        (activity as HomeActivity).showBottomNavigation(false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as HomeActivity).showBottomNavigation(true)
     }
 
     private fun setData() = binding.apply {
+        if(coach.photo.isNotEmpty()) {
+            Picasso.get().load(coach.photo).into(coachImg)
+        }
         edtUserName.setText(coach.name)
         mskContact.setText(coach.contact)
-        tvFunction.setText(coach.function)
+        function.setText(coach.function)
+        //tvFunction.setText(coach.function)
         edtSubFunction.setText(coach.subFunction)
         edtBirth.setText(coach.birth)
     }
@@ -74,6 +124,7 @@ class UpdateUserInfoFragment : Fragment() {
                 is UiState.Success -> {
                     lists = it.data
                     functionList = lists.function
+                    categoryList = lists.subFunction
                 }
             }
         }
@@ -93,15 +144,15 @@ class UpdateUserInfoFragment : Fragment() {
         }
     }
 
-
     private fun getCoachObject(): Coach {
 
         return Coach(
             id = coach.id,
             name = binding.edtUserName.text.toString(),
             email = coach.email,
-            photo = coach.photo,
-            function = binding.tvFunction.text.toString(),
+            photo = image,
+            function = binding.function.text.toString(),
+          //  function = binding.tvFunction.text.toString(),
             subFunction = binding.edtSubFunction.text.toString(),
             birth = binding.edtBirth.text.toString(),
             genre = coach.genre,
@@ -111,13 +162,17 @@ class UpdateUserInfoFragment : Fragment() {
     }
 
 
-
-    private fun setUpClicks() {
-        binding.btnDone.setOnClickListener {
+    private fun setUpClicks() = binding.apply {
+        btnDone.setOnClickListener {
             observer()
-            updateUserInfo()
-            updateLists()
+            uploadImage()
+        }
+        coachImg.setOnClickListener {
+            loadImage()
+        }
+        btnChangePassword.setOnClickListener {
 
+            findNavController().navigate(R.id.action_updateUserInfoFragment_to_changePasswordFragment)
         }
     }
 
@@ -127,68 +182,62 @@ class UpdateUserInfoFragment : Fragment() {
             binding.edtUserName.text?.clear()
             binding.edtUserName.requestFocus()
         }
-
-        binding.edtFunctionLayout.setEndIconOnClickListener {
-            coachFunctionSpinner()
-
-        }
-
+//        binding.edtFunctionLayout.setEndIconOnClickListener {
+//            coachFunctionSpinner()
+//        }
+        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun updateUserInfo() {
         viewModel.updateUserInfo(getCoachObject())
     }
 
-    private fun updateLists() {
-        viewModel.updateLists(binding.tvFunction.text.toString())
+//    private fun coachFunctionSpinner() {
+//
+//
+//        binding.edtFunctionLayout.visibility = View.INVISIBLE
+//        binding.cvFunctionSpinner.visibility = View.VISIBLE
+//
+//        binding.edtFunctionSpinner.post { binding.edtFunctionSpinner.performClick() }
+//
+//        val adapter: ArrayAdapter<String> = ArrayAdapter(
+//            requireContext(),
+//            android.R.layout.simple_spinner_item,
+//            this.functionList.map { it })
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        binding.edtFunctionSpinner.adapter = adapter
+//        val spinnerPosition = adapter.getPosition(binding.tvFunction.text.toString())
+//        binding.edtFunctionSpinner.setSelection(spinnerPosition)
+//
+//        binding.edtFunctionSpinner.onItemSelectedListener =
+//            object : AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(
+//                    parentView: AdapterView<*>?,
+//                    selectedItemview: View?,
+//                    position: Int,
+//                    id: Long,
+//                ) {
+//                    val selectedPlayerPosition = functionList[position]
+//                    function = selectedPlayerPosition
+//                    binding.tvFunction.setText(function)
+//                    binding.edtFunctionLayout.visibility = View.VISIBLE
+//                    binding.cvFunctionSpinner.visibility = View.INVISIBLE
+//
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//                }
+//            }
+//    }
+
+    private fun setupSpinner() {
+            spinnerAutoComplete(binding.function, functionList)
+            spinnerAutoComplete(binding.edtSubFunction, categoryList)
     }
-
-
-
-    private fun coachFunctionSpinner() {
-
-
-        binding.edtFunctionLayout.visibility = View.INVISIBLE
-        binding.cvFunctionSpinner.visibility = View.VISIBLE
-
-        binding.edtFunctionSpinner.post { binding.edtFunctionSpinner.performClick() }
-
-        val adapter: ArrayAdapter<String> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            this.functionList.map { it })
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.edtFunctionSpinner.adapter = adapter
-        val spinnerPosition = adapter.getPosition(binding.tvFunction.text.toString())
-        binding.edtFunctionSpinner.setSelection(spinnerPosition)
-
-        binding.edtFunctionSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parentView: AdapterView<*>?,
-                    selectedItemview: View?,
-                    position: Int,
-                    id: Long,
-                ) {
-                    val selectedPlayerPosition = functionList[position]
-                    function = selectedPlayerPosition
-                    binding.tvFunction.setText(function)
-                    binding.edtFunctionLayout.visibility = View.VISIBLE
-                    binding.cvFunctionSpinner.visibility = View.INVISIBLE
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-
-                }
-            }
-    }
-
 
     private fun setDatePicker() {
-
         datePicker(coach.birth, binding.edtBirth)
-
     }
 
     private fun observer() {
@@ -204,13 +253,37 @@ class UpdateUserInfoFragment : Fragment() {
                     toast("suceso")
                     findNavController().popBackStack()
                 }
-
-
             }
+        }
+    }
 
+    private fun loadImage() {
+        loadImage(startForProfileImageResult)
+    }
+
+    private fun uploadImage() {
+        if (imageUri != null) {
+            viewModel.uploadImage(imageUri!!) {
+                when (it) {
+                    is UiState.Loading -> {
+                    }
+                    is UiState.Failure -> {
+                        toast(it.error)
+                    }
+                    is UiState.Success -> {
+                        image = it.data.toString()
+                        updateUserInfo()
+                        toast(getString(R.string.successfully_updated))
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+        } else {
+            updateUserInfo()
         }
 
     }
+
 
     companion object {
         const val COACH = "coach"
