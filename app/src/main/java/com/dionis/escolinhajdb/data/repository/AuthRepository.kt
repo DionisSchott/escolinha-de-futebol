@@ -17,10 +17,9 @@ interface AuthRepository {
     fun storeSession(id: String, result: (Coach?) -> Unit)
     fun recoveryCoach (id: String, result: (UiState<Coach>) -> Unit)
 
-    fun getlists(result: (UiState<Lists>) -> Unit)
-    fun updateLists(newFunction: String, result: (UiState<String>) -> Unit)
-
     suspend fun uploadImage(fileUri: Uri, onResult: (UiState<Uri>) -> Unit)
 
+    suspend fun authenticateUser(user: FirebaseUser?, currentPassword: String, onResult: (UiState<String>) -> Unit)
     suspend fun changePassword(user: FirebaseUser?, newPassword: String, onResult: (UiState<String>) -> Unit)
+
 }

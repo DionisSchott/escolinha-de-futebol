@@ -115,9 +115,9 @@ class LoginFragment : Fragment() {
 
         val email = binding.edtEmail.text.toString()
         val password = binding.edtPassword.text.toString()
-        val authenticated = binding.checkBox.isChecked
+       // val authenticated = binding.checkBox.isChecked
 
-        lifecycleScope.launch() { userManager.saveDataUser(email, password, authenticated) }
+        lifecycleScope.launch() { userManager.saveDataUser(email, password) }
     }
 
 
@@ -126,8 +126,8 @@ class LoginFragment : Fragment() {
             val user = userManager.readDataUser()
 
             binding.edtEmail.setText(user.email)
-            binding.edtPassword.setText(user.password)
-            binding.checkBox.isChecked = user.authenticated
+       //     binding.edtPassword.setText(user.password)
+      //      binding.checkBox.isChecked = user.authenticated
         }
 
     }

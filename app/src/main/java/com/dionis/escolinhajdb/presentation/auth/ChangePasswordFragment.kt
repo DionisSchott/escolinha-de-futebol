@@ -1,10 +1,13 @@
 package com.dionis.escolinhajdb.presentation.auth
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,7 +23,7 @@ import com.google.firebase.ktx.Firebase
 class ChangePasswordFragment : Fragment() {
 
     private val viewModel: ViewModel by activityViewModels()
-    private lateinit var binding: FragmentChangePasswordBinding
+    private var binding: FragmentChangePasswordBinding? = null
     lateinit var firebaseUser: FirebaseUser
 
 
@@ -28,8 +31,10 @@ class ChangePasswordFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
-        return binding.root
+
+        return FragmentChangePasswordBinding.inflate(inflater, container, false).apply {
+            binding = this
+        }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,22 +45,84 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun setUp() {
-        setUpClicks()
+        binding?.setUpClicks()
+        binding?.passwordValidate()
     }
 
-    private fun setUpClicks() {
-        binding.btnDone.setOnClickListener {
-            changePassword()
+
+    private fun FragmentChangePasswordBinding.setUpClicks() {
+        btnDone.setOnClickListener {
+            binding?.authenticateUser()
         }
 
-        binding.btnBack.setOnClickListener {
+        btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    private fun changePassword() {
 
-        val newPassword = binding.newPasswordEdt.text.toString()
+    private fun FragmentChangePasswordBinding.passwordValidate() {
+
+        val passwordTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                val newPassword = newPasswordEdt.text.toString()
+                val confirmPassword = newPasswordConfirmEdt.text.toString()
+
+                if (newPassword.length < 8) {
+                    messagePassword.text = "senha curta"
+                } else {
+                    messagePassword.text = ""
+                    if (newPassword == confirmPassword) {
+                        messagePasswordConfirm.text = ""
+                        btnDone.isEnabled = true
+                    } else {
+                        messagePasswordConfirm.text = "senhas não coincidem"
+                        btnDone.isEnabled = false
+
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        }
+
+        newPasswordEdt.addTextChangedListener(passwordTextWatcher)
+        newPasswordConfirmEdt.addTextChangedListener(passwordTextWatcher)
+
+
+    }
+
+    private fun FragmentChangePasswordBinding.authenticateUser() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentPassword = currentPasswordEdt.text.toString()
+
+        if (currentPassword.isNotEmpty()) {
+            viewModel.authenticateUser(currentUser, currentPassword) {
+                when (it) {
+                    is UiState.Loading -> {
+                    }
+                    is UiState.Failure -> {
+                        toast(it.error)
+                    }
+                    is UiState.Success -> {
+                        changePassword()
+                    }
+                }
+            }
+        } else {
+            toast("Digite sua senha atual")
+        }
+    }
+
+
+    private fun FragmentChangePasswordBinding.changePassword() {
+
+        val newPassword = newPasswordEdt.text.toString()
 
         viewModel.changePassword(firebaseUser, newPassword) {
 
@@ -66,6 +133,7 @@ class ChangePasswordFragment : Fragment() {
                     toast(it.error)
                 }
                 is UiState.Success -> {
+                    toast(it.data)
                     findNavController().popBackStack()
                 }
             }
@@ -73,5 +141,12 @@ class ChangePasswordFragment : Fragment() {
 
 
     }
+
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+
+    }
+
 
 }

@@ -8,10 +8,23 @@
     app:cardElevation="5dp"
     >
 
+<!--    <ImageView-->
+<!--        android:id="@+id/delete"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:src="@drawable/ic_baseline_delete_24"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        android:elevation="1dp"-->
+<!--        />-->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:background="@color/jdb_light">
+        android:background="@color/jdb_light"
+        >
+
 
 
         <androidx.cardview.widget.CardView
@@ -29,7 +42,10 @@
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/person_" />
+
         </androidx.cardview.widget.CardView>
+
+
 
         <TextView
             android:id="@+id/tvName"

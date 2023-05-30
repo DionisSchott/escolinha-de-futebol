@@ -56,6 +56,7 @@ class PlayerListFragment : Fragment() {
         playerViewModel.player.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Failure -> {
+
                 }
                 is UiState.Loading -> {
 

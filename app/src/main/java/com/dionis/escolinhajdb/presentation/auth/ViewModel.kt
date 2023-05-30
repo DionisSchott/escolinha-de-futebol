@@ -22,12 +22,6 @@ class ViewModel @Inject constructor(
     private val _coach = MutableLiveData<UiState<List<Coach>>>()
     val coach: LiveData<UiState<List<Coach>>> get() = _coach
 
-    private val _lists = MutableLiveData<UiState<Lists>>()
-    val lists: LiveData<UiState<Lists>> get() = _lists
-
-    private val _updateLists = MutableLiveData<UiState<String>>()
-    val updateLists: LiveData<UiState<String>> get() = _updateLists
-
     private val _updateInfo = MutableLiveData<UiState<String>>()
     val updateInfo: LiveData<UiState<String>> get() = _updateInfo
 
@@ -40,8 +34,9 @@ class ViewModel @Inject constructor(
     private val _recoveryCoach = MutableLiveData<UiState<Coach>>()
     val recoveryCoach: LiveData<UiState<Coach>> = _recoveryCoach
 
-//    private val _recoveryCoach = MutableLiveData<Coach>()
-//    val recoveryCoach: LiveData<Coach> = _recoveryCoach
+    private var _authenticate = MutableLiveData<UiState<String>>()
+    val authenticate: LiveData<UiState<String>> get() = _authenticate
+
 
 
     fun getCoach() {
@@ -63,15 +58,18 @@ class ViewModel @Inject constructor(
         authRepository.updateUserInfo(coach) { _updateInfo.value = it }
     }
 
-    fun getLists() {
-        _lists.value = UiState.Loading
-        authRepository.getlists { _lists.value = it }
-    }
 
     fun uploadImage(fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
         onResult.invoke(UiState.Loading)
         viewModelScope.launch {
             authRepository.uploadImage(fileUri, onResult)
+        }
+    }
+
+    fun authenticateUser(user: FirebaseUser?, currentPassword: String, onResult: (UiState<String>) -> Unit) {
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            authRepository.authenticateUser(user, currentPassword, onResult)
         }
     }
 
@@ -82,11 +80,6 @@ class ViewModel @Inject constructor(
         }
     }
 
-
-//    fun updateLists(newItem: String) {
-//        _updateLists.value = UiState.Loading
-//        authRepository.updateLists(newFunction) {_updateLists.value = it}
-//    }
 
     fun register(
         email: String,

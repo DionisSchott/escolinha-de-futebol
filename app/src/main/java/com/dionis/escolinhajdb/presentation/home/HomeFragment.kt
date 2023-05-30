@@ -94,6 +94,7 @@ class HomeFragment : Fragment() {
         viewModel.player.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Failure -> {
+
                 }
                 is UiState.Loading -> {
                     binding.progressBarPlayer.visibility = View.VISIBLE
@@ -103,10 +104,11 @@ class HomeFragment : Fragment() {
                     binding.progressBarPlayer.visibility = View.GONE
 //                    binding.recyclerView3.visibility = View.VISIBLE
                     playersAdapter.updateList(it.data)
-
                 }
             }
         }
+
+
 
 //        coachViewModel.coach.observe(viewLifecycleOwner) {
 //            when (it) {
@@ -242,9 +244,9 @@ class HomeFragment : Fragment() {
         val intent = Intent(requireContext(), LoginActivity::class.java)
         startActivity(intent)
         activity?.finish()
-        lifecycleScope.launch {
-            userManager.clearDataUser()
-        }
+//        lifecycleScope.launch {
+//            userManager.clearDataUser()
+//        }
     }
 
     private fun navigateFromPlayerDetail(player: Player) {

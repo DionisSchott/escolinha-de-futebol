@@ -55,7 +55,7 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/preferredPlayerNameEdt"
@@ -64,10 +64,10 @@
                     android:background="@color/jdb"
                     android:gravity="center"
                     android:text="Apelido"
-                    android:visibility="invisible"
                     android:textColor="@color/white"
                     android:textSize="32sp"
                     android:textStyle="normal"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -357,6 +357,7 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvGenre"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
@@ -364,17 +365,18 @@
                 android:visibility="invisible"
                 app:cardCornerRadius="2dp"
                 app:cardElevation="20dp"
-                app:layout_constraintBottom_toBottomOf="@id/tvGenre"
                 app:layout_constraintCircleRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/tvGenre"
                 app:layout_constraintEnd_toEndOf="@id/tvGenre"
                 app:layout_constraintStart_toStartOf="@id/tvGenre"
                 app:layout_constraintTop_toTopOf="@id/tvGenre">
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinnerGenre"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center" />
+                    android:layout_height="wrap_content"
+                    android:focusable="false" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -385,6 +387,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
                 android:text="tipo sanguineo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvGenre" />

@@ -1,10 +1,7 @@
 package com.dionis.escolinhajdb.di
 
 import com.dionis.escolinhajdb.data.model.Player
-import com.dionis.escolinhajdb.data.repository.AuthRepository
-import com.dionis.escolinhajdb.data.repository.AuthRepositoryImpl
-import com.dionis.escolinhajdb.data.repository.PlayerRepository
-import com.dionis.escolinhajdb.data.repository.PlayerRepositoryImpl
+import com.dionis.escolinhajdb.data.repository.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
@@ -39,6 +36,14 @@ object RepositoryModule {
         storageReference: StorageReference,
     ): PlayerRepository {
         return PlayerRepositoryImpl (database, storageReference)
+    }
+
+    @Provides
+    @Singleton
+    fun provideListRepository(
+        database: FirebaseFirestore
+    ): ListRepository {
+        return ListRepositoryImpl (database)
     }
 
 

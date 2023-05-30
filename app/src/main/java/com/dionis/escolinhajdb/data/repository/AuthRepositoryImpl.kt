@@ -49,54 +49,6 @@ class AuthRepositoryImpl(
             }
     }
 
-    override fun getlists(result: (UiState<Lists>) -> Unit) {
-
-        database.collection(FireStoreCollection.LISTS).document("1UT4NrbDvK1cZkwAb3Ex")
-            .get()
-            .addOnCompleteListener {
-                val lists = it.result.toObject(Lists::class.java)
-
-                result.invoke(
-                    UiState.Success(lists!!)
-                )
-            }
-            .addOnFailureListener {
-                result.invoke(
-                    UiState.Failure(it.localizedMessage)
-                )
-            }
-
-    }
-
-
-    //função para adicionar item à lista, como por exemplo lsita de posição de jogador. falta terminar.
-    override fun updateLists(newItem: String, result: (UiState<String>) -> Unit) {
-        database.collection(FireStoreCollection.LISTS).document("")
-            .update("function", FieldValue.arrayUnion(newItem))
-            .addOnSuccessListener {
-                result.invoke(
-                    UiState.Success("feito")
-                )
-            }
-            .addOnFailureListener {
-                result.invoke(
-                    UiState.Failure(it.localizedMessage)
-                )
-            }
-    }
-
-    //função para remover item da lista, como por exemplo lsita de posição de jogador. falta terminar.
-    fun removeListItem(itemId: String) {
-        database.collection("lists").document("1UT4NrbDvK1cZkwAb3Ex")
-
-            .update("position", FieldValue.arrayRemove(itemId))
-            .addOnSuccessListener {
-                Log.d(TAG, "Item removed from list")
-            }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Error removing item from list", e)
-            }
-    }
 
     override fun updateUserInfo(coach: Coach, result: (UiState<String>) -> Unit) {
         val document = database.collection(FireStoreCollection.COACH).document(coach.id)
@@ -149,6 +101,7 @@ class AuthRepositoryImpl(
                 result.invoke(null)
             }
     }
+
 
     override fun registerUser(
         email: String,
@@ -251,15 +204,44 @@ class AuthRepositoryImpl(
         }
     }
 
+
+    override suspend fun authenticateUser(user: FirebaseUser?, currentPassword: String, onResult: (UiState<String>) -> Unit) {
+        val credentials = EmailAuthProvider.getCredential(user?.email.toString(), currentPassword)
+        user?.reauthenticate(credentials)
+            ?.addOnSuccessListener {
+                onResult.invoke(UiState.Success("sucesso"))
+            }
+            ?.addOnFailureListener {
+                onResult.invoke((UiState.Failure("Senha atual incorreta")))
+            }
+    }
+
     override suspend fun changePassword(user: FirebaseUser?, newPassword: String, onResult: (UiState<String>) -> Unit) {
-        try {
-            user?.updatePassword(newPassword)
-            onResult.invoke(UiState.Success("Senha alterada com sucesso!"))
-        } catch (e: FirebaseException) {
-            onResult.invoke(UiState.Failure(e.message))
-        }
+
+        user?.updatePassword(newPassword)
+            ?.addOnSuccessListener {
+                onResult.invoke(UiState.Success("Senha alterada com sucesso"))
+            }
+            ?.addOnFailureListener {
+                onResult.invoke((UiState.Failure(it.message)))
+            }
+
+
+//        try {
+//            user?.updatePassword(newPassword)
+//            onResult.invoke(UiState.Success("Senha alterada com sucesso!"))
+//        } catch (e: FirebaseException) {
+//            onResult.invoke(UiState.Failure(e.message))
+//        }
+
 
     }
 
 
 }
+
+
+
+
+
+

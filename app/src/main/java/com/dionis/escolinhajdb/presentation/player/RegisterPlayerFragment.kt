@@ -261,7 +261,7 @@ class RegisterPlayerFragment : Fragment() {
         val layoutText = binding.cvGenre
         val text = binding.genre
 
-        val items= GENRE
+        val items = GENRE
         val itemsAdapter = ArrayAdapter(requireContext(), R.layout.items_list, items)
         text.setAdapter(itemsAdapter)
         text.onItemClickListener = object : AdapterView.OnItemClickListener {

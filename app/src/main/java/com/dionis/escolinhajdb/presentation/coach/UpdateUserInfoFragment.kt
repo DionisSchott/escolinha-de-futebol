@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
@@ -21,15 +22,14 @@ import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.databinding.FragmentUpdateUserInfoBinding
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.presentation.lists.ListViewModel
 import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.loadImage
-import com.dionis.escolinhajdb.util.Extensions.spinner
 import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -41,6 +41,7 @@ class UpdateUserInfoFragment : Fragment() {
     private lateinit var binding: FragmentUpdateUserInfoBinding
     private lateinit var coach: Coach
     private val viewModel: ViewModel by activityViewModels()
+    private val listViewModel: ListViewModel by viewModels()
     private val myCalendar = Calendar.getInstance()
     private lateinit var position: List<String>
     private var functionList = listOf<String>()
@@ -78,7 +79,7 @@ class UpdateUserInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         coach = arguments?.getParcelable(COACH)!!
-        viewModel.getLists()
+        listViewModel.getLists()
         setup()
 
     }
@@ -102,7 +103,7 @@ class UpdateUserInfoFragment : Fragment() {
     }
 
     private fun setData() = binding.apply {
-        if(coach.photo.isNotEmpty()) {
+        if (coach.photo.isNotEmpty()) {
             Picasso.get().load(coach.photo).into(coachImg)
         }
         edtUserName.setText(coach.name)
@@ -115,7 +116,7 @@ class UpdateUserInfoFragment : Fragment() {
 
     private fun setObserver() {
 
-        viewModel.lists.observe(viewLifecycleOwner) {
+        listViewModel.lists.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Failure -> {
                 }
@@ -123,25 +124,12 @@ class UpdateUserInfoFragment : Fragment() {
                 }
                 is UiState.Success -> {
                     lists = it.data
-                    functionList = lists.function
-                    categoryList = lists.subFunction
+                    functionList = it.data.function
+                    categoryList = it.data.subFunction
                 }
             }
         }
 
-        viewModel.updateLists.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Success -> {
-
-                }
-                is UiState.Failure -> {
-                    toast(it.error)
-                }
-                is UiState.Loading -> {
-
-                }
-            }
-        }
     }
 
     private fun getCoachObject(): Coach {
@@ -152,7 +140,7 @@ class UpdateUserInfoFragment : Fragment() {
             email = coach.email,
             photo = image,
             function = binding.function.text.toString(),
-          //  function = binding.tvFunction.text.toString(),
+//            function = binding.tvFunction.text.toString(),
             subFunction = binding.edtSubFunction.text.toString(),
             birth = binding.edtBirth.text.toString(),
             genre = coach.genre,
@@ -232,8 +220,8 @@ class UpdateUserInfoFragment : Fragment() {
 //    }
 
     private fun setupSpinner() {
-            spinnerAutoComplete(binding.function, functionList)
-            spinnerAutoComplete(binding.edtSubFunction, categoryList)
+        spinnerAutoComplete(binding.function, functionList)
+        spinnerAutoComplete(binding.edtSubFunction, categoryList)
     }
 
     private fun setDatePicker() {

@@ -73,6 +73,7 @@ class PlayerRepositoryImpl(
             }
     }
 
+
     override fun getPlayer(filter: String, result: (UiState<List<Player>>) -> Unit) {
         val query = dataBase.collection(PLAYER)
 

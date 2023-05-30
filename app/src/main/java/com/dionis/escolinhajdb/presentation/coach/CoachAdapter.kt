@@ -15,13 +15,14 @@ import com.squareup.picasso.Picasso
 class CoachAdapter : RecyclerView.Adapter<CoachAdapter.Holder>() {
 
     lateinit var onItemClicked: (Coach) -> Unit
+    lateinit var onDeleteClicked: (Coach) -> Unit
     private var coachList: MutableList<Coach> = ArrayList()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(ItemPlayer2Binding.inflate(LayoutInflater.from(parent.context),
             parent,
-            false), onItemClicked)
+            false), onItemClicked, onDeleteClicked)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -44,6 +45,7 @@ class CoachAdapter : RecyclerView.Adapter<CoachAdapter.Holder>() {
     class Holder(
         private val binding: ItemPlayer2Binding,
         private val onItemClicked: (Coach) -> Unit,
+        private val onDeleteClicked: (Coach) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(info: Coach) {
@@ -58,7 +60,9 @@ class CoachAdapter : RecyclerView.Adapter<CoachAdapter.Holder>() {
             } else {
                 binding.image.setImageResource(R.drawable.person_)
             }
-
+//            binding.delete.setOnClickListener {
+//                onDeleteClicked.invoke(info)
+//            }
             binding.root.setOnClickListener {
                 onItemClicked.invoke(info)
             }

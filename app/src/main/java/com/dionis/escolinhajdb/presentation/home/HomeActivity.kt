@@ -1,15 +1,29 @@
 package com.dionis.escolinhajdb.presentation.home
 
+import android.app.PendingIntent
+import android.content.Context
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.databinding.ActivityHomeBinding
+import com.dionis.escolinhajdb.databinding.CustomDialogLayoutBinding
+import com.dionis.escolinhajdb.databinding.DialogLayoutBinding
 import com.dionis.escolinhajdb.util.ListSelector
+import com.dionis.escolinhajdb.util.ShortcutUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +39,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -33,8 +49,24 @@ class HomeActivity : AppCompatActivity() {
         navController = navHostFragment?.navController
 
         setupBottomNavigation()
-        binding.floatButton.setOnClickListener{showAlertDialog(it)}
+        binding.floatButton.setOnClickListener { showAlertDialog(it) }
 
+        setShortcutUtil()
+
+
+    }
+
+
+    private fun setShortcutUtil() {
+
+        ShortcutUtil.createShortcut(applicationContext)
+
+        val fragmentToOpen = intent.getStringExtra("fragment")
+        when (fragmentToOpen) {
+            "playerList" -> navController!!.navigate(R.id.playerListFragment)
+            "coachList" ->  navController!!.navigate(R.id.coachListFragment)
+            else -> navController!!.navigate(R.id.homeFragment)
+        }
 
     }
 
@@ -59,12 +91,31 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
+
+
+//    fun showAlertDialog(view: View) {
+//
+//        val builder = MaterialAlertDialogBuilder(this)
+//        val binding = CustomDialogLayoutBinding.inflate(layoutInflater)
+//
+//        binding.newCoach.setOnClickListener {
+//            navController!!.navigate(R.id.registerCoachFragment)
+//        }
+//        binding.newPlayer.setOnClickListener { navController!!.navigate(R.id.registerPlayerFragment) }
+//
+//        builder.setView(binding.root)
+//        builder.background = Color.TRANSPARENT.toDrawable()
+//
+//        builder.show()
+//
+//    }
+
     fun showAlertDialog(view: View) {
 
         MaterialAlertDialogBuilder(this)
             .setTitle("adicionar")
             .setIcon(R.drawable.person_)
-            .setNeutralButton("cancelar") { dialog, which -> Toast.makeText(this, "oi", Toast.LENGTH_SHORT).show()}
+            .setNeutralButton("cancelar") { dialog, which -> Toast.makeText(this, "oi", Toast.LENGTH_SHORT).show() }
             .setNegativeButton("novo aluno")
             { dialog, which ->
 
@@ -85,7 +136,6 @@ class HomeActivity : AppCompatActivity() {
             binding.floatButton.visibility = View.GONE
         }
     }
-
 
 
 }

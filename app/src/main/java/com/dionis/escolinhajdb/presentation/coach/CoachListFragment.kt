@@ -15,6 +15,7 @@ import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.databinding.FragmentCoachListBinding
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
 import com.dionis.escolinhajdb.presentation.coach.DialogCoachDetailFragment.Companion.COACH
+import com.dionis.escolinhajdb.util.Extensions.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,6 +63,7 @@ class CoachListFragment : Fragment() {
         coachViewModel.coach.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Failure -> {
+                    toast("falha")
                 }
                 is UiState.Loading -> {
                 }
@@ -75,14 +77,18 @@ class CoachListFragment : Fragment() {
 
     private fun setCoachAdapter() {
         coachListAdapter = CoachAdapter()
+
         coachListAdapter.onItemClicked = {
 
             val args = Bundle().apply { putParcelable(COACH, it) }
 
             val dialog = DialogCoachDetailFragment()
             dialog.show(childFragmentManager, dialog.tag)
-
             dialog.arguments = args
+        }
+
+        coachListAdapter.onDeleteClicked = {
+            toast("deletedo")
         }
 
         binding.recyclerViewCoachList.adapter = coachListAdapter

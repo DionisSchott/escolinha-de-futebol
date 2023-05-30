@@ -8,9 +8,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.IdRes
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
+import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
@@ -21,12 +23,15 @@ import java.util.*
 object Extensions {
 
     fun Fragment.toast(msg: String?) {
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
     }
+
 
     fun Fragment.navTo(@IdRes dest: Int, args: Bundle) = findNavController().navigate(dest, args)
     fun Fragment.navTo(@IdRes dest: Int) = findNavController().navigate(dest)
-    fun Fragment.firstName(name: String): String {  return name.split(" ")[0]  }
+    fun Fragment.firstName(name: String): String {
+        return name.split(" ")[0]
+    }
 
     fun Fragment.spinnerAutoComplete(text: AutoCompleteTextView, list: List<String>) {
 
@@ -44,25 +49,34 @@ object Extensions {
         }
     }
 
-    fun Fragment.spinner(text: Spinner, list: List<String>) {
 
-        val itemsAdapter = ArrayAdapter(requireContext(), R.layout.items_list,
-            list)
-        text.setAdapter(itemsAdapter)
-        text.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long,
-            ) {
+
+    fun Fragment.setSpinner(spinner: Spinner, list: List<String>, textView: TextView) {
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, list.map { it })
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        val spinnerPosition = adapter.getPosition(textView.text.toString())
+        spinner.setSelection(spinnerPosition)
+
+        spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemview: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    textView.text = list[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-        }
     }
+
 
     fun Fragment.datePicker(birth: String, editText: TextInputEditText) {
 
@@ -112,7 +126,6 @@ object Extensions {
                 launcher.launch(intent)
             }
     }
-
 
 
 }

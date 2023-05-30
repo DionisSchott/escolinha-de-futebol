@@ -18,17 +18,17 @@ class UserManager(val context: Context) {
     companion object {
         private val USER_EMAIL_KEY = stringPreferencesKey("USER_EMAIL")
         private val USER_PASSWORD_KEY = stringPreferencesKey("USER_PASSWORD")
-        private val USER_AUTHENTICATED_KEY = booleanPreferencesKey("USER_AUTHENTICATED")
+   //     private val USER_AUTHENTICATED_KEY = booleanPreferencesKey("USER_AUTHENTICATED")
         private val USER_UID = stringPreferencesKey("USER_UID")
 
     }
 
-    suspend fun saveDataUser(email: String, password: String, authenticated: Boolean) {
+    suspend fun saveDataUser(email: String, password: String) {
 
         context.dataUser.edit {
             it[USER_EMAIL_KEY] = email
             it[USER_PASSWORD_KEY] = password
-            it[USER_AUTHENTICATED_KEY] = authenticated
+   //         it[USER_AUTHENTICATED_KEY] = authenticated
         }
     }
 
@@ -39,7 +39,7 @@ class UserManager(val context: Context) {
         return User(
             email = prefs[USER_EMAIL_KEY] ?: "",
             password = prefs[USER_PASSWORD_KEY] ?: "",
-            authenticated = prefs[USER_AUTHENTICATED_KEY] ?: false
+     //       authenticated = prefs[USER_AUTHENTICATED_KEY] ?: false
         )
     }
 

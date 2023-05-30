@@ -18,6 +18,7 @@ import com.dionis.escolinhajdb.databinding.FragmentRegisterBinding
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.presentation.lists.ListViewModel
 import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.loadImage
 import com.dionis.escolinhajdb.util.Extensions.toast
@@ -34,7 +35,10 @@ class RegisterCoachFragment : Fragment() {
     val TAG: String = "UserUpdateFragment"
     private lateinit var binding: FragmentRegisterBinding
     private val viewModel: ViewModel by viewModels()
+    private val listViewModel: ListViewModel by viewModels()
     private val myCalendar = Calendar.getInstance()
+    private var functionList = listOf<String>()
+    private var categoryList = listOf<String>()
 
     var imageUri: Uri? = null
     var image: String = ""
@@ -66,6 +70,7 @@ class RegisterCoachFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        listViewModel.getLists()
         setUp()
 
     }
@@ -108,6 +113,21 @@ class RegisterCoachFragment : Fragment() {
     }
 
     private fun observer() {
+        listViewModel.lists.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {
+
+                }
+                is UiState.Failure -> {
+
+                }
+                is UiState.Success -> {
+                    functionList = it.data.function
+                    categoryList = it.data.subFunction
+                }
+            }
+        }
+
         viewModel.register.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -140,7 +160,6 @@ class RegisterCoachFragment : Fragment() {
             birth = binding.tvBirth.text.toString(),
             addedBy = user!!,
             memberSince = myCalendar.time.toString()
-
 
 
         )
@@ -182,7 +201,7 @@ class RegisterCoachFragment : Fragment() {
 
     }
 
-    private fun loadImage () {
+    private fun loadImage() {
         loadImage(startForProfileImageResult)
     }
 

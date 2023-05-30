@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.databinding.ActivityLoginBinding
+import com.dionis.escolinhajdb.util.ShortcutUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,5 +24,6 @@ class LoginActivity : AppCompatActivity() {
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_login) as NavHostFragment
         navController = navHostFragment?.navController
+
     }
 }

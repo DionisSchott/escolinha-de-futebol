@@ -17,54 +17,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/falseToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/jdb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/pageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_back_24"
+            android:textColor="@color/white"
+            android:contentDescription="@string/back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_marginTop="63dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/falseToolbar"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="0dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/falseToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/jdb"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/pageTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="@string/app_name"
-                    android:textColor="@color/white"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/btnBack"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="16dp"
-                    android:gravity="center"
-                    android:background="@color/transparent"
-                    android:src="@drawable/ic_back_24"
-                    android:textColor="@color/white"
-                    android:contentDescription="@string/back"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgPlayer"
@@ -75,7 +79,7 @@
                 app:civ_circle_background_color="@color/jdb"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/falseToolbar" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -201,10 +205,10 @@
                     style="@style/ThemeOverlay.Material3.TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
                     app:mask="(__) _____-____"
-                    android:inputType="number"
                     app:maskCharacter="_"
                     app:maskStyle="completable" />
 
@@ -218,10 +222,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
+                android:hint="Sexo"
                 android:visibility="visible"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                android:hint="Sexo"
                 app:layout_constraintCircleRadius="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -231,25 +235,24 @@
                 <AutoCompleteTextView
                     android:id="@+id/genre"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
                 <!--https://www.youtube.com/watch?v=SnE7ncKBCUU
 
 <!-                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/edtGenre"-->
-<!--                    style="@style/ThemeOverlay.Material3.TextInputEditText"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:clickable="false"-->
-<!--                    android:focusable="false"-->
-<!--                    android:hint="Sexo" />-->
+                <!--                    android:id="@+id/edtGenre"-->
+                <!--                    style="@style/ThemeOverlay.Material3.TextInputEditText"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    android:clickable="false"-->
+                <!--                    android:focusable="false"-->
+                <!--                    android:hint="Sexo" />-->
 
-<!--                <Spinner-->
-<!--                    android:id="@+id/spinnerGenre"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent" />-->
+                <!--                <Spinner-->
+                <!--                    android:id="@+id/spinnerGenre"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="match_parent"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent" />-->
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -262,9 +265,9 @@
                 android:background="#00000000"
                 android:text="cancelar"
                 android:textColor="@color/blue"
-                app:layout_constraintTop_toBottomOf="@id/cvGenre"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cvGenre" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDone"
