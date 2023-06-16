@@ -74,7 +74,7 @@ class PlayerRepositoryImpl(
     }
 
 
-    override fun getPlayer(filter: String, result: (UiState<List<Player>>) -> Unit) {
+    override fun getPlayer(result: (UiState<List<Player>>) -> Unit) {
         val query = dataBase.collection(PLAYER)
 
 //            .whereEqualTo("category", "sub10")

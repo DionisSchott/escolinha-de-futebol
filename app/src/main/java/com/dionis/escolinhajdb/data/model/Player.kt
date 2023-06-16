@@ -32,5 +32,7 @@ data class Player(
     val bloodType: String = "",
     val healthNotes: String = "",
     @ServerTimestamp
-    val insertionDate: Date = Date(),
+    val startDate: Date? = null,
+    val isActive: Boolean = true,
+    //val departureDate: Date? = null,
 ) : Parcelable

@@ -20,8 +20,10 @@ class UserManager(val context: Context) {
         private val USER_PASSWORD_KEY = stringPreferencesKey("USER_PASSWORD")
    //     private val USER_AUTHENTICATED_KEY = booleanPreferencesKey("USER_AUTHENTICATED")
         private val USER_UID = stringPreferencesKey("USER_UID")
-
+        private val CATEGORY = stringPreferencesKey("CATEGORY")
     }
+
+
 
     suspend fun saveDataUser(email: String, password: String) {
 
@@ -59,6 +61,25 @@ class UserManager(val context: Context) {
 
     suspend fun clearDataUser() {
         context.dataUser.edit { it.clear() }
+    }
+
+    suspend fun saveCategory(category: String) {
+        context.dataUser.edit {
+            it[CATEGORY] = category
+        }
+    }
+
+    suspend fun clearCategory() {
+        context.dataUser.edit {
+            it[CATEGORY] = ""
+        }
+    }
+
+    suspend fun readCategory() : String {
+        val category = context.dataUser.data.first()
+        return (
+                category[CATEGORY] ?: ""
+                )
     }
 
 }

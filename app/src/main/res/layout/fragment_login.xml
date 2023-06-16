@@ -22,15 +22,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/imgLogo"
-        app:layout_constraintStart_toStartOf="@id/imgLogo"
-        app:layout_constraintEnd_toEndOf="@id/imgLogo"
-        app:layout_constraintBottom_toBottomOf="@id/imgLogo"
-        android:textSize="80sp"
+        android:text="logo"
         android:textAllCaps="true"
-        android:textStyle="bold"
         android:textColor="@color/white"
-        android:text="logo"/>
+        android:textSize="80sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/imgLogo"
+        app:layout_constraintEnd_toEndOf="@id/imgLogo"
+        app:layout_constraintStart_toStartOf="@id/imgLogo"
+        app:layout_constraintTop_toTopOf="@id/imgLogo" />
 
     <TextView
         android:id="@+id/tv_welcome"
@@ -83,10 +83,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
+        android:hint="senha"
         app:layout_constraintStart_toStartOf="@id/edtEmailLayout"
         app:layout_constraintTop_toBottomOf="@id/edtEmailLayout"
         app:passwordToggleEnabled="true"
-        android:hint="senha"
         app:startIconDrawable="@drawable/key">
 
 
@@ -114,19 +114,28 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
         android:text="entrar"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnRecoveryPassword"
+        app:layout_constraintTop_toBottomOf="@id/edtPassLayout" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRecoveryPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="esqueci a senha"
+        android:background="@color/transparent"
+        android:textColor="@color/jdb"
+        app:layout_constraintEnd_toStartOf="@id/btnLogin"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edtPassLayout"
-         />
+
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

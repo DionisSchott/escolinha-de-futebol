@@ -1,5 +1,6 @@
 package com.dionis.escolinhajdb.presentation.player
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Color
@@ -9,15 +10,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.States
@@ -25,25 +24,37 @@ import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentRegisterPlayerBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.presentation.lists.ListViewModel
 import com.dionis.escolinhajdb.util.Extensions.datePicker
+import com.dionis.escolinhajdb.util.Extensions.datePickerReturn
 import com.dionis.escolinhajdb.util.Extensions.firstName
+import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
-import com.dionis.escolinhajdb.util.Genre.GENRE
+import com.dionis.escolinhajdb.util.Genre.GENRE_LIST
+import com.dionis.escolinhajdb.util.Permissions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputLayout
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
 class RegisterPlayerFragment : Fragment() {
 
-    val TAG: String = "RegisterPlayerfragment"
+    val TAG: String = "RegisterPlayerFragment"
     private lateinit var binding: FragmentRegisterPlayerBinding
     private val viewModel: PlayerViewModel by activityViewModels()
+    private val listViewModel: ListViewModel by activityViewModels()
     var objPlayer: Player? = null
     var imageUris: MutableList<Uri> = arrayListOf()
     var image: MutableList<String> = arrayListOf()
+    private var categoryList = listOf<String>()
+    var date = Calendar.getInstance().time
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission(), ::handlePermissionResult)
 
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -55,20 +66,18 @@ class RegisterPlayerFragment : Fragment() {
             Picasso.get().load(imageUris[0]).into(binding.imgPlayer)
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
-
             toast(ImagePicker.getError(data))
         } else {
-
             Log.e(TAG, "Task Cancelled")
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
         binding = FragmentRegisterPlayerBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,46 +89,59 @@ class RegisterPlayerFragment : Fragment() {
         (activity as HomeActivity).showBottomNavigation(true)
     }
 
-    private fun setUp() {
-        spinner()
-        setObservers()
-        setupClick()
-        (activity as HomeActivity).showBottomNavigation(false)
+    private fun handlePermissionResult(isGranted: Boolean) {
+        val permission = Permissions()
+
+        val permissionState = permission.checkPermissionState(
+            requireActivity(),
+            READ_EXTERNAL_STORAGE
+        )
+        when (permissionState) {
+            Permissions.PermissionState.GRANTED -> loadImage()
+            Permissions.PermissionState.DENIED ->
+                requestPermission()
+            // se negar 2 vezes criar função para ir para configurações liberar manualmente
+            Permissions.PermissionState.DO_NOT_ASK -> {
+                toast("permissão necessária")
+
+                // função para ir para configurações liberar manualmente
+            }
+
+            Permissions.PermissionState.RATIONALE -> {
+                toast("permissão necessária")
+                requestPermission()
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        requestPermissionLauncher.launch(READ_EXTERNAL_STORAGE)
+    }
+
+    private fun tryLoadImage() {
+        val permissions = Permissions()
+        permissions.requestPermission(requireActivity(), READ_EXTERNAL_STORAGE, { loadImage() }, { requestPermission() })
 
     }
 
-//    private fun setUpSpinner() {
-//
-//        binding.edtGenre.setOnClickListener {
-//            binding.spinnerGenre.visibility = View.VISIBLE
-//        }
-//
-//        val spinner = binding.spinnerGenre
-//        val adapter = ArrayAdapter(
-//            requireContext(),
-//            R.layout.spinner_item,
-//            genreList.map { it })
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        spinner.adapter = adapter
-//        val spinnerPosition = adapter.getPosition(genre)
-//        spinner.setSelection(spinnerPosition)
-//        spinner.onItemSelectedListener =
-//            object : AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(
-//                    parentView: AdapterView<*>?,
-//                    selectedItemview: View?,
-//                    position: Int,
-//                    id: Long,
-//                ) {
-//                    val selectedGender = genreList[position]
-//                    genre = selectedGender
-//                    binding.edtGenre.setText(genre)
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>?) {
-//                }
-//
-//            }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        listViewModel.getLists()
+    }
+
+    private fun setUp() {
+        setObservers()
+        setupClick()
+        getInsertionDate()
+        lifecycleScope.launch {
+            delay(500)
+            spinner()
+        }
+        (activity as HomeActivity).showBottomNavigation(false)
+
+
+    }
+
 //    }
 
     private fun validateFields() {
@@ -128,8 +150,9 @@ class RegisterPlayerFragment : Fragment() {
         val responsibleName = binding.edtResponsibleName.text.toString()
         val playersBirth = binding.edtPlayersBirth.text.toString()
         val playerGenre = binding.genre.text.toString()
+        val playerCategory = binding.category.text.toString()
 
-        viewModel.validateFields(playerName, responsibleName, playersBirth, playerGenre)
+        viewModel.validateFields(playerName, responsibleName, playersBirth, playerGenre, playerCategory)
     }
 
     private fun loadImage() {
@@ -157,10 +180,28 @@ class RegisterPlayerFragment : Fragment() {
                 is States.ValidateRegisterPlayer.PlayerGenreEmpty -> {
                     showObligatoryField(binding.cvGenre, R.string.obligatory_field)
                 }
+                is States.ValidateRegisterPlayer.PlayerCategoryEmpty -> {
+                    showObligatoryField(binding.cvCategory, R.string.obligatory_field)
+                }
 
                 is States.ValidateRegisterPlayer.FieldsDone -> {
-                    registerPlayer()
+                    uploadImage()
+                    // registerPlayer()
                     showDialog()
+                }
+            }
+        }
+
+        listViewModel.lists.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {
+
+                }
+                is UiState.Failure -> {
+
+                }
+                is UiState.Success -> {
+                    categoryList = it.data.category
                 }
             }
         }
@@ -200,8 +241,21 @@ class RegisterPlayerFragment : Fragment() {
             images = image,
             responsibleType = binding.edtResponsibleType.text.toString(),
             genre = binding.genre.text.toString(),
-            insertionDate = Date()
+            startDate = date,
+            category = binding.category.text.toString(),
         )
+    }
+
+    private fun getInsertionDate() {
+
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        binding.edtInsertionDate.setText(formatter.format(date))
+
+        datePickerReturn("", binding.edtInsertionDate) {
+            date = it
+            binding.edtInsertionDate.setText(formatter.format(it))
+        }
+
     }
 
     private fun setupClick() = binding.apply {
@@ -211,12 +265,13 @@ class RegisterPlayerFragment : Fragment() {
         }
         datePicker("", edtPlayersBirth)
 
+
         imgPlayer.setOnClickListener {
-            loadImage()
+            tryLoadImage()
         }
         btnDone.setOnClickListener {
-//            validateFields()
-            uploadImage()
+            validateFields()
+            //    uploadImage()
         }
         btnCancel.setOnClickListener {
             findNavController().popBackStack()
@@ -229,7 +284,7 @@ class RegisterPlayerFragment : Fragment() {
     }
 
 
-    private fun getimageUrls(): List<String> {
+    private fun getImageUrls(): List<String> {
         if (imageUris.isNotEmpty()) {
             return imageUris.map { it.toString() }
         } else {
@@ -257,23 +312,10 @@ class RegisterPlayerFragment : Fragment() {
 
 
     private fun spinner() {
-
-        val layoutText = binding.cvGenre
-        val text = binding.genre
-
-        val items = GENRE
-        val itemsAdapter = ArrayAdapter(requireContext(), R.layout.items_list, items)
-        text.setAdapter(itemsAdapter)
-        text.onItemClickListener = object : AdapterView.OnItemClickListener {
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long,
-            ) {
-            }
-        }
+        spinnerAutoComplete(binding.genre, GENRE_LIST)
+        spinnerAutoComplete(binding.category, categoryList)
     }
+
 
     private fun uploadImage() {
         if (imageUris.isNotEmpty()) {

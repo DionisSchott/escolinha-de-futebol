@@ -23,33 +23,56 @@ class ShortcutUtil {
         fun createShortcut(context: Context) {
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
 
-            // Crie um Intent para abrir o fragment desejado
-            val intentPlayerList = Intent(context, HomeActivity::class.java).apply {
+
+//            val intentPlayerList = Intent(context, HomeActivity::class.java).apply {
+//                action = Intent.ACTION_VIEW
+//                putExtra("fragment", "playerList")
+//            }
+//
+//
+//            val shortcutPlayerList = ShortcutInfo.Builder(context, "player_list_id")
+//                .setShortLabel("Alunos")
+//                .setIcon(Icon.createWithResource(context, R.drawable.ic_baseline_people_24))
+//                .setIntent(intentPlayerList)
+//                .build()
+//
+//
+//            val intentCoachList = Intent(context, HomeActivity::class.java).apply {
+//                action = Intent.ACTION_VIEW
+//                putExtra("fragment", "coachList")
+//            }
+//
+//            val shortcutCoachList = ShortcutInfo.Builder(context, "coach_list_id")
+//                .setShortLabel("Treinadores")
+//                .setIcon(Icon.createWithResource(context, R.drawable.ic_baseline_sports_24))
+//                .setIntent(intentCoachList)
+//                .build()
+
+            val intentRegisterPlayer = Intent(context, HomeActivity::class.java).apply {
                 action = Intent.ACTION_VIEW
-                putExtra("fragment", "playerList")
+                putExtra("fragment", "registerPlayer")
             }
 
-            // Crie um objeto ShortcutInfo com o nome, ícone e Intent do atalho
-            val shortcutPlayerList = ShortcutInfo.Builder(context, "player_list_id")
-                .setShortLabel("Alunos")
-                .setIcon(Icon.createWithResource(context, R.drawable.ic_baseline_people_24))
-                .setIntent(intentPlayerList)
+            val shortcutRegisterPlayer = ShortcutInfo.Builder(context, "register_player_id")
+                .setShortLabel("Novo aluno")
+                .setIcon(Icon.createWithResource(context, R.drawable.ic_baseline_person_add_24))
+                .setIntent(intentRegisterPlayer)
                 .build()
 
+//            val intentHome = Intent(context, HomeActivity::class.java).apply {
+//                action = Intent.ACTION_VIEW
+//                putExtra("fragment", "home")
+//            }
+//
+//            val shortcutHome = ShortcutInfo.Builder(context, "home_id")
+//                .setShortLabel("home")
+//                .setIcon(Icon.createWithResource(context, R.drawable.ic_baseline_sports_24))
+//                .setIntent(intentHome)
+//                .build()
 
-            val intentCoachList = Intent(context, HomeActivity::class.java).apply {
-                action = Intent.ACTION_VIEW
-                putExtra("fragment", "coachList")
-            }
-            // Crie um objeto ShortcutInfo com o nome, ícone e Intent do atalho
-            val shortcutCoachList = ShortcutInfo.Builder(context, "coach_list_id")
-                .setShortLabel("Treinadores")
-                .setIcon(Icon.createWithResource(context, R.drawable.ic_baseline_sports_24))
-                .setIntent(intentCoachList)
-                .build()
 
-            // Adicione o atalho ao ShortcutManager
-            shortcutManager.dynamicShortcuts = listOf(shortcutPlayerList, shortcutCoachList)
+
+            shortcutManager.dynamicShortcuts = listOf(shortcutRegisterPlayer)
         }
     }
 }

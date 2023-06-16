@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentFromPdfSaveBinding
+import com.dionis.escolinhajdb.util.Extensions.formatDate
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.delay
@@ -56,14 +57,21 @@ class FromPdfSaveFragment : Fragment() {
     private fun setInfo() {
         Picasso.get().load(playerDetail.images[0]).into(binding.playerImg)
         binding.playerNameEdt.text = playerDetail.playerName
-        binding.tvPlayerPosition.text = playerDetail.position
+        binding.tvMemberSince.text = playerDetail.startDate.toString()
         binding.playerWeightEdt.text = playerDetail.weight.toString()
         binding.playerHeightEdt.text = playerDetail.height.toString()
         binding.tvGenre.text = playerDetail.genre
         binding.responsibleNameEdt.text = playerDetail.responsibleName
         binding.responsibleTypeEdt.text = playerDetail.responsibleType
         binding.playerBirthEdt.text = playerDetail.playersBirth
-        binding.playerAgeTv.text = "10"
+
+        val formattedDate = formatDate(playerDetail.startDate!!)
+        binding.tvMemberSince.text = formattedDate
+
+//        ageFormatter(playerDetail.insertionDate) {
+//            binding.tvMemberSince.text = it
+//        }
+
 
 //        val currentDay = Calendar.getInstance()
 //        currentDay.time
@@ -83,6 +91,7 @@ class FromPdfSaveFragment : Fragment() {
             binding.tvSkillsNotes.visibility = View.INVISIBLE
         }
     }
+
 
     private fun exportPdf(layout: View) {
 

@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#CAC9C9"
+    android:background="#AECAC9C9"
     android:padding="5dp"
+    android:textSize="16sp"
     android:paddingStart="15dp"
     android:text="Sample"
     android:textColor="@color/black"
-
     tools:ignore="RtlSymmetry">
-
 </TextView>

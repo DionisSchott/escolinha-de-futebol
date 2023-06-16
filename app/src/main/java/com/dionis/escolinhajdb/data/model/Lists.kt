@@ -9,6 +9,6 @@ data class Lists(
     val position: List<String> = arrayListOf(),
     val blood: List<String> = arrayListOf(),
     val function: List<String> = arrayListOf(),
-    val subFunction: List<String> = arrayListOf(),
+    val category: List<String> = arrayListOf(),
 
     ) : Parcelable

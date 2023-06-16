@@ -22,4 +22,5 @@ interface AuthRepository {
     suspend fun authenticateUser(user: FirebaseUser?, currentPassword: String, onResult: (UiState<String>) -> Unit)
     suspend fun changePassword(user: FirebaseUser?, newPassword: String, onResult: (UiState<String>) -> Unit)
 
+    suspend fun sendPasswordResetEmail(email: String, onResult: (UiState<String>) -> Unit)
 }

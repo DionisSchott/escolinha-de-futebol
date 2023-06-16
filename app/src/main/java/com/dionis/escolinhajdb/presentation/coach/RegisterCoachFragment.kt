@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
@@ -21,12 +23,14 @@ import com.dionis.escolinhajdb.presentation.home.HomeActivity
 import com.dionis.escolinhajdb.presentation.lists.ListViewModel
 import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.loadImage
+import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
@@ -34,8 +38,8 @@ class RegisterCoachFragment : Fragment() {
 
     val TAG: String = "UserUpdateFragment"
     private lateinit var binding: FragmentRegisterBinding
-    private val viewModel: ViewModel by viewModels()
-    private val listViewModel: ListViewModel by viewModels()
+    private val viewModel: ViewModel by activityViewModels()
+    private val listViewModel: ListViewModel by activityViewModels()
     private val myCalendar = Calendar.getInstance()
     private var functionList = listOf<String>()
     private var categoryList = listOf<String>()
@@ -70,6 +74,7 @@ class RegisterCoachFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         listViewModel.getLists()
         setUp()
 
@@ -81,8 +86,13 @@ class RegisterCoachFragment : Fragment() {
     }
 
     private fun setUp() {
+        observer()
         setDatePicker()
         setUpClicks()
+        lifecycleScope.launch {
+            delay(500)
+            setupSpinner()
+        }
         (activity as HomeActivity).showBottomNavigation(false)
     }
 
@@ -100,7 +110,7 @@ class RegisterCoachFragment : Fragment() {
 
     private fun register() {
 
-        observer()
+
         if (validate()) {
             viewModel.register(
                 email = binding.edtEmail.text.toString(),
@@ -123,7 +133,7 @@ class RegisterCoachFragment : Fragment() {
                 }
                 is UiState.Success -> {
                     functionList = it.data.function
-                    categoryList = it.data.subFunction
+                    categoryList = it.data.category
                 }
             }
         }
@@ -144,6 +154,11 @@ class RegisterCoachFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setupSpinner() {
+        spinnerAutoComplete(binding.edtFunction, functionList)
+        spinnerAutoComplete(binding.edtCategory, categoryList)
     }
 
     private fun getCoachObj(): Coach {

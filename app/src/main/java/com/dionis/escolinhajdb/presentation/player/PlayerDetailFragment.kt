@@ -1,19 +1,16 @@
 package com.dionis.escolinhajdb.presentation.player
 
 import android.app.Activity
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
@@ -27,12 +24,8 @@ import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.setSpinner
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.material.slider.Slider
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -48,12 +41,13 @@ class PlayerDetailFragment : Fragment() {
     private val viewModel: PlayerViewModel by activityViewModels()
     private var genreList = listOf("Masculino", "Feminino")
     private var playerGenre = ""
-    private var playerPositionList : List<String> = arrayListOf()
+    private var playerPositionList: List<String> = arrayListOf()
+    private var playerCategoryList: List<String> = arrayListOf()
     private var playerPosition = "---"
     private var bloodTypeList: List<String> = arrayListOf()
     private var playerBloodType = ""
     private val myCalendar = Calendar.getInstance()
-    private val listViewModel: ListViewModel by viewModels()
+    private val listViewModel: ListViewModel by activityViewModels()
 
     val TAG: String = "NoteDetailFragment"
     var imageUris: MutableList<Uri> = arrayListOf()
@@ -122,6 +116,7 @@ class PlayerDetailFragment : Fragment() {
                 is UiState.Success -> {
                     bloodTypeList = it.data.blood
                     playerPositionList = it.data.position
+                    playerCategoryList = it.data.category
                 }
 
             }
@@ -135,13 +130,13 @@ class PlayerDetailFragment : Fragment() {
             loadImage()
         }
 
-        binding.playerWeightEdt.setOnClickListener {
-            slider(binding.playerWeightEdt)
-        }
-
-        binding.playerHeightEdt.setOnClickListener {
-            slider(binding.playerHeightEdt)
-        }
+//        binding.playerWeightEdt.setOnClickListener {
+//            slider(binding.playerWeightEdt)
+//        }
+//
+//        binding.playerHeightEdt.setOnClickListener {
+//            slider(binding.playerHeightEdt)
+//        }
 
         binding.btnEdit.setOnClickListener {
             turnVisible()
@@ -151,7 +146,6 @@ class PlayerDetailFragment : Fragment() {
 
         binding.btnSave.setOnClickListener {
             uploadImage()
-            findNavController().popBackStack()
         }
 
         binding.exportPdf.setOnClickListener {
@@ -183,41 +177,7 @@ class PlayerDetailFragment : Fragment() {
     }
 
     private fun playerGenreSpinner() {
-
         setSpinner(binding.spinnerGenre, genreList, binding.tvGenre)
-
-//        binding.spinnerGenre.post {
-//            binding.spinnerGenre.performClick()
-//
-//        }
-//        val spinner = binding.spinnerGenre
-//        val adapter = ArrayAdapter(
-//            requireContext(),
-//            R.layout.spinner_item,
-//            genreList.map { it })
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        spinner.adapter = adapter
-//        val spinnerPosition = adapter.getPosition(binding.tvGenre.text.toString())
-//        spinner.setSelection(spinnerPosition)
-//        spinner.onItemSelectedListener =
-//            object : AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(
-//                    parentView: AdapterView<*>?,
-//                    selectedItemview: View?,
-//                    position: Int,
-//                    id: Long,
-//                ) {
-//                    playerGenre = genreList[position]
-//                    binding.tvGenre.text = playerGenre
-////                    binding.tvGenre.visibility = View.VISIBLE
-////                    binding.cvGenre.visibility = View.INVISIBLE
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>?) {
-//
-//                }
-//
-//            }
     }
 
     private fun playerPositionSpinner() {
@@ -228,38 +188,43 @@ class PlayerDetailFragment : Fragment() {
         setSpinner(binding.spinnerBlood, bloodTypeList, binding.tvBloodType)
     }
 
-    private fun slider(view: EditText) {
-
-
-        val sliderView = binding.slider
-
-        sliderView.visibility = View.VISIBLE
-
-        sliderView.value = playerDetail.weight
-
-
-        sliderView.setLabelFormatter { value: Float ->
-            val format = DecimalFormat("#,##0.##", DecimalFormatSymbols(Locale.getDefault()))
-            format.positiveSuffix = "Kg"
-            format.format(value.toDouble())
-
-        }
-        sliderView.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-            override fun onStartTrackingTouch(slider: Slider) {
-                sliderView.background.setTint(resources.getColor(R.color.jdb_ultra_light))
-            }
-
-            override fun onStopTrackingTouch(slider: Slider) {
-                sliderView.background.setTint(Color.WHITE)
-                sliderView.visibility = View.INVISIBLE
-            }
-        })
-
-        sliderView.addOnChangeListener { slider, value, fromUser ->
-            view.setText(value.toString())
-
-        }
+    private fun playerCategorySpinner() {
+        setSpinner(binding.spinnerPlayerCategory, playerCategoryList, binding.tvPlayerCategory)
     }
+
+
+//    private fun slider(view: EditText) {
+//
+//
+//        val sliderView = binding.slider
+//
+//        sliderView.visibility = View.VISIBLE
+//
+//        sliderView.value = playerDetail.weight
+//
+//
+//        sliderView.setLabelFormatter { value: Float ->
+//            val format = DecimalFormat("#,##0.##", DecimalFormatSymbols(Locale.getDefault()))
+//            format.positiveSuffix = "Kg"
+//            format.format(value.toDouble())
+//
+//        }
+//        sliderView.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+//            override fun onStartTrackingTouch(slider: Slider) {
+//                sliderView.background.setTint(resources.getColor(R.color.jdb_ultra_light))
+//            }
+//
+//            override fun onStopTrackingTouch(slider: Slider) {
+//                sliderView.background.setTint(Color.WHITE)
+//                sliderView.visibility = View.INVISIBLE
+//            }
+//        })
+//
+//        sliderView.addOnChangeListener { slider, value, fromUser ->
+//            view.setText(value.toString())
+//
+//        }
+//    }
 
     private fun turnVisible() = binding.apply {
 
@@ -274,6 +239,9 @@ class PlayerDetailFragment : Fragment() {
 
         tvPlayerPosition.visibility = View.INVISIBLE
         cvPlayerPosition.visibility = View.VISIBLE
+
+        tvPlayerCategory.visibility = View.INVISIBLE
+        cvPlayerCategory.visibility = View.VISIBLE
 
         tvResponsibleName.visibility = View.INVISIBLE
         cvResponsibleName.visibility = View.VISIBLE
@@ -300,6 +268,7 @@ class PlayerDetailFragment : Fragment() {
         //playerGenreSpinner()
         playerPositionSpinner()
         playerBloodSpinner()
+        playerCategorySpinner()
     }
 
 
@@ -323,6 +292,7 @@ class PlayerDetailFragment : Fragment() {
         tvGenre.isClickable = isClickable
         tvBloodType.isClickable = isClickable
         tvPlayerPosition.isClickable = isClickable
+        tvPlayerCategory.isClickable = isClickable
         cvResponsibleName.isClickable = isClickable
         responsibleTypeEdt.isClickable = isClickable
         cvContact.isClickable = isClickable
@@ -347,6 +317,7 @@ class PlayerDetailFragment : Fragment() {
             tvPlayerName.text = it.playerName
 
             tvPlayerPosition.text = it.position
+            tvPlayerCategory.text = it.category
 
             if (it.weight > 0.1) {
                 playerWeightEdt.setText(it.weight.toString())
@@ -382,31 +353,7 @@ class PlayerDetailFragment : Fragment() {
 
 
     private fun setDatePicker() {
-
         datePicker(playerDetail.playersBirth, binding.playerBirthEdt)
-
-    }
-
-    private fun updateLabel() {
-
-        val myFormat = "dd/MM/yyyy"
-        val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
-        binding.playerBirthEdt.setText(sdf.format(myCalendar.time).toString())
-//        val simpleFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.getDefault())
-//        dateFormatted = simpleFormat.format(myCalendar.time)
-
-        val currentDay = Calendar.getInstance()
-
-        age = (
-                currentDay.get(Calendar.YEAR) -
-                        myCalendar.get(Calendar.YEAR))
-        if (myCalendar.get(Calendar.DAY_OF_YEAR) > currentDay.get(Calendar.DAY_OF_YEAR)) {
-            age--
-        }
-
-        binding.playerAgeTv.text = age.toString()
-
-
     }
 
 
@@ -436,7 +383,9 @@ class PlayerDetailFragment : Fragment() {
             height = height,
             genre = binding.tvGenre.text.toString(),
             contacts = binding.contactEdt.unMasked,
-            bloodType = binding.tvBloodType.text.toString()
+            bloodType = binding.tvBloodType.text.toString(),
+            category = binding.tvPlayerCategory.text.toString(),
+            startDate = playerDetail.startDate
 
         )
     }
@@ -477,12 +426,14 @@ class PlayerDetailFragment : Fragment() {
                         viewModel.updatePlayer(getPlayerObj())
                         // viewModel.deleteImage(playerDetail.images[0])
                         toast("suceso")
+                        findNavController().popBackStack()
                     }
                 }
             }
         } else {
             image.add(playerDetail.images[0])
             viewModel.updatePlayer(getPlayerObj())
+            findNavController().popBackStack()
         }
     }
 

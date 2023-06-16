@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -26,6 +27,8 @@ import com.dionis.escolinhajdb.util.ListSelector
 import com.dionis.escolinhajdb.util.ShortcutUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -48,12 +51,14 @@ class HomeActivity : AppCompatActivity() {
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_home) as NavHostFragment
         navController = navHostFragment?.navController
 
-        setupBottomNavigation()
         binding.floatButton.setOnClickListener { showAlertDialog(it) }
 
-        setShortcutUtil()
+        setupBottomNavigation()
 
-
+        lifecycleScope.launch {
+            delay(200)
+            setShortcutUtil()
+        }
     }
 
 
@@ -61,13 +66,12 @@ class HomeActivity : AppCompatActivity() {
 
         ShortcutUtil.createShortcut(applicationContext)
 
-        val fragmentToOpen = intent.getStringExtra("fragment")
-        when (fragmentToOpen) {
-            "playerList" -> navController!!.navigate(R.id.playerListFragment)
-            "coachList" ->  navController!!.navigate(R.id.coachListFragment)
-            else -> navController!!.navigate(R.id.homeFragment)
+        when (intent.getStringExtra("fragment")) {
+//            "playerList" -> navController!!.navigate(R.id.playerListFragment)
+//            "coachList" -> navController!!.navigate(R.id.coachListFragment)
+            "registerPlayer" -> navController!!.navigate(R.id.registerPlayerFragment)
+//            "home" -> navController!!.navigate(R.id.homeFragment)
         }
-
     }
 
     private fun setupBottomNavigation() {
@@ -76,7 +80,6 @@ class HomeActivity : AppCompatActivity() {
         binding.bottonNavigationView.setOnNavigationItemReselectedListener {
             when (it.itemId) {
                 R.id.homeFragment -> {
-
                     navController!!.navigate(R.id.homeFragment)
                 }
                 R.id.playerListFragment -> {
@@ -90,7 +93,6 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
-
 
 
 //    fun showAlertDialog(view: View) {
@@ -114,11 +116,10 @@ class HomeActivity : AppCompatActivity() {
 
         MaterialAlertDialogBuilder(this)
             .setTitle("adicionar")
-            .setIcon(R.drawable.person_)
+            .setIcon(R.mipmap.ic_jdb)
             .setNeutralButton("cancelar") { dialog, which -> Toast.makeText(this, "oi", Toast.LENGTH_SHORT).show() }
             .setNegativeButton("novo aluno")
             { dialog, which ->
-
                 navController!!.navigate(R.id.registerPlayerFragment)
             }
             .setPositiveButton("novo treinador") { dialog, wich ->

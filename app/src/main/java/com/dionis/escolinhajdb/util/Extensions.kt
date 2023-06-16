@@ -8,15 +8,15 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.IdRes
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
-import com.dionis.escolinhajdb.util.Extensions.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -49,7 +49,19 @@ object Extensions {
         }
     }
 
+    fun ageFormatter(date: Date, result: (String) -> Unit) {
 
+        val inputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val outputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val birthDate = LocalDate.parse(date.toString(), inputFormat)
+        val formattedBirthDate = birthDate.format(outputFormat)
+        result.invoke(formattedBirthDate)
+    }
+
+    fun formatDate(date: Date): String {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        return dateFormat.format(date)
+    }
 
     fun Fragment.setSpinner(spinner: Spinner, list: List<String>, textView: TextView) {
 
@@ -108,6 +120,38 @@ object Extensions {
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             currentDate = Date(it)
             editText.setText(dateFormat.format(Date(it)))
+        }
+    }
+
+
+    fun Fragment.datePickerReturn(birth: String, editText: TextInputEditText, result: (Date) -> Unit) {
+
+        val currentDate = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val formattedDate = formatter.format(currentDate)
+
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+        val date = if (birth.isNotEmpty()) {
+            sdf.parse(birth)
+        } else {
+            sdf.parse(formattedDate)
+        }
+
+        val dateInMillis = date?.time
+
+
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Selecione uma data")
+            .setSelection(dateInMillis)
+            .build()
+
+        editText.setOnClickListener {
+            datePicker.show(childFragmentManager, "datePicker")
+        }
+
+        datePicker.addOnPositiveButtonClickListener {
+            result.invoke(Date(it))
         }
     }
 

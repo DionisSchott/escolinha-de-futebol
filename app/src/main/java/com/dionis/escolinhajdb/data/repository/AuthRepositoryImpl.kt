@@ -120,20 +120,12 @@ class AuthRepositoryImpl(
                                 if (it == null) {
                                     result.invoke(UiState.Failure("User register successfully but session failed to store"))
                                 } else {
+
                                     result.invoke(
                                         UiState.Success("User register successfully!")
+
                                     )
                                 }
-
-//                                storeSession(id = it.result.user?.uid ?: "") {
-//                                    if (it == null) {
-//                                        result.invoke(UiState.Failure("User register successfully but session failed to store"))
-//                                    } else {
-//                                        result.invoke(
-//                                            UiState.Success("User register successfully!")
-//                                        )
-//                                    }
-//                                }
                             }
                             is UiState.Failure -> {
                                 result.invoke(UiState.Failure(state.error))
@@ -213,6 +205,17 @@ class AuthRepositoryImpl(
             }
             ?.addOnFailureListener {
                 onResult.invoke((UiState.Failure("Senha atual incorreta")))
+            }
+    }
+
+    override suspend fun sendPasswordResetEmail(email: String, onResult: (UiState<String>) -> Unit) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                onResult.invoke(UiState.Success("Link de verificação enviado ao email: $email"))
+            }
+            .addOnFailureListener {
+                val errorMessage = it.message ?: "Erro desconhecido"
+                onResult.invoke(UiState.Failure(errorMessage))
             }
     }
 

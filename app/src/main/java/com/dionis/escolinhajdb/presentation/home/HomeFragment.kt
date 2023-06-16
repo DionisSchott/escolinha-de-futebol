@@ -27,6 +27,8 @@ import com.dionis.escolinhajdb.presentation.player.PlayerDetailFragment.Companio
 import com.dionis.escolinhajdb.presentation.player.PlayerViewModel
 import com.dionis.escolinhajdb.presentation.player.PlayersAdapter
 import com.dionis.escolinhajdb.util.Extensions.firstName
+import com.dionis.escolinhajdb.util.Extensions.setSpinner
+import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
@@ -46,6 +48,7 @@ class HomeFragment : Fragment() {
     private lateinit var userManager: UserManager
     private lateinit var coach: Coach
     private var userUid: String = ""
+    private var playerList: List<Player> = mutableListOf()
 
 
     override fun onCreateView(
@@ -62,7 +65,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userManager = UserManager(requireContext())
-        viewModel.getPlayers("")
+        viewModel.getPlayers()
         coachViewModel.getCoach()
 
         setUp()
@@ -71,57 +74,47 @@ class HomeFragment : Fragment() {
 
     private fun setUp() {
         setUpClicks()
-        setUpAdapter()
         setObservers()
+        recoveryCoach()
         setOnRefreshListener()
         viewLifecycleOwner.lifecycleScope.launch {
             delay(50)
-            recoveryCoach()
+            setUpAdapter()
         }
 
     }
 
 
     private fun setUpClicks() {
+
+
         binding.userEdit.setOnClickListener {
             val args = Bundle().apply { putParcelable(COACH, coach) }
             findNavController().navigate(R.id.action_homeFragment_to_updateUserInfoFragment, args)
         }
+
         binding.btLogout.setOnClickListener { logout() }
+
+
+    }
+
+    private fun filterListByCategory(category: String) {
+
+        val filteredList = playerList.filter {
+            it.category.contains(category, ignoreCase = true)
+        }
+
+        playersAdapter.updateList(filteredList)
+
+
+//            if (coach.subFunction != "outro") {
+//                playersAdapter.updateList(filteredList)
+//            } else {
+//                playersAdapter.updateList(playerList)
+//        }
     }
 
     private fun setObservers() {
-        viewModel.player.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Failure -> {
-
-                }
-                is UiState.Loading -> {
-                    binding.progressBarPlayer.visibility = View.VISIBLE
-//                    binding.recyclerView3.visibility = View.INVISIBLE
-                }
-                is UiState.Success -> {
-                    binding.progressBarPlayer.visibility = View.GONE
-//                    binding.recyclerView3.visibility = View.VISIBLE
-                    playersAdapter.updateList(it.data)
-                }
-            }
-        }
-
-
-
-//        coachViewModel.coach.observe(viewLifecycleOwner) {
-//            when (it) {
-//                is UiState.Failure -> {
-//                }
-//                is UiState.Loading -> {
-//                }
-//                is UiState.Success -> {
-//                    coachAdapter.updateList(it.data)
-//                }
-//            }
-//        }
-
         coachViewModel.recoveryCoach.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Failure -> {
@@ -139,26 +132,36 @@ class HomeFragment : Fragment() {
                     binding.coachName.text = firstName(coach.name)
                     if (it.data.photo.isNotEmpty()) {
                         Picasso.get().load(it.data.photo).into(binding.coachImg)
-//            }
+                    }
+                    lifecycleScope.launch {
+                        filterListByCategory(it.data.subFunction)
                     }
                 }
             }
-//        coachViewModel.recoveryCoach.observe(viewLifecycleOwner) {
-//            coach = it
-//            val fullName = coach.name
-//            val firstName = fullName.split(" ")[0]
-//            binding.tvWelcomeName.text = firstName
-//            binding.coachName.text = firstName
-//            if (it.photo.isNotEmpty()) {
-//                Picasso.get().load(it.photo).into(binding.coachImg)
-//            }
+        }
 
+
+        viewModel.player.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Failure -> {
+                    toast("não foi possivel carregar a lista de jogadores")
+                }
+                is UiState.Loading -> {
+                    binding.progressBarPlayer.visibility = View.VISIBLE
+                }
+                is UiState.Success -> {
+                    binding.progressBarPlayer.visibility = View.GONE
+                    playerList = it.data
+                }
+            }
         }
     }
+
 
     private fun setUpAdapter() {
 
         playersAdapter = PlayersAdapter()
+
 
         val layoutManager = GridLayoutManager(requireContext(), 2, LinearLayoutManager.HORIZONTAL, false)
 
@@ -197,33 +200,20 @@ class HomeFragment : Fragment() {
 //                }
 //            }
 //        }, 0, 4500)
-
-
-//        coachAdapter = CoachAdapter()
-//        coachAdapter.onItemClicked = {
-//
-//            val args = Bundle().apply { putParcelable(COACH, it) }
-//
-//            val dialog = DialogCoachDetailFragment()
-//            dialog.show(childFragmentManager, dialog.tag)
-//
-//            dialog.arguments = args
-//        }
-//
-//        binding.recyclerViewCoach.adapter = coachAdapter
     }
 
     private fun setOnRefreshListener() {
         val refresh = binding.refreshListener
 
         refresh.setOnRefreshListener {
-            viewModel.getPlayers("")
+            viewModel.getPlayers()
             coachViewModel.getCoach()
-            setUpAdapter()
+            setUp()
             refresh.isRefreshing = false
         }
 
     }
+
 
     private fun recoveryCoach() {
         lifecycleScope.launch {
@@ -257,9 +247,9 @@ class HomeFragment : Fragment() {
 
     private fun deletePlayer(player: Player) {
         viewModel.deletePlayer(player)
-        viewModel.getPlayers("")
+        viewModel.getPlayers()
         coachViewModel.getCoach()
-        setUpAdapter()
+        setUp()
     }
 
 

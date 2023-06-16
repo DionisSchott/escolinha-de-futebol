@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_loginFragment_to_registerCoachFragment3"
             app:destination="@id/registerCoachFragment3" />
+        <action
+            android:id="@+id/action_loginFragment_to_recoveryPasswordFragment"
+            app:destination="@id/recoveryPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerCoachFragment3"
@@ -20,6 +23,15 @@
         android:label="RegisterCoachFragment" >
         <action
             android:id="@+id/action_registerCoachFragment3_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recoveryPasswordFragment"
+        android:name="com.dionis.escolinhajdb.presentation.auth.RecoveryPasswordFragment"
+        android:label="fragment_recovery_password"
+        tools:layout="@layout/fragment_recovery_password" >
+        <action
+            android:id="@+id/action_recoveryPasswordFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

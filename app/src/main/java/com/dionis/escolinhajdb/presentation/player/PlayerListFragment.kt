@@ -24,7 +24,7 @@ class PlayerListFragment : Fragment() {
     private lateinit var playersListAdapter: PlayersListAdapter
     private val playerViewModel: PlayerViewModel by viewModels()
     private var textForSearch: String = ""
-    var playerList: List<Player> = mutableListOf()
+    private var playerList: List<Player> = mutableListOf()
 
 
     override fun onCreateView(
@@ -39,7 +39,7 @@ class PlayerListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playerViewModel.getPlayers(textForSearch)
+        playerViewModel.getPlayers()
 
         setUp()
     }
@@ -119,7 +119,6 @@ class PlayerListFragment : Fragment() {
         }
     }
 
-//    private fun searchBy
 
     fun search(query: String) {
         val filteredList = playerList.filter { document ->

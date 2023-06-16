@@ -23,6 +23,7 @@ class PlayersAdapter : RecyclerView.Adapter<PlayersAdapter.Holder>() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(list: List<Player>) {
+        playerList.clear()
         playerList.addAll(list)
         notifyDataSetChanged()
     }

@@ -41,7 +41,7 @@ class UpdateUserInfoFragment : Fragment() {
     private lateinit var binding: FragmentUpdateUserInfoBinding
     private lateinit var coach: Coach
     private val viewModel: ViewModel by activityViewModels()
-    private val listViewModel: ListViewModel by viewModels()
+    private val listViewModel: ListViewModel by activityViewModels()
     private val myCalendar = Calendar.getInstance()
     private lateinit var position: List<String>
     private var functionList = listOf<String>()
@@ -115,7 +115,6 @@ class UpdateUserInfoFragment : Fragment() {
     }
 
     private fun setObserver() {
-
         listViewModel.lists.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Failure -> {
@@ -125,7 +124,7 @@ class UpdateUserInfoFragment : Fragment() {
                 is UiState.Success -> {
                     lists = it.data
                     functionList = it.data.function
-                    categoryList = it.data.subFunction
+                    categoryList = it.data.category
                 }
             }
         }
@@ -159,7 +158,6 @@ class UpdateUserInfoFragment : Fragment() {
             loadImage()
         }
         btnChangePassword.setOnClickListener {
-
             findNavController().navigate(R.id.action_updateUserInfoFragment_to_changePasswordFragment)
         }
     }

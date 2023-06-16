@@ -7,6 +7,7 @@ abstract class States {
         object ResponsibleNameEmpty : ValidateRegisterPlayer()
         object PlayersBirthEmpty : ValidateRegisterPlayer()
         object PlayerGenreEmpty : ValidateRegisterPlayer()
+        object PlayerCategoryEmpty : ValidateRegisterPlayer()
         object FieldsDone : ValidateRegisterPlayer()
     }
 

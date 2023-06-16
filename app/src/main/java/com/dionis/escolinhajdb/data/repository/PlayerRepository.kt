@@ -10,7 +10,7 @@ interface PlayerRepository {
     fun addPlayer(player: Player, result: (UiState<Pair<Player, String>>) -> Unit)
     fun deletePlayer(player: Player, result: (UiState<String>) -> Unit)
     fun updatePlayer(player: Player, result: (UiState<String>) -> Unit)
-    fun getPlayer(filter: String, result: (UiState<List<Player>>) -> Unit)
+    fun getPlayer(result: (UiState<List<Player>>) -> Unit)
 
     suspend fun uploadImage(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit)
     suspend fun uploadSingleFile(fileUri: Uri, onResult: (UiState<Uri>) -> Unit)

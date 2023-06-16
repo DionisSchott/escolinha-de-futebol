@@ -12,7 +12,7 @@ object FirebaseStorageConstants {
 }
 
 object Genre {
-    val GENRE = listOf<String>("Masculino", "Feminino")
+    val GENRE_LIST = listOf("Masculino", "Feminino")
 
 }
 

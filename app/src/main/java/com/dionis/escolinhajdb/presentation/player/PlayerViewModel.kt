@@ -40,9 +40,9 @@ class PlayerViewModel @Inject constructor(
         playerRepository.addPlayer(player) { _registerPlayer.value = it }
     }
 
-    fun getPlayers(filter: String) {
+    fun getPlayers() {
         _player.value = UiState.Loading
-        playerRepository.getPlayer(filter) { _player.value = it }
+        playerRepository.getPlayer() { _player.value = it }
     }
 
     fun updatePlayer(player: Player) {
@@ -88,12 +88,14 @@ class PlayerViewModel @Inject constructor(
         responsibleName: String,
         playersBirth: String,
         playerGenre: String,
+        playerCategory: String,
     ) {
         if (validateAllFields(
                 playerName,
                 responsibleName,
                 playersBirth,
-                playerGenre
+                playerGenre,
+                playerCategory
             )
         )
             _validateFields.value = States.ValidateRegisterPlayer.FieldsDone
@@ -104,6 +106,7 @@ class PlayerViewModel @Inject constructor(
         responsibleName: String,
         playersBirth: String,
         playerGenre: String,
+        playerCategory: String,
     ): Boolean {
         if (playerName.isEmpty()) {
             _validateFields.value = States.ValidateRegisterPlayer.PlayerNameEmpty
@@ -121,6 +124,11 @@ class PlayerViewModel @Inject constructor(
             _validateFields.value = States.ValidateRegisterPlayer.PlayerGenreEmpty
             return false
         }
+        if (playerCategory.isEmpty()) {
+            _validateFields.value = States.ValidateRegisterPlayer.PlayerCategoryEmpty
+            return false
+        }
+
 
         return true
     }

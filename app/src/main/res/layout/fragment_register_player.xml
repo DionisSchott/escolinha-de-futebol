@@ -235,7 +235,38 @@
                 <AutoCompleteTextView
                     android:id="@+id/genre"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:completionThreshold="20"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/cvCategory"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:hint="Categoria"
+                android:visibility="visible"
+                android:focusable="false"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintCircleRadius="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cvGenre">
+
+
+                <AutoCompleteTextView
+                    android:id="@+id/category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:inputType="text"
+                    android:completionThreshold="20"
+                    />
+
 
                 <!--https://www.youtube.com/watch?v=SnE7ncKBCUU
 
@@ -256,6 +287,29 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtInsertionDateLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:hint="Data de inicio"
+                app:layout_constraintTop_toBottomOf="@+id/cvCategory"
+                tools:layout_editor_absoluteX="30dp">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtInsertionDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="53dp"
+                    android:focusable="false"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="13dp"/>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancel"
@@ -267,7 +321,7 @@
                 android:textColor="@color/blue"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvGenre" />
+                app:layout_constraintTop_toBottomOf="@id/edtInsertionDateLayout" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDone"

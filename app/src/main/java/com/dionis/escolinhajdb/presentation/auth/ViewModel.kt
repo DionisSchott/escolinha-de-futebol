@@ -80,6 +80,14 @@ class ViewModel @Inject constructor(
         }
     }
 
+    fun sendPasswordResetEmail(email: String, onResult: (UiState<String>) -> Unit){
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            authRepository.sendPasswordResetEmail(email, onResult)
+        }
+
+    }
+
 
     fun register(
         email: String,

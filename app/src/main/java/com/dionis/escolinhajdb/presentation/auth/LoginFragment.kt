@@ -13,7 +13,9 @@ import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.databinding.FragmentLoginBinding
+import com.dionis.escolinhajdb.presentation.auth.RecoveryPasswordFragment.Companion.EMAIL
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
 import com.google.android.material.snackbar.Snackbar
@@ -56,11 +58,32 @@ class LoginFragment : Fragment() {
             validate(it)
             observer()
         }
-//        binding.btnRegister.setOnClickListener {
-//            findNavController().navigate(R.id.action_loginFragment_to_registerCoachFragment3)
-//        }
+        binding.btnRecoveryPassword.setOnClickListener{
+            recoveryPassword()
+        }
     }
 
+    private fun recoveryPassword() {
+        val email = binding.edtEmail.text.toString()
+
+        viewModel.sendPasswordResetEmail(email) {
+            when (it) {
+                is UiState.Loading -> {
+                }
+                is UiState.Failure -> {
+                    toast(it.error)
+                }
+                is UiState.Success -> {
+                    toast(it.data)
+                }
+            }
+        }
+
+
+//        val args = Bundle().apply { putString(EMAIL, email) }
+//        findNavController().navigate(R.id.action_loginFragment_to_recoveryPasswordFragment, args)
+
+    }
 
 
     private fun openHomeFragment() {

@@ -52,10 +52,7 @@
                     android:text="Apelido"
                     android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/preferredPlayerNameEdt"
@@ -67,10 +64,7 @@
                     android:textColor="@color/white"
                     android:textSize="32sp"
                     android:textStyle="normal"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:visibility="invisible" />
 
 
             </com.google.android.material.card.MaterialCardView>
@@ -247,26 +241,6 @@
                 app:layout_constraintStart_toEndOf="@id/playerWeightEdt"
                 app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
 
-            <com.google.android.material.slider.Slider
-                android:id="@+id/slider"
-                style="@style/ShapeAppearance.Material3.Tooltip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/white"
-                android:stepSize="0.1"
-                android:valueFrom="0.00"
-                android:valueTo="100.00"
-                android:visibility="gone"
-                app:haloRadius="20dp"
-                app:labelBehavior="visible"
-                app:layout_constraintBottom_toBottomOf="@id/playerWeightEdt"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvWeight"
-                app:thumbRadius="16dp" />
-
 
             <TextView
                 android:id="@+id/tvPlayerNameTitle"
@@ -365,8 +339,8 @@
                 android:visibility="invisible"
                 app:cardCornerRadius="2dp"
                 app:cardElevation="20dp"
-                app:layout_constraintCircleRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="@id/tvGenre"
+                app:layout_constraintCircleRadius="20dp"
                 app:layout_constraintEnd_toEndOf="@id/tvGenre"
                 app:layout_constraintStart_toStartOf="@id/tvGenre"
                 app:layout_constraintTop_toTopOf="@id/tvGenre">
@@ -387,9 +361,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:textSize="16sp"
-                android:textColor="@color/black"
                 android:text="tipo sanguineo"
+                android:textColor="@color/black"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvGenre" />
 
@@ -458,10 +432,8 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvPlayerPosition"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:visibility="invisible"
                 app:cardCornerRadius="2dp"
                 app:cardElevation="20dp"
@@ -473,6 +445,59 @@
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/spinnerPlayerPosition"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <TextView
+                android:id="@+id/tvcategoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoria"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="@id/tvPlayerCategory"
+                app:layout_constraintTop_toTopOf="@id/tvPositionTitle"/>
+
+            <TextView
+                android:id="@+id/tvPlayerCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="start"
+                android:hint="indefinida"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintStart_toEndOf="@id/tvPlayerPosition"
+                app:layout_constraintTop_toTopOf="@id/tvPlayerPosition"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tvPlayerPosition"
+                />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvPlayerCategory"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/tvPlayerCategory"
+                app:layout_constraintCircleRadius="20dp"
+                app:layout_constraintEnd_toEndOf="@id/tvPlayerCategory"
+                app:layout_constraintStart_toStartOf="@id/tvPlayerCategory"
+                app:layout_constraintTop_toTopOf="@id/tvPlayerCategory">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinnerPlayerCategory"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
