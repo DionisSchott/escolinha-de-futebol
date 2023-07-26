@@ -40,6 +40,15 @@ object RepositoryModule {
 
     @Provides
     @Singleton
+    fun provideEventsRepository(
+        database: FirebaseFirestore,
+        storageReference: StorageReference,
+    ): EventRepository {
+        return EventRepositoryImpl (database, storageReference)
+    }
+
+    @Provides
+    @Singleton
     fun provideListRepository(
         database: FirebaseFirestore
     ): ListRepository {

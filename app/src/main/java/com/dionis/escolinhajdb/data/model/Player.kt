@@ -13,7 +13,7 @@ import java.util.*
 @Parcelize
 data class Player(
     var id: String = "",
-    val images: List<String> = arrayListOf(),
+    val images: String = "",
     val playerName: String = "",
     val preferredName: String = "",
     val playersBirth: String = "",
@@ -21,6 +21,8 @@ data class Player(
     val responsibleName: String = "",
     val responsibleType: String = "",
     val contacts: String = "",
+    val addedBy: String = "",
+  //  val endereço: String = "",
 
     val position: String = "",
     val preferredFoot: String = "",
@@ -29,10 +31,12 @@ data class Player(
 
     val weight: Float = 0f,
     val height: Float = 0f,
+    val measurementDate: Date? = null,
     val bloodType: String = "",
     val healthNotes: String = "",
     @ServerTimestamp
     val startDate: Date? = null,
     val isActive: Boolean = true,
-    //val departureDate: Date? = null,
+    @ServerTimestamp
+    val departureDate: Date? = null,
 ) : Parcelable

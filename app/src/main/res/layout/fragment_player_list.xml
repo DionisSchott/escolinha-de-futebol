@@ -54,55 +54,56 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/playerFindLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                app:startIconDrawable="@drawable/ic_baseline_search_24"
-                app:layout_constraintTop_toBottomOf="@id/falseToolbar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/imgSearch">
+                app:layout_constraintTop_toBottomOf="@id/falseToolbar"
+                app:startIconDrawable="@drawable/ic_baseline_search_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/playerFindEdt"
-                    android:hint="digite para procurar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"/>
+                    android:hint="digite um aluno ou responsável"
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <ImageButton
-                android:id="@+id/imgSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_filter_alt_24"
-                android:background="@color/transparent"
-                app:layout_constraintTop_toTopOf="@id/playerFindLayout"
-                app:layout_constraintBottom_toBottomOf="@id/playerFindLayout"
-                app:layout_constraintStart_toEndOf="@id/playerFindLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_margin="16dp"/>
-
-
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewPlayerList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_margin="8dp"
+                android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playerFindLayout"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/playerFindLayout"
                 app:spanCount="3"
                 tools:itemCount="10"
                 tools:listitem="@layout/item_player" />
+
+
+            <Button
+                android:id="@+id/tvFormerPlayers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:gravity="center"
+                android:text="lista de ex-jogadores"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewPlayerList" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

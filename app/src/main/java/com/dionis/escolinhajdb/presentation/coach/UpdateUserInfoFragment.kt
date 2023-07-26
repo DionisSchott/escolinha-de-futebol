@@ -1,6 +1,7 @@
 package com.dionis.escolinhajdb.presentation.coach
 
 
+import android.Manifest
 import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
@@ -12,7 +13,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
@@ -27,6 +27,7 @@ import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.loadImage
 import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
+import com.dionis.escolinhajdb.util.Permissions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +50,10 @@ class UpdateUserInfoFragment : Fragment() {
     private var function = ""
     private lateinit var lists: Lists
     var imageUri: Uri? = null
-    var image: String = ""
+    var photo: String = ""
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission(), ::handlePermissionResult)
+
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         val resultCode = result.resultCode
@@ -84,6 +88,11 @@ class UpdateUserInfoFragment : Fragment() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as HomeActivity).showBottomNavigation(true)
+    }
+
     private fun setup() {
         setData()
         setUpClicks()
@@ -97,9 +106,17 @@ class UpdateUserInfoFragment : Fragment() {
         (activity as HomeActivity).showBottomNavigation(false)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        (activity as HomeActivity).showBottomNavigation(true)
+    private fun setUpClicks() = binding.apply {
+        btnDone.setOnClickListener {
+            observer()
+            uploadImage()
+        }
+        coachImg.setOnClickListener {
+            tryLoadImage()
+        }
+        btnChangePassword.setOnClickListener {
+            findNavController().navigate(R.id.action_updateUserInfoFragment_to_changePasswordFragment)
+        }
     }
 
     private fun setData() = binding.apply {
@@ -131,13 +148,48 @@ class UpdateUserInfoFragment : Fragment() {
 
     }
 
+    private fun handlePermissionResult(isGranted: Boolean) {
+        val permission = Permissions()
+
+        val permissionState = permission.checkPermissionState(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        when (permissionState) {
+            Permissions.PermissionState.GRANTED -> loadImage()
+            Permissions.PermissionState.DENIED -> requestPermission()
+            // se negar 2 vezes criar função para ir para configurações liberar manualmente
+            Permissions.PermissionState.DO_NOT_ASK -> {
+                toast("permissão necessária")
+                // função para ir para configurações liberar manualmente
+            }
+            Permissions.PermissionState.RATIONALE -> {
+                toast("permissão necessária")
+                requestPermission()
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+    private fun tryLoadImage() {
+        val permissions = Permissions()
+        permissions.requestPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE, { loadImage() }, { requestPermission() })
+
+    }
+
+
     private fun getCoachObject(): Coach {
+
+        photo = coach.photo
 
         return Coach(
             id = coach.id,
             name = binding.edtUserName.text.toString(),
             email = coach.email,
-            photo = image,
+            photo = photo,
             function = binding.function.text.toString(),
 //            function = binding.tvFunction.text.toString(),
             subFunction = binding.edtSubFunction.text.toString(),
@@ -148,29 +200,12 @@ class UpdateUserInfoFragment : Fragment() {
         )
     }
 
-
-    private fun setUpClicks() = binding.apply {
-        btnDone.setOnClickListener {
-            observer()
-            uploadImage()
-        }
-        coachImg.setOnClickListener {
-            loadImage()
-        }
-        btnChangePassword.setOnClickListener {
-            findNavController().navigate(R.id.action_updateUserInfoFragment_to_changePasswordFragment)
-        }
-    }
-
     private fun endIconClick() {
 
         binding.edtUserNameLayout.setEndIconOnClickListener {
             binding.edtUserName.text?.clear()
             binding.edtUserName.requestFocus()
         }
-//        binding.edtFunctionLayout.setEndIconOnClickListener {
-//            coachFunctionSpinner()
-//        }
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
     }
 
@@ -257,7 +292,7 @@ class UpdateUserInfoFragment : Fragment() {
                         toast(it.error)
                     }
                     is UiState.Success -> {
-                        image = it.data.toString()
+                        photo = it.data.toString()
                         updateUserInfo()
                         toast(getString(R.string.successfully_updated))
                         findNavController().popBackStack()

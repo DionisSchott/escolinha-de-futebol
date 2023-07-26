@@ -1,19 +1,13 @@
 package com.dionis.escolinhajdb.data.repository
 
-import android.content.ContentValues.TAG
 import android.net.Uri
-import android.util.Log
 import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Coach
-import com.dionis.escolinhajdb.data.model.Lists
 import com.dionis.escolinhajdb.util.FireStoreCollection
-import com.dionis.escolinhajdb.util.UserManager
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -33,13 +27,13 @@ class AuthRepositoryImpl(
             .orderBy("name", Query.Direction.ASCENDING)
             .get()
             .addOnSuccessListener {
-                val coachs = arrayListOf<Coach>()
+                val coaches = arrayListOf<Coach>()
                 for (document in it) {
                     val coach = document.toObject(Coach::class.java)
-                    coachs.add(coach)
+                    coaches.add(coach)
                 }
                 result.invoke(
-                    UiState.Success(coachs)
+                    UiState.Success(coaches)
                 )
             }
             .addOnFailureListener {
@@ -120,11 +114,20 @@ class AuthRepositoryImpl(
                                 if (it == null) {
                                     result.invoke(UiState.Failure("User register successfully but session failed to store"))
                                 } else {
-
-                                    result.invoke(
-                                        UiState.Success("User register successfully!")
-
-                                    )
+                                    val currentUser = FirebaseAuth.getInstance().currentUser
+                                    currentUser?.sendEmailVerification()
+                                        ?.addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                // E-mail de verificação enviado com sucesso
+                                                result.invoke(UiState.Success("User register successfully! Please check email for verification."))
+                                            } else {
+                                                // Falha ao enviar o e-mail de verificação
+                                                result.invoke(UiState.Failure("Failed to send verification email."))
+                                            }
+                                        }
+//                                    result.invoke(
+//                                        UiState.Success("User register successfully!")
+//                                    )
                                 }
                             }
                             is UiState.Failure -> {
@@ -165,16 +168,21 @@ class AuthRepositoryImpl(
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    storeSession(id = it.result.user?.uid ?: "") { coach ->
-                        if (coach == null) {
-                            result.invoke(UiState.Failure("Failed to store local session"))
-                        } else {
-                            result.invoke(UiState.Success(coach.id))
+                    val currentUser = auth.currentUser
+                    if (currentUser != null && currentUser.isEmailVerified) {
+                        storeSession(id = it.result.user?.uid ?: "") { coach ->
+                            if (coach == null) {
+                                result.invoke(UiState.Failure("Failed to store local session"))
+                            } else {
+                                result.invoke(UiState.Success(coach.id))
+                            }
                         }
+                    } else {
+                        result.invoke(UiState.Failure("Verificação de e-mail necessária. Verifique seu e-mail para confirmar."))
                     }
                 }
             }.addOnFailureListener {
-                result.invoke(UiState.Failure("Authentication failed, Check email and password"))
+                result.invoke(UiState.Failure(it.message))
             }
     }
 

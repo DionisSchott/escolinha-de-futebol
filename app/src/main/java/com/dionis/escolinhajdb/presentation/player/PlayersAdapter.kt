@@ -48,7 +48,7 @@ class PlayersAdapter : RecyclerView.Adapter<PlayersAdapter.Holder>() {
             this.playerInfo = information
 
             if (playerInfo.images.isNotEmpty()) {
-                Picasso.get().load(playerInfo.images[0]).into(binding.image)
+                Picasso.get().load(playerInfo.images).into(binding.image)
             }
 
             binding.tvName.text = playerInfo.preferredName

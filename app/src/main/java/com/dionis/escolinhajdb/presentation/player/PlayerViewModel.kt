@@ -36,7 +36,6 @@ class PlayerViewModel @Inject constructor(
 
     fun registerPlayer(player: Player) {
         _registerPlayer.value = UiState.Loading
-
         playerRepository.addPlayer(player) { _registerPlayer.value = it }
     }
 
@@ -55,29 +54,25 @@ class PlayerViewModel @Inject constructor(
         playerRepository.deletePlayer(player) { _deletePlayer.value = it }
     }
 
+    fun addFormerPlayer(player: Player, onResult: (UiState<Player>) -> Unit) {
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            playerRepository.addFormerPlayer(player, onResult)
+        }
+    }
 
-    //   lista de imagem
+
     fun updateImage(imageUrl: String, fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
         onResult.invoke(UiState.Loading)
         viewModelScope.launch {
             playerRepository.updateImage(imageUrl, fileUri, onResult)
         }
-
     }
 
     fun uploadSingleImage(fileUri: Uri, onResult: (UiState<Uri>) -> Unit) {
         onResult.invoke(UiState.Loading)
         viewModelScope.launch {
             playerRepository.uploadSingleFile(fileUri, onResult)
-        }
-
-    }
-
-    //testando
-    fun uploadSingleImage2(fileUri: Uri, onResult: (UiState<String>) -> Unit) {
-        onResult.invoke(UiState.Loading)
-        viewModelScope.launch {
-            playerRepository.uploadSingleFile2(fileUri, onResult)
         }
 
     }
@@ -96,8 +91,7 @@ class PlayerViewModel @Inject constructor(
                 playersBirth,
                 playerGenre,
                 playerCategory
-            )
-        )
+            ))
             _validateFields.value = States.ValidateRegisterPlayer.FieldsDone
     }
 

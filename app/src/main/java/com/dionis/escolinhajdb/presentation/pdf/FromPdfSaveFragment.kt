@@ -2,6 +2,7 @@ package com.dionis.escolinhajdb.presentation.pdf
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentFromPdfSaveBinding
 import com.dionis.escolinhajdb.util.Extensions.formatDate
@@ -18,6 +20,8 @@ import com.dionis.escolinhajdb.util.Extensions.toast
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 
 
 class FromPdfSaveFragment : Fragment() {
@@ -30,7 +34,7 @@ class FromPdfSaveFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentFromPdfSaveBinding.inflate(inflater, container, false)
 
-        playerDetail = arguments?.getParcelable(PLAYERTOPDF)!!
+        playerDetail = arguments?.getParcelable(PLAYER_TO_PDF)!!
         keyForAction = arguments?.getString(KEY)!!
         return binding.root
     }
@@ -55,41 +59,30 @@ class FromPdfSaveFragment : Fragment() {
 
 
     private fun setInfo() {
-        Picasso.get().load(playerDetail.images[0]).into(binding.playerImg)
+        Picasso.get().load(playerDetail.images).into(binding.playerImg)
         binding.playerNameEdt.text = playerDetail.playerName
         binding.tvMemberSince.text = playerDetail.startDate.toString()
-        binding.playerWeightEdt.text = playerDetail.weight.toString()
-        binding.playerHeightEdt.text = playerDetail.height.toString()
+        binding.playerWeightEdt.text = playerDetail.weight.toString().plus(" Kg")
+        binding.playerHeightEdt.text = playerDetail.height.toString().plus(" M")
         binding.tvGenre.text = playerDetail.genre
-        binding.responsibleNameEdt.text = playerDetail.responsibleName
-        binding.responsibleTypeEdt.text = playerDetail.responsibleType
+        binding.responsibleNameEdt.text = playerDetail.responsibleName.plus(" (${playerDetail.responsibleType})")
         binding.playerBirthEdt.text = playerDetail.playersBirth
+        binding.playerCategory.text = getString(R.string.current_category).plus("  ${playerDetail.category}")
+        binding.tvBloodType.text = playerDetail.bloodType
 
         val formattedDate = formatDate(playerDetail.startDate!!)
         binding.tvMemberSince.text = formattedDate
 
-//        ageFormatter(playerDetail.insertionDate) {
-//            binding.tvMemberSince.text = it
-//        }
-
-
-//        val currentDay = Calendar.getInstance()
-//        currentDay.time
-//        val age = (currentDay.get(Calendar.YEAR) - playerDetail.playersBirth
-
-        if (playerDetail.healthNotes.isNotEmpty()) {
-            binding.healthNotesEdt.setText(playerDetail.healthNotes)
-        } else {
-            binding.healthNotesEdt.visibility = View.INVISIBLE
-            binding.tvHealthNotes.visibility = View.INVISIBLE
-        }
+        binding.healthNotesEdt.setText(playerDetail.healthNotes)
 
         if (playerDetail.skillsNotes.isNotEmpty()) {
             binding.skillsNotesEdt.setText(playerDetail.skillsNotes)
         } else {
-            binding.skillsNotesEdt.visibility = View.INVISIBLE
             binding.tvSkillsNotes.visibility = View.INVISIBLE
         }
+
+        val date = Calendar.getInstance().time
+        binding.date.text = getString(R.string.sao_jose).plus("  -  ${formatDate(date)}")
     }
 
 
@@ -108,23 +101,6 @@ class FromPdfSaveFragment : Fragment() {
 
     }
 
-//    private fun permissao() {
-//
-//        val permissionReadExternalStorage = ActivityCompat.checkSelfPermission(requireContext(),
-//            Manifest.permission.READ_EXTERNAL_STORAGE)
-//        val permissionWriteExternalStorage = ActivityCompat.checkSelfPermission(requireContext(),
-//            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//        if (permissionReadExternalStorage != PackageManager.PERMISSION_GRANTED ||
-//            permissionWriteExternalStorage != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(requireActivity(),
-//                arrayOf(
-//                    Manifest.permission.READ_EXTERNAL_STORAGE,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
-//                REQUEST_PERMISSION_CODE)
-//            return
-//        }
-//    }
 
     private fun click() {
 
@@ -166,7 +142,7 @@ class FromPdfSaveFragment : Fragment() {
     }
 
     companion object {
-        const val PLAYERTOPDF = "playerToPdf"
+        const val PLAYER_TO_PDF = "playerToPdf"
         const val KEY = "key"
         const val REQUEST_PERMISSION_CODE = 57
 

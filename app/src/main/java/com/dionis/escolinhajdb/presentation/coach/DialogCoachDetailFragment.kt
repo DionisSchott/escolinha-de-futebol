@@ -1,5 +1,8 @@
 package com.dionis.escolinhajdb.presentation.coach
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Color
 import android.icu.text.DecimalFormat
 import android.icu.text.NumberFormat
@@ -17,6 +20,7 @@ import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.databinding.FragmentCoachDetailsBinding
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
+import com.dionis.escolinhajdb.util.Extensions.copyToClipboard
 import com.squareup.picasso.Picasso
 import java.time.format.DateTimeFormatter
 
@@ -49,17 +53,18 @@ class DialogCoachDetailFragment() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         setup()
     }
 
     private fun setup() {
 
         binding.imgExit.setOnClickListener { dismiss() }
-        binding.imgCoach.setOnClickListener { findNavController().navigate(R.id.registerPlayerFragment) }
+        binding.imgCoach.setOnClickListener {   }
+        binding.tvContact.setOnLongClickListener {
+            copyToClipboard(requireContext(), binding.tvContact.text.toString())
+        }
         setData()
     }
-
 
     private fun setData() = binding.apply {
         coach.let {

@@ -34,6 +34,15 @@
         <action
             android:id="@+id/action_homeFragment_to_coachListFragment"
             app:destination="@id/coachListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_eventsFragment"
+            app:destination="@id/eventsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_eventRegisterFragment"
+            app:destination="@id/eventRegisterFragment" />
 
 
     </fragment>
@@ -61,6 +70,9 @@
         <action
             android:id="@+id/action_playerDetailFragment_to_playerListFragment"
             app:destination="@id/playerListFragment" />
+        <action
+            android:id="@+id/action_playerDetailFragment_to_formerPlayerListFragment"
+            app:destination="@id/formerPlayerListFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerCoachFragment"
@@ -81,6 +93,9 @@
         <action
             android:id="@+id/action_playerListFragment_to_playerDetailFragment"
             app:destination="@id/playerDetailFragment" />
+        <action
+            android:id="@+id/action_playerListFragment_to_formerPlayerListFragment"
+            app:destination="@id/formerPlayerListFragment" />
     </fragment>
     <fragment
         android:id="@+id/fromPdfSaveFragment"
@@ -119,5 +134,43 @@
         <action
             android:id="@+id/action_changePasswordFragment_to_updateUserInfoFragment"
             app:destination="@id/updateUserInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="com.dionis.escolinhajdb.presentation.events.EventsFragment"
+        android:label="fragment_events"
+        tools:layout="@layout/fragment_events_list" >
+        <action
+            android:id="@+id/action_eventsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.dionis.escolinhajdb.presentation.lists.ListFragment"
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/action_listFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/formerPlayerListFragment"
+        android:name="com.dionis.escolinhajdb.presentation.player.formerplayers.FormerPlayerListFragment"
+        android:label="FormerPlayerListFragment" >
+        <action
+            android:id="@+id/action_formerPlayerListFragment_to_playerListFragment"
+            app:destination="@id/playerListFragment" />
+        <action
+            android:id="@+id/action_formerPlayerListFragment_to_playerDetailFragment"
+            app:destination="@id/playerDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventRegisterFragment"
+        android:name="com.dionis.escolinhajdb.presentation.events.EventRegisterFragment"
+        android:label="fragment_register_event"
+        tools:layout="@layout/fragment_register_event" >
+        <action
+            android:id="@+id/action_eventRegisterFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

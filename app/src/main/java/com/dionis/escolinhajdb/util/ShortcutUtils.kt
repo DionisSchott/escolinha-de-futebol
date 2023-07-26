@@ -5,16 +5,8 @@ import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
-import android.os.Build
-import android.support.annotation.RequiresApi
 import com.dionis.escolinhajdb.R
-import com.dionis.escolinhajdb.presentation.auth.LoginActivity
-import com.dionis.escolinhajdb.presentation.coach.CoachListFragment
-import com.dionis.escolinhajdb.presentation.coach.CoachListFragment_GeneratedInjector
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
-import com.dionis.escolinhajdb.presentation.player.PlayerListFragment
-import com.dionis.escolinhajdb.presentation.player.PlayerListFragmentDirections
-import com.dionis.escolinhajdb.presentation.player.PlayerListFragment_GeneratedInjector
 
 
 class ShortcutUtil {

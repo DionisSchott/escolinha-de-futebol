@@ -1,14 +1,16 @@
 package com.dionis.escolinhajdb.util
 
-object FireStoreCollection{
-    val PLAYER = "players"
-    val COACH = "coach"
-    val LISTS = "lists"
+object FireStoreCollection {
+    const val PLAYER = "players"
+    const val FORMER_PLAYERS = "formerPlayers"
+    const val COACH = "coach"
+    const val LISTS = "lists"
+    const val EVENTS = "events"
 }
 
 object FirebaseStorageConstants {
-    val ROOT_DIRECTORY = "app"
-    val NOTE_IMAGES = "note"
+    const val ROOT_DIRECTORY = "app"
+    const val NOTE_IMAGES = "note"
 }
 
 object Genre {

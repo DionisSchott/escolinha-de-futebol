@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EscolinhaJDB</string>
+    <string name="app_name">Escolinha</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_back">Bem Vindo</string>
@@ -36,4 +36,6 @@
     <string name="member_since">Membro desde</string>
     <string name="full_name">Nome completo</string>
     <string name="preferred_name">Apelido</string>
+    <string name="current_category">Categoria atual:</string>
+    <string name="sao_jose">São José Do Ribeirão</string>
 </resources>

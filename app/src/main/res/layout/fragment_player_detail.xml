@@ -86,6 +86,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="8dp"
+                android:background="@drawable/bg_fragment_coach"
                 android:src="@drawable/ic_baseline_edit_24"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -95,6 +96,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="8dp"
+                android:background="@drawable/bg_fragment_coach"
                 android:src="@drawable/ic_baseline_save_alt_24"
                 app:layout_constraintEnd_toStartOf="@id/exportPdf"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -105,6 +107,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_margin="8dp"
+                android:background="@drawable/bg_fragment_coach"
                 android:src="@drawable/ic_baseline_share_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -462,12 +465,14 @@
                 android:textSize="16sp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="@id/tvPlayerCategory"
-                app:layout_constraintTop_toTopOf="@id/tvPositionTitle"/>
+                app:layout_constraintTop_toTopOf="@id/tvPositionTitle" />
 
             <TextView
                 android:id="@+id/tvPlayerCategory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="@color/white"
                 android:gravity="start"
                 android:hint="indefinida"
@@ -475,13 +480,10 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:visibility="visible"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintStart_toEndOf="@id/tvPlayerPosition"
-                app:layout_constraintTop_toTopOf="@id/tvPlayerPosition"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/tvPlayerPosition"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvPlayerPosition"
+                app:layout_constraintTop_toTopOf="@id/tvPlayerPosition" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvPlayerCategory"

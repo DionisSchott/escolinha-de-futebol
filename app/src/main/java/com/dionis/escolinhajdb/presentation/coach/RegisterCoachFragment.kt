@@ -1,5 +1,6 @@
 package com.dionis.escolinhajdb.presentation.coach
 
+import android.Manifest
 import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.loadImage
 import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
+import com.dionis.escolinhajdb.util.Permissions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
@@ -46,6 +48,8 @@ class RegisterCoachFragment : Fragment() {
 
     var imageUri: Uri? = null
     var image: String = ""
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission(), ::handlePermissionResult)
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         val resultCode = result.resultCode
@@ -96,21 +100,56 @@ class RegisterCoachFragment : Fragment() {
         (activity as HomeActivity).showBottomNavigation(false)
     }
 
-    private fun setDatePicker() {
-        datePicker("", binding.tvBirth)
-    }
-
     private fun setUpClicks() = binding.apply {
 
-        coachImg.setOnClickListener { loadImage() }
+        coachImg.setOnClickListener { tryLoadImage() }
         btnBack.setOnClickListener { findNavController().popBackStack() }
         btnDone.setOnClickListener { uploadImage() }
     }
 
 
+    private fun handlePermissionResult(isGranted: Boolean) {
+        val permission = Permissions()
+
+        val permissionState = permission.checkPermissionState(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        when (permissionState) {
+            Permissions.PermissionState.GRANTED -> loadImage()
+            Permissions.PermissionState.DENIED -> requestPermission()
+            // se negar 2 vezes criar função para ir para configurações liberar manualmente
+            Permissions.PermissionState.DO_NOT_ASK -> {
+                toast("permissão necessária")
+                // função para ir para configurações liberar manualmente
+            }
+            Permissions.PermissionState.RATIONALE -> {
+                toast("permissão necessária")
+                requestPermission()
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+    private fun tryLoadImage() {
+        val permissions = Permissions()
+        permissions.requestPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE, { loadImage() }, { requestPermission() })
+
+    }
+
+
+    private fun setDatePicker() {
+        datePicker("", binding.tvBirth)
+    }
+
+    private fun loadImage() {
+        loadImage(startForProfileImageResult)
+    }
+
     private fun register() {
-
-
         if (validate()) {
             viewModel.register(
                 email = binding.edtEmail.text.toString(),
@@ -176,9 +215,9 @@ class RegisterCoachFragment : Fragment() {
             addedBy = user!!,
             memberSince = myCalendar.time.toString()
 
-
         )
     }
+
 
     private fun validate(): Boolean {
         var isValid = true
@@ -214,10 +253,6 @@ class RegisterCoachFragment : Fragment() {
         }
         return isValid
 
-    }
-
-    private fun loadImage() {
-        loadImage(startForProfileImageResult)
     }
 
     private fun uploadImage() {

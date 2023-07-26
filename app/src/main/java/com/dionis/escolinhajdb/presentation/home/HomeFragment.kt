@@ -1,14 +1,15 @@
 package com.dionis.escolinhajdb.presentation.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import androidx.biometric.BiometricManager
+import androidx.biometric.auth.startCredentialAuthentication
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,21 +27,22 @@ import com.dionis.escolinhajdb.presentation.coach.DialogCoachDetailFragment.Comp
 import com.dionis.escolinhajdb.presentation.player.PlayerDetailFragment.Companion.PLAYER
 import com.dionis.escolinhajdb.presentation.player.PlayerViewModel
 import com.dionis.escolinhajdb.presentation.player.PlayersAdapter
+import com.dionis.escolinhajdb.util.Extensions.dialogConfirm
 import com.dionis.escolinhajdb.util.Extensions.firstName
-import com.dionis.escolinhajdb.util.Extensions.setSpinner
+import com.dionis.escolinhajdb.util.Extensions.promptBiometricChecker
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.UserManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val viewModel: PlayerViewModel by viewModels()
+    private val viewModel: PlayerViewModel by activityViewModels()
     private val coachViewModel: ViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
     private lateinit var playersAdapter: PlayersAdapter
@@ -49,6 +51,7 @@ class HomeFragment : Fragment() {
     private lateinit var coach: Coach
     private var userUid: String = ""
     private var playerList: List<Player> = mutableListOf()
+    private var category: String = ""
 
 
     override fun onCreateView(
@@ -86,8 +89,6 @@ class HomeFragment : Fragment() {
 
 
     private fun setUpClicks() {
-
-
         binding.userEdit.setOnClickListener {
             val args = Bundle().apply { putParcelable(COACH, coach) }
             findNavController().navigate(R.id.action_homeFragment_to_updateUserInfoFragment, args)
@@ -99,19 +100,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun filterListByCategory(category: String) {
-
         val filteredList = playerList.filter {
             it.category.contains(category, ignoreCase = true)
         }
-
         playersAdapter.updateList(filteredList)
-
-
-//            if (coach.subFunction != "outro") {
-//                playersAdapter.updateList(filteredList)
-//            } else {
-//                playersAdapter.updateList(playerList)
-//        }
     }
 
     private fun setObservers() {
@@ -121,10 +113,12 @@ class HomeFragment : Fragment() {
                 }
                 is UiState.Loading -> {
                     binding.progressBarCoach.visibility = View.VISIBLE
+                    binding.progressBarPlayer.visibility = View.VISIBLE
                     binding.coachName.visibility = View.INVISIBLE
                 }
                 is UiState.Success -> {
                     binding.progressBarCoach.visibility = View.GONE
+
                     binding.coachName.visibility = View.VISIBLE
 
                     coach = it.data
@@ -133,25 +127,25 @@ class HomeFragment : Fragment() {
                     if (it.data.photo.isNotEmpty()) {
                         Picasso.get().load(it.data.photo).into(binding.coachImg)
                     }
+                    category = it.data.subFunction
                     lifecycleScope.launch {
-                        filterListByCategory(it.data.subFunction)
+                        delay(500)
+                        viewModel.player.observe(viewLifecycleOwner) {
+                            when (it) {
+                                is UiState.Failure -> {
+                                    toast("não foi possivel carregar a lista de jogadores")
+                                }
+                                is UiState.Loading -> {
+                                }
+                                is UiState.Success -> {
+                                    binding.progressBarPlayer.visibility = View.GONE
+                                    playerList = it.data
+                                    filterListByCategory(category)
+                                }
+                            }
+                        }
                     }
-                }
-            }
-        }
 
-
-        viewModel.player.observe(viewLifecycleOwner) {
-            when (it) {
-                is UiState.Failure -> {
-                    toast("não foi possivel carregar a lista de jogadores")
-                }
-                is UiState.Loading -> {
-                    binding.progressBarPlayer.visibility = View.VISIBLE
-                }
-                is UiState.Success -> {
-                    binding.progressBarPlayer.visibility = View.GONE
-                    playerList = it.data
                 }
             }
         }
@@ -174,32 +168,39 @@ class HomeFragment : Fragment() {
         }
 
         playersAdapter.onLongItemClicked = {
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle("apagar cadastro?")
-                .setNegativeButton("Sim")
-                { dialog, which ->
-                    deletePlayer(it)
+            dialogConfirm(
+                "Desativar aluno"
+            ) { biometricChecker(it) }
 
-                }
-                .setNeutralButton("cancelar") { dialog, wich ->
-                }
-                .show()
         }
 
+    }
 
-//        val snapHelper = LinearSnapHelper()
-//        snapHelper.attachToRecyclerView(recyclerView)
-//
-//        val timer = Timer()
-//        timer.schedule(object : TimerTask() {
-//            override fun run() {
-//                if (layoutManager.findLastCompletelyVisibleItemPosition() < (playersAdapter.itemCount - 1)) {
-//                    layoutManager.smoothScrollToPosition(recyclerView, RecyclerView.State(), layoutManager.findLastVisibleItemPosition())
-//                } else {
-//                    layoutManager.smoothScrollToPosition(recyclerView, RecyclerView.State(), 0)
-//                }
-//            }
-//        }, 0, 4500)
+
+    private fun isBiometricSupported(context: Context): Boolean {
+        val biometricManager = BiometricManager.from(context)
+        return when (biometricManager.canAuthenticate()) {
+            BiometricManager.BIOMETRIC_SUCCESS -> true
+            else -> false
+        }
+    }
+
+    private fun biometricChecker(player: Player) {
+
+        promptBiometricChecker(
+            "Por favor, confirme!",
+            null,
+            "cancelar",
+            confirmationRequired = true,
+            null,
+            player,
+            requireContext(),
+
+            { error, errorMsg ->
+                toast("$error: $errorMsg")
+            }) {
+            makePlayerInactive(player.copy(departureDate = Calendar.getInstance().time))
+        }
     }
 
     private fun setOnRefreshListener() {
@@ -211,6 +212,7 @@ class HomeFragment : Fragment() {
             setUp()
             refresh.isRefreshing = false
         }
+
 
     }
 
@@ -245,11 +247,22 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment_to_playerDetailFragment, args)
     }
 
-    private fun deletePlayer(player: Player) {
-        viewModel.deletePlayer(player)
-        viewModel.getPlayers()
-        coachViewModel.getCoach()
-        setUp()
+    private fun makePlayerInactive(player: Player) {
+
+        viewModel.addFormerPlayer(player) {
+            when (it) {
+                is UiState.Failure -> {
+                }
+                is UiState.Loading -> {
+                }
+                is UiState.Success -> {
+                    toast("Enviado para lista de ex jogadores.")
+                    viewModel.getPlayers()
+                    coachViewModel.getCoach()
+                    setUp()
+                }
+            }
+        }
     }
 
 

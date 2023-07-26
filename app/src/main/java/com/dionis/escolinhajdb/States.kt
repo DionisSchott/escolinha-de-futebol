@@ -11,5 +11,11 @@ abstract class States {
         object FieldsDone : ValidateRegisterPlayer()
     }
 
+    sealed class ValidateRegisterEvent() {
+        object EventTitleEmpty: ValidateRegisterEvent()
+        object EventDescriptionEmpty: ValidateRegisterEvent()
+        object FieldsDone: ValidateRegisterEvent()
+    }
+
 
 }

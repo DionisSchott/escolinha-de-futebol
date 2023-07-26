@@ -12,7 +12,7 @@
         android:id="@+id/playerListFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_people_24"
-        android:title="players"
+        android:title="Jogadores"
         />
 
     <item
@@ -24,13 +24,13 @@
         android:id="@+id/coachListFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_sports_24"
-        android:title="coachs"/>
+        android:title="Treinadores"/>
 
     <item
-        android:id="@+id/events"
+        android:id="@+id/eventsFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_event_24"
-        android:title="events"/>
+        android:title="Eventos"/>
 
 
 </menu>

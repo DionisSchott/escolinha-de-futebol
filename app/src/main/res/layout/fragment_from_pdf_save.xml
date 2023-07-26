@@ -10,9 +10,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="16dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo_escolinha__bw"
-        android:padding="16dp"/>
+        android:src="@drawable/logo_escolinha__bw" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,16 +34,16 @@
                 android:layout_width="150dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:layout_marginTop="8dp"
+
                 android:padding="5dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/logo_escolinha_no_backgroud"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playerNameEdt" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/playerNameEdt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -55,64 +55,26 @@
                 android:textColor="@color/black"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/tvMemberSince"
+                app:layout_constraintBottom_toTopOf="@id/playerWeightEdt"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/playerImg"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
-            <TextView
-                android:id="@+id/tvMemberSinceTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Membro desde: "
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/playerWeightEdt"
-                app:layout_constraintStart_toEndOf="@id/playerImg"
-                app:layout_constraintTop_toTopOf="@id/playerImg" />
-
-            <TextView
-                android:id="@+id/tvMemberSince"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="dd/MM/yyyy"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/playerWeightEdt"
-                app:layout_constraintStart_toEndOf="@id/tvMemberSinceTitle"
-                app:layout_constraintTop_toTopOf="@id/playerImg" />
 
             <TextView
                 android:id="@+id/playerWeightEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:clickable="false"
                 android:text="0.0"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/playerHeightEdt"
+                app:layout_constraintBottom_toTopOf="@id/playerCategory"
+                app:layout_constraintEnd_toStartOf="@id/playerHeightEdt"
                 app:layout_constraintStart_toEndOf="@id/playerImg"
-                app:layout_constraintTop_toBottomOf="@id/tvMemberSince" />
-
-            <TextView
-                android:id="@+id/tvKg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="Kg"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/playerWeightEdt"
-                app:layout_constraintStart_toEndOf="@id/playerWeightEdt"
-                app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
+                app:layout_constraintTop_toBottomOf="@+id/playerNameEdt" />
 
 
             <TextView
@@ -123,47 +85,22 @@
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/playerCategory"
-                app:layout_constraintStart_toStartOf="@id/playerWeightEdt"
-                app:layout_constraintTop_toBottomOf="@id/playerWeightEdt" />
-
-            <TextView
-                android:id="@+id/tvMeters"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="M"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/playerHeightEdt"
-                app:layout_constraintStart_toEndOf="@id/playerHeightEdt"
-                app:layout_constraintTop_toTopOf="@id/playerHeightEdt" />
-
-            <TextView
-                android:id="@+id/playerCategoryTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categoria atual:"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/playerHeightEdt"
-                app:layout_constraintTop_toBottomOf="@id/playerHeightEdt" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/playerWeightEdt"
+                app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
 
             <TextView
                 android:id="@+id/playerCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="SubXX"
+                android:text="Categoria atual: SubXX"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/playerCategoryTitle"
-                app:layout_constraintTop_toBottomOf="@id/playerHeightEdt" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/playerImg"
+                app:layout_constraintTop_toBottomOf="@+id/playerWeightEdt" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -182,6 +119,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="-4dp"
                 android:text="Sexo"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/tvGenre"
@@ -192,7 +130,7 @@
                 android:id="@+id/tvGenre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:text="gênero"
                 android:textColor="@color/black"
                 android:textSize="24sp"
@@ -209,6 +147,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="-4dp"
                 android:text="Tipo Sanguíneo"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/tvBloodType"
@@ -237,42 +176,19 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="-4dp"
                 android:text="Responsável"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@id/responsibleNameEdt"
                 app:layout_constraintStart_toStartOf="@id/responsibleNameEdt"
-                app:layout_constraintTop_toBottomOf="@id/tvGenre" />
-
-            <TextView
-                android:id="@+id/hyphen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="-"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/responsibleNameEdt"
-                app:layout_constraintStart_toEndOf="@+id/responsibleNameEdt"
-                app:layout_constraintTop_toTopOf="@+id/responsibleNameEdt" />
-
-            <TextView
-                android:id="@+id/responsibleTypeEdt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:gravity="center"
-                android:text="grau"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/responsibleNameEdt"
-                app:layout_constraintStart_toEndOf="@id/hyphen"
-                app:layout_constraintTop_toTopOf="@+id/responsibleNameEdt" />
+                app:layout_constraintTop_toBottomOf="@id/playerBirthEdt" />
 
             <TextView
                 android:id="@+id/responsibleNameEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:gravity="center"
+                android:maxLines="2"
                 android:text="nome"
                 android:textColor="@color/black"
                 android:textSize="24sp"
@@ -287,10 +203,11 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="-4dp"
                 android:text="Nascimento"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@id/playerBirthEdt"
                 app:layout_constraintStart_toStartOf="@id/playerBirthEdt"
-                app:layout_constraintTop_toBottomOf="@id/responsibleNameEdt" />
+                app:layout_constraintTop_toBottomOf="@id/tvGenre" />
 
 
             <TextView
@@ -312,24 +229,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Informações de saúde"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@id/healthNotesEdt"
-                app:layout_constraintTop_toBottomOf="@id/playerBirthEdt" />
+                app:layout_constraintTop_toBottomOf="@id/responsibleNameEdt" />
 
 
             <EditText
                 android:id="@+id/healthNotesEdt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@color/transparent"
                 android:gravity="top"
                 android:inputType="textMultiLine"
-                android:lines="6"
+                android:maxLines="5"
                 android:padding="4dp"
-                android:text="Sem informações"
-                android:textSize="16sp"
+                android:text="Sem informações "
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvHealthNotes" />
@@ -349,24 +267,57 @@
                 android:id="@+id/skillsNotesEdt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"
                 android:background="@color/transparent"
                 android:gravity="top"
                 android:inputType="textMultiLine"
-                android:lines="6"
+                android:maxLines="5"
                 android:padding="4dp"
-                android:text="Sem informações"
-                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvSkillsNotes" />
 
+            <TextView
+                android:id="@+id/tvMemberSince"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dd/MM/yyyy"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tvBloodType"
+                app:layout_constraintTop_toTopOf="@+id/playerBirthEdt" />
+
+            <TextView
+                android:id="@+id/tvMemberSinceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Membro desde"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/tvMemberSince"
+                app:layout_constraintTop_toTopOf="@+id/tvBirth" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="data"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:textColor="#555555"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

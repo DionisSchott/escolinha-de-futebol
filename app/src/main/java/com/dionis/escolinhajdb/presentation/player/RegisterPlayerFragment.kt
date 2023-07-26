@@ -28,12 +28,15 @@ import com.dionis.escolinhajdb.presentation.lists.ListViewModel
 import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.datePickerReturn
 import com.dionis.escolinhajdb.util.Extensions.firstName
+import com.dionis.escolinhajdb.util.Extensions.loadImage
 import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.Genre.GENRE_LIST
 import com.dionis.escolinhajdb.util.Permissions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -50,12 +53,12 @@ class RegisterPlayerFragment : Fragment() {
     private val listViewModel: ListViewModel by activityViewModels()
     var objPlayer: Player? = null
     var imageUris: MutableList<Uri> = arrayListOf()
-    var image: MutableList<String> = arrayListOf()
+    var image: String = ""
+    var imageUri: Uri? = null
     private var categoryList = listOf<String>()
     var date = Calendar.getInstance().time
 
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission(), ::handlePermissionResult)
-
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         val resultCode = result.resultCode
@@ -63,8 +66,8 @@ class RegisterPlayerFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK) {
             val fileUri = data?.data!!
             imageUris.add(fileUri)
+            imageUri = fileUri
             Picasso.get().load(imageUris[0]).into(binding.imgPlayer)
-
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             toast(ImagePicker.getError(data))
         } else {
@@ -81,12 +84,26 @@ class RegisterPlayerFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        listViewModel.getLists()
         setUp()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         (activity as HomeActivity).showBottomNavigation(true)
+    }
+
+    private fun setUp() {
+        setObservers()
+        setupClick()
+        getInsertionDate()
+        lifecycleScope.launch {
+            delay(500)
+            spinner()
+        }
+        (activity as HomeActivity).showBottomNavigation(false)
+
+
     }
 
     private fun handlePermissionResult(isGranted: Boolean) {
@@ -98,15 +115,12 @@ class RegisterPlayerFragment : Fragment() {
         )
         when (permissionState) {
             Permissions.PermissionState.GRANTED -> loadImage()
-            Permissions.PermissionState.DENIED ->
-                requestPermission()
+            Permissions.PermissionState.DENIED -> requestPermission()
             // se negar 2 vezes criar função para ir para configurações liberar manualmente
             Permissions.PermissionState.DO_NOT_ASK -> {
                 toast("permissão necessária")
-
                 // função para ir para configurações liberar manualmente
             }
-
             Permissions.PermissionState.RATIONALE -> {
                 toast("permissão necessária")
                 requestPermission()
@@ -124,26 +138,6 @@ class RegisterPlayerFragment : Fragment() {
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        listViewModel.getLists()
-    }
-
-    private fun setUp() {
-        setObservers()
-        setupClick()
-        getInsertionDate()
-        lifecycleScope.launch {
-            delay(500)
-            spinner()
-        }
-        (activity as HomeActivity).showBottomNavigation(false)
-
-
-    }
-
-//    }
-
     private fun validateFields() {
 
         val playerName = binding.edtPlayerName.text.toString()
@@ -156,12 +150,7 @@ class RegisterPlayerFragment : Fragment() {
     }
 
     private fun loadImage() {
-        ImagePicker.with(this)
-            .compress(1024)
-            .galleryOnly()
-            .createIntent { intent ->
-                startForProfileImageResult.launch(intent)
-            }
+        loadImage(startForProfileImageResult)
     }
 
     private fun setObservers() {
@@ -232,6 +221,9 @@ class RegisterPlayerFragment : Fragment() {
     }
 
     private fun getPlayerObj(): Player {
+
+        val coach = FirebaseAuth.getInstance().currentUser?.uid
+
         return Player(
             id = "",
             playerName = binding.edtPlayerName.text.toString(),
@@ -243,6 +235,7 @@ class RegisterPlayerFragment : Fragment() {
             genre = binding.genre.text.toString(),
             startDate = date,
             category = binding.category.text.toString(),
+            addedBy = coach!!
         )
     }
 
@@ -284,13 +277,13 @@ class RegisterPlayerFragment : Fragment() {
     }
 
 
-    private fun getImageUrls(): List<String> {
-        if (imageUris.isNotEmpty()) {
-            return imageUris.map { it.toString() }
-        } else {
-            return objPlayer?.images ?: arrayListOf()
-        }
-    }
+//    private fun getImageUrls(): List<String> {
+//        if (imageUris.isNotEmpty()) {
+//            return imageUris.map { it.toString() }
+//        } else {
+//            return objPlayer?.images ?: arrayListOf()
+//        }
+//    }
 
     private fun showObligatoryField(edt: TextInputLayout, message: Int) {
         edt.error = getString(message)
@@ -318,8 +311,8 @@ class RegisterPlayerFragment : Fragment() {
 
 
     private fun uploadImage() {
-        if (imageUris.isNotEmpty()) {
-            viewModel.uploadSingleImage(imageUris.first()) {
+        if (imageUri != null) {
+            viewModel.uploadSingleImage(imageUri!!) {
                 when (it) {
                     is UiState.Loading -> {
                     }
@@ -327,7 +320,7 @@ class RegisterPlayerFragment : Fragment() {
                         toast(it.error)
                     }
                     is UiState.Success -> {
-                        image.add(it.data.toString())
+                        image = it.data.toString()
                         registerPlayer()
                         toast("suceso")
                         findNavController().popBackStack()

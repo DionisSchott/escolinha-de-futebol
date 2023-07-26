@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/jdb_ultra_light</item>
         <item name="colorOnSecondary">#000000</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -21,6 +21,7 @@
 
     <style name="MaterialAlertDialogBuilderBackGround.Jdb" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/jdb</item>
+        <item name="android:windowBackground">@color/transparent</item>
     </style>
 
 

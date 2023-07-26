@@ -1,5 +1,6 @@
 package com.dionis.escolinhajdb.presentation.player
 
+import android.Manifest
 import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
@@ -19,10 +20,13 @@ import com.dionis.escolinhajdb.databinding.FragmentPlayerDetailBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
 import com.dionis.escolinhajdb.presentation.lists.ListViewModel
 import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.KEY
-import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.PLAYERTOPDF
+import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.PLAYER_TO_PDF
+import com.dionis.escolinhajdb.util.Extensions.copyToClipboard
 import com.dionis.escolinhajdb.util.Extensions.datePicker
+import com.dionis.escolinhajdb.util.Extensions.loadImage
 import com.dionis.escolinhajdb.util.Extensions.setSpinner
 import com.dionis.escolinhajdb.util.Extensions.toast
+import com.dionis.escolinhajdb.util.Permissions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,8 +55,12 @@ class PlayerDetailFragment : Fragment() {
 
     val TAG: String = "NoteDetailFragment"
     var imageUris: MutableList<Uri> = arrayListOf()
-    var image: MutableList<String> = arrayListOf()
+    var image: String = ""
+    var imageUri: Uri? = null
     var age: Int = 0
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission(), ::handlePermissionResult)
+
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         val resultCode = result.resultCode
@@ -60,7 +68,8 @@ class PlayerDetailFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK) {
             val fileUri = data?.data!!
             imageUris.add(fileUri)
-            Picasso.get().load(imageUris[0]).into(binding.playerImg)
+            imageUri = fileUri
+            Picasso.get().load(imageUri).into(binding.playerImg)
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
 
@@ -95,7 +104,6 @@ class PlayerDetailFragment : Fragment() {
 
 
     private fun setUp() {
-        playerGenreSpinner()
         setUpClicks()
         ageFormatter()
         setDatePicker()
@@ -103,6 +111,42 @@ class PlayerDetailFragment : Fragment() {
         setObservers()
         editActivating(false)
         (activity as HomeActivity).showBottomNavigation(false)
+    }
+
+    private fun setUpClicks() {
+
+        binding.playerImg.setOnClickListener {
+            tryLoadImage()
+        }
+
+        binding.btnEdit.setOnClickListener {
+            turnVisible()
+            editActivating(true)
+            setUpSpinner()
+        }
+
+        binding.btnSave.setOnClickListener {
+            uploadImage()
+        }
+
+        binding.exportPdf.setOnClickListener {
+            tryExportPDF()
+        }
+
+        binding.savePdf.setOnClickListener {
+            trySavePDF()
+        }
+
+        binding.tvContact.setOnLongClickListener {
+            copyToClipboard(requireContext(),  binding.tvContact.unMasked)
+        }
+    }
+
+    private fun setUpSpinner() {
+        playerGenreSpinner()
+        playerPositionSpinner()
+        playerBloodSpinner()
+        playerCategorySpinner()
     }
 
     private fun setObservers() {
@@ -123,45 +167,65 @@ class PlayerDetailFragment : Fragment() {
         }
     }
 
-
-    private fun setUpClicks() {
-
-        binding.playerImg.setOnClickListener {
-            loadImage()
+    private fun savePDF() {
+        val args = Bundle().apply {
+            putParcelable(PLAYER_TO_PDF, playerDetail)
+            putString(KEY, "save")
         }
+        findNavController().navigate(R.id.action_playerDetailFragment_to_fromPdfSaveFragment, args)
+    }
 
-//        binding.playerWeightEdt.setOnClickListener {
-//            slider(binding.playerWeightEdt)
-//        }
-//
-//        binding.playerHeightEdt.setOnClickListener {
-//            slider(binding.playerHeightEdt)
-//        }
+    private fun exportPDF() {
+        val args = Bundle()
+        args.putParcelable(PLAYER_TO_PDF, playerDetail)
+        args.putString(KEY, "export")
+        findNavController().navigate(R.id.action_playerDetailFragment_to_fromPdfSaveFragment, args)
 
-        binding.btnEdit.setOnClickListener {
-            turnVisible()
-            editActivating(true)
-            setUpSpinner()
-        }
+    }
 
-        binding.btnSave.setOnClickListener {
-            uploadImage()
-        }
+    private fun handlePermissionResult(isGranted: Boolean) {
+        val permission = Permissions()
 
-        binding.exportPdf.setOnClickListener {
-            val args = Bundle()
-            args.putParcelable(PLAYERTOPDF, playerDetail)
-            args.putString(KEY, "export")
-            findNavController().navigate(R.id.action_playerDetailFragment_to_fromPdfSaveFragment, args)
-        }
+        val permissionState = permission.checkPermissionState(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        when (permissionState) {
+            Permissions.PermissionState.GRANTED ->
+                toast("permissão concedida!")
 
-        binding.savePdf.setOnClickListener {
-            val args = Bundle().apply {
-                putParcelable(PLAYERTOPDF, playerDetail)
-                putString(KEY, "save")
+            Permissions.PermissionState.DENIED -> requestPermission()
+            // se negar 2 vezes criar função para ir para configurações liberar manualmente
+            Permissions.PermissionState.DO_NOT_ASK -> {
+                toast("permissão necessária")
+                // função para ir para configurações liberar manualmente
             }
-            findNavController().navigate(R.id.action_playerDetailFragment_to_fromPdfSaveFragment, args)
+            Permissions.PermissionState.RATIONALE -> {
+                toast("permissão necessária")
+                requestPermission()
+            }
         }
+    }
+
+    private fun requestPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+    private fun tryLoadImage() {
+        val permissions = Permissions()
+        permissions.requestPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE, { loadImage() }, { requestPermission() })
+
+    }
+
+    private fun trySavePDF() {
+        val permissions = Permissions()
+        permissions.requestPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, { savePDF() }, { requestPermission() })
+
+    }
+
+    private fun tryExportPDF() {
+        val permissions = Permissions()
+        permissions.requestPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, { exportPDF() }, { requestPermission() })
     }
 
     private fun ageFormatter() {
@@ -192,39 +256,9 @@ class PlayerDetailFragment : Fragment() {
         setSpinner(binding.spinnerPlayerCategory, playerCategoryList, binding.tvPlayerCategory)
     }
 
-
-//    private fun slider(view: EditText) {
-//
-//
-//        val sliderView = binding.slider
-//
-//        sliderView.visibility = View.VISIBLE
-//
-//        sliderView.value = playerDetail.weight
-//
-//
-//        sliderView.setLabelFormatter { value: Float ->
-//            val format = DecimalFormat("#,##0.##", DecimalFormatSymbols(Locale.getDefault()))
-//            format.positiveSuffix = "Kg"
-//            format.format(value.toDouble())
-//
-//        }
-//        sliderView.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-//            override fun onStartTrackingTouch(slider: Slider) {
-//                sliderView.background.setTint(resources.getColor(R.color.jdb_ultra_light))
-//            }
-//
-//            override fun onStopTrackingTouch(slider: Slider) {
-//                sliderView.background.setTint(Color.WHITE)
-//                sliderView.visibility = View.INVISIBLE
-//            }
-//        })
-//
-//        sliderView.addOnChangeListener { slider, value, fromUser ->
-//            view.setText(value.toString())
-//
-//        }
-//    }
+    private fun loadImage() {
+        loadImage(startForProfileImageResult)
+    }
 
     private fun turnVisible() = binding.apply {
 
@@ -261,24 +295,6 @@ class PlayerDetailFragment : Fragment() {
         playerWeightEdt.elevation = 20F
         playerHeightEdt.elevation = 20F
 
-
-    }
-
-    private fun setUpSpinner() {
-        //playerGenreSpinner()
-        playerPositionSpinner()
-        playerBloodSpinner()
-        playerCategorySpinner()
-    }
-
-
-    private fun loadImage() {
-        ImagePicker.with(this)
-            .compress(1024)
-            .galleryOnly()
-            .createIntent { intent ->
-                startForProfileImageResult.launch(intent)
-            }
     }
 
     private fun editActivating(isClickable: Boolean) = binding.apply {
@@ -296,7 +312,7 @@ class PlayerDetailFragment : Fragment() {
         cvResponsibleName.isClickable = isClickable
         responsibleTypeEdt.isClickable = isClickable
         cvContact.isClickable = isClickable
-        tvContact.isClickable = isClickable
+        tvContact.isFocusable = isClickable
         //   playerBirthEdt.isClickable = isClickable
         cvBirth.isClickable = isClickable
         healthNotesEdt.isEnabled = isClickable
@@ -304,7 +320,6 @@ class PlayerDetailFragment : Fragment() {
 
 
     }
-
 
     private fun setInfo() = binding.apply {
 
@@ -343,7 +358,7 @@ class PlayerDetailFragment : Fragment() {
                 playerGenre = it.genre
             }
             if (playerDetail.images.isNotEmpty()) {
-                Picasso.get().load(playerDetail.images[0]).into(binding.playerImg)
+                Picasso.get().load(playerDetail.images).into(binding.playerImg)
             }
             tvContact.setText(it.contacts)
             contactEdt.setText(it.contacts)
@@ -351,11 +366,9 @@ class PlayerDetailFragment : Fragment() {
 
     }
 
-
     private fun setDatePicker() {
         datePicker(playerDetail.playersBirth, binding.playerBirthEdt)
     }
-
 
     private fun getPlayerObj(): Player {
 
@@ -367,6 +380,8 @@ class PlayerDetailFragment : Fragment() {
         if (binding.playerHeightEdt.text.isNotEmpty()) {
             height = binding.playerHeightEdt.text.toString().toFloat()
         }
+
+
 
         return Player(
             id = playerDetail.id,
@@ -385,35 +400,20 @@ class PlayerDetailFragment : Fragment() {
             contacts = binding.contactEdt.unMasked,
             bloodType = binding.tvBloodType.text.toString(),
             category = binding.tvPlayerCategory.text.toString(),
-            startDate = playerDetail.startDate
-
+            startDate = playerDetail.startDate,
         )
     }
 
-    private fun updatePlayer() {
-
-        viewModel.updatePlayer(getPlayerObj())
-
-    }
-
-
-    private fun getimageUrls(): List<String> {
-        if (imageUris.isNotEmpty()) {
-            return imageUris.map { it.toString() }
-        } else {
-            return playerDetail.images ?: arrayListOf()
-        }
-    }
-
-
     private fun uploadImage() {
-        val imageUrl = if (!playerDetail.images.isNullOrEmpty()) {
-            playerDetail.images[0]
+        val imageUrl = if (playerDetail.images.isNotEmpty()) {
+            playerDetail.images
+
         } else {
             ""
         }
 
-        if (imageUris.isNotEmpty()) {
+
+        if (imageUri != null) {
             viewModel.updateImage(imageUrl, imageUris.first()) {
                 when (it) {
                     is UiState.Loading -> {
@@ -422,16 +422,15 @@ class PlayerDetailFragment : Fragment() {
                         toast(it.error)
                     }
                     is UiState.Success -> {
-                        image.add(it.data.toString())
+                        image = it.data.toString()
                         viewModel.updatePlayer(getPlayerObj())
-                        // viewModel.deleteImage(playerDetail.images[0])
                         toast("suceso")
                         findNavController().popBackStack()
                     }
                 }
             }
         } else {
-            image.add(playerDetail.images[0])
+            image = playerDetail.images
             viewModel.updatePlayer(getPlayerObj())
             findNavController().popBackStack()
         }

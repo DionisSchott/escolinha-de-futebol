@@ -4,9 +4,10 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-//    id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.crashlytics'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs'
+
 
 }
 
@@ -64,7 +65,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation'com.google.firebase:firebase-firestore-ktx'
-//    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.2'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.7'
     implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
     implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
     implementation 'com.google.firebase:firebase-firestore:24.4.1'
@@ -100,6 +101,7 @@ dependencies {
     implementation 'com.github.dhaval2404:imagepicker:2.1'
 
     //Picasso
+    implementation "com.squareup.picasso:picasso:"
     implementation "com.squareup.picasso:picasso:2.71828"
 
     //Maskara - https://github.com/santalu/maskara
@@ -110,6 +112,9 @@ dependencies {
 
     //swiperefreshlayout
     'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    //Biometric
+    implementation 'androidx.biometric:biometric-ktx:1.2.0-alpha04'
 
 
 }
