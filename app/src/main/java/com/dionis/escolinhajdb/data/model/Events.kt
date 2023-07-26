@@ -12,10 +12,10 @@ data class Events(
     val image: String = "",
     val albumLink: String = "",
     val description: String = "",
-    val listOfNeeds: List<String> = arrayListOf(),
-
+ //   val listOfNeeds: List<String> = arrayListOf(),
+    val addedBy: String = "",
 
     @ServerTimestamp
-    val date: Date,
+    val date: Date? = null,
 
 ) : Parcelable

@@ -1,11 +1,15 @@
 package com.dionis.escolinhajdb.presentation.events
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.dionis.escolinhajdb.data.model.Events
 import com.dionis.escolinhajdb.databinding.ItemEventBinding
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EventsAdapter : RecyclerView.Adapter<EventsAdapter.Holder>() {
 
@@ -18,6 +22,13 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.Holder>() {
         return Holder(ItemEventBinding.inflate(LayoutInflater.from(parent.context),
             parent,
             false), onItemClicked)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(list: List<Events>) {
+        eventsList.clear()
+        eventsList.addAll(list)
+        notifyDataSetChanged()
     }
 
 
@@ -35,6 +46,7 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.Holder>() {
     ) : RecyclerView.ViewHolder(binding.root) {
         lateinit var eventInfo: Events
 
+
         fun bind(information: Events) {
             this.eventInfo = information
 
@@ -42,6 +54,10 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.Holder>() {
                 Picasso.get().load(eventInfo.image).into(binding.eventImage)
             }
             binding.eventName.text = eventInfo.title
+
+            val date = SimpleDateFormat("dd/MM/yyyy", Locale.ROOT)
+            binding.eventDate.text = date.format(eventInfo.date!!)
+
 
             binding.root.setOnClickListener{
                 onItemClicked.invoke(eventInfo)
