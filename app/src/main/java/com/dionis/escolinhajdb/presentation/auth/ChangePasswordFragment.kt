@@ -80,7 +80,7 @@ class ChangePasswordFragment : Fragment() {
                         messagePasswordConfirm.text = ""
                         btnDone.isEnabled = true
                     } else {
-                        messagePasswordConfirm.text = "senhas não coincidem"
+                        messagePasswordConfirm.text = "confirme sua senha atual"
                         btnDone.isEnabled = false
 
                     }

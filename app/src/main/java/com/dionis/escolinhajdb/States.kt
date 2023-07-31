@@ -14,6 +14,7 @@ abstract class States {
     sealed class ValidateRegisterEvent() {
         object EventTitleEmpty: ValidateRegisterEvent()
         object EventDescriptionEmpty: ValidateRegisterEvent()
+        object EventTypeEmpty: ValidateRegisterEvent()
         object FieldsDone: ValidateRegisterEvent()
     }
 

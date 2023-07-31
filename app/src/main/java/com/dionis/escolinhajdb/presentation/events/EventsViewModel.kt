@@ -47,18 +47,22 @@ class EventsViewModel @Inject constructor(
     fun validateFields(
         eventTitle: String,
         eventDescription: String,
+        eventType: String,
     ) {
         if (validateAllFields(
                 eventTitle,
-                eventDescription
-        ))
+                eventDescription,
+                eventType
+            )
+        )
             _validateFields.value = States.ValidateRegisterEvent.FieldsDone
     }
 
     private fun validateAllFields(
         eventTitle: String,
         eventDescription: String,
-    ) : Boolean {
+        eventType: String,
+    ): Boolean {
 
         if (eventTitle.isEmpty()) {
             _validateFields.value = States.ValidateRegisterEvent.EventTitleEmpty
@@ -68,6 +72,11 @@ class EventsViewModel @Inject constructor(
             _validateFields.value = States.ValidateRegisterEvent.EventDescriptionEmpty
             return false
         }
+        if (eventType.isEmpty()) {
+            _validateFields.value = States.ValidateRegisterEvent.EventTypeEmpty
+            return false
+        }
+
         return true
 
     }

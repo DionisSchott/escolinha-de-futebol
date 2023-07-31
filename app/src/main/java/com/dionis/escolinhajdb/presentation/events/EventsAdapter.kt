@@ -50,11 +50,8 @@ class EventsAdapter : RecyclerView.Adapter<EventsAdapter.Holder>() {
         fun bind(information: Events) {
             this.eventInfo = information
 
-            if (eventInfo.image.isNotEmpty()) {
-                Picasso.get().load(eventInfo.image).into(binding.eventImage)
-            }
+            binding.eventType.text = eventInfo.eventType
             binding.eventName.text = eventInfo.title
-
             val date = SimpleDateFormat("dd/MM/yyyy", Locale.ROOT)
             binding.eventDate.text = date.format(eventInfo.date!!)
 

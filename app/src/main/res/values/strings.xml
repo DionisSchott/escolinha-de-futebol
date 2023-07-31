@@ -38,4 +38,6 @@
     <string name="preferred_name">Apelido</string>
     <string name="current_category">Categoria atual:</string>
     <string name="sao_jose">São José Do Ribeirão</string>
+    <string name="log_out">log-out</string>
+    <string name="type_to_search">digite para procurar</string>
 </resources>

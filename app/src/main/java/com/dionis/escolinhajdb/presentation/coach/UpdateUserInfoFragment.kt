@@ -183,8 +183,6 @@ class UpdateUserInfoFragment : Fragment() {
 
     private fun getCoachObject(): Coach {
 
-        photo = coach.photo
-
         return Coach(
             id = coach.id,
             name = binding.edtUserName.text.toString(),
@@ -209,9 +207,7 @@ class UpdateUserInfoFragment : Fragment() {
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
     }
 
-    private fun updateUserInfo() {
-        viewModel.updateUserInfo(getCoachObject())
-    }
+
 
 //    private fun coachFunctionSpinner() {
 //
@@ -292,15 +288,15 @@ class UpdateUserInfoFragment : Fragment() {
                         toast(it.error)
                     }
                     is UiState.Success -> {
-                        photo = it.data.toString()
-                        updateUserInfo()
+                        viewModel.updateUserInfo(getCoachObject().copy(photo = it.data.toString()))
                         toast(getString(R.string.successfully_updated))
-                        findNavController().popBackStack()
                     }
                 }
             }
         } else {
-            updateUserInfo()
+            photo = coach.photo
+            viewModel.updateUserInfo(getCoachObject())
+
         }
 
     }

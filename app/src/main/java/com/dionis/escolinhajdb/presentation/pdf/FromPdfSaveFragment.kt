@@ -93,9 +93,12 @@ class FromPdfSaveFragment : Fragment() {
 
     }
 
+
+
+
     private fun savePdf(layout: View) {
 
-        exportPdf.savePdf(layout, playerDetail.playerName + playerDetail.category)
+        exportPdf.savePdf(layout, "${playerDetail.playerName}_${playerDetail.category}", requireContext())
         toast("salvo com sucesso")
         findNavController().popBackStack()
 

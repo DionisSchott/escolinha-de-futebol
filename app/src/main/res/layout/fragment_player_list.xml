@@ -39,11 +39,11 @@
 
                 <TextView
                     android:id="@+id/btLogout"
-                    android:layout_width="48dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="16dp"
                     android:gravity="center"
-                    android:text="sair"
+                    android:text="@string/log_out"
                     android:textColor="@color/white"
                     android:textSize="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"

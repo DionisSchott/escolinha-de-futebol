@@ -194,7 +194,7 @@ class PlayerDetailFragment : Fragment() {
             Permissions.PermissionState.GRANTED ->
                 toast("permissão concedida!")
 
-            Permissions.PermissionState.DENIED -> requestPermission()
+            Permissions.PermissionState.DENIED -> requestPermission("")
             // se negar 2 vezes criar função para ir para configurações liberar manualmente
             Permissions.PermissionState.DO_NOT_ASK -> {
                 toast("permissão necessária")
@@ -202,30 +202,29 @@ class PlayerDetailFragment : Fragment() {
             }
             Permissions.PermissionState.RATIONALE -> {
                 toast("permissão necessária")
-                requestPermission()
             }
         }
     }
 
-    private fun requestPermission() {
+    private fun requestPermission(permission: String) {
         requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     private fun tryLoadImage() {
         val permissions = Permissions()
-        permissions.requestPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE, { loadImage() }, { requestPermission() })
+        permissions.requestPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE, { loadImage() }, { requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE) })
 
     }
 
     private fun trySavePDF() {
         val permissions = Permissions()
-        permissions.requestPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, { savePDF() }, { requestPermission() })
+        permissions.requestPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, { savePDF() }, { requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) })
 
     }
 
     private fun tryExportPDF() {
         val permissions = Permissions()
-        permissions.requestPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, { exportPDF() }, { requestPermission() })
+        permissions.requestPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, { exportPDF() }, { requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) })
     }
 
     private fun ageFormatter() {
@@ -422,8 +421,8 @@ class PlayerDetailFragment : Fragment() {
                         toast(it.error)
                     }
                     is UiState.Success -> {
-                        image = it.data.toString()
-                        viewModel.updatePlayer(getPlayerObj())
+//                        image = it.data.toString()
+                        viewModel.updatePlayer(getPlayerObj().copy(images = it.data.toString()))
                         toast("suceso")
                         findNavController().popBackStack()
                     }

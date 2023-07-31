@@ -38,11 +38,11 @@
 
                 <TextView
                     android:id="@+id/btLogout"
-                    android:layout_width="48dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="16dp"
                     android:gravity="center"
-                    android:text="sair"
+                    android:text="@string/log_out"
                     android:textColor="@color/white"
                     android:textSize="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -58,34 +58,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                app:startIconDrawable="@drawable/ic_baseline_search_24"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_baseline_search_24"
-                app:layout_constraintEnd_toStartOf="@id/imgFilter"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/falseToolbar"
-                >
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/falseToolbar">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/coachFindEdt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="digite para procurar"
-                    android:inputType="text"/>
+                    android:hint="@string/type_to_search"
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <ImageButton
-                android:id="@+id/imgFilter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:background="@color/transparent"
-                android:src="@drawable/ic_baseline_filter_alt_24"
-                app:layout_constraintBottom_toBottomOf="@id/coachFindLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/coachFindLayout"
-                app:layout_constraintTop_toTopOf="@id/coachFindLayout" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewCoachList"

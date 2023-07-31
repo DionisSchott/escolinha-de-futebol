@@ -57,6 +57,7 @@ class FormerPlayerListFragment : Fragment() {
     }
 
 
+
     private fun setPlayerObservers() {
         formerPlayerViewModel.formerPlayers.observe(viewLifecycleOwner) {
             when (it) {

@@ -12,15 +12,33 @@
         android:layout_height="match_parent"
         android:background="@color/jdb_light">
 
-        <ImageView
-            android:id="@+id/eventImage"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvEventType"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/logo_jdb"
+            android:layout_height="100dp"
+            android:src="@drawable/logo_escolinha__bw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="@color/grey">
+
+            <TextView
+                android:id="@+id/eventType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Confraternização"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:textColor="@color/jdb"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+
+
+
+
+
+        </androidx.cardview.widget.CardView>
+
 
         <TextView
             android:id="@+id/eventName"
@@ -34,7 +52,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/eventImage" />
+            app:layout_constraintTop_toBottomOf="@id/cvEventType" />
 
         <TextView
             android:id="@+id/eventDate"

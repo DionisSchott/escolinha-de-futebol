@@ -1,5 +1,7 @@
 package com.dionis.escolinhajdb.presentation.pdf
 
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -9,7 +11,10 @@ import android.graphics.pdf.PdfDocument
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
+import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
+import com.dionis.escolinhajdb.R
+import com.dionis.escolinhajdb.presentation.home.HomeActivity
 import java.io.File
 import java.io.FileOutputStream
 
@@ -42,18 +47,24 @@ class ExportPdf {
 
     fun savePdf(
         layout: View,
-        nomeArquivo: String,
+        fileName: String,
+        context: Context
     ) {
 
         createPdf(layout)
 
         // Salva o documento em um arquivo PDF
         val diretorio = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val arquivo = File(diretorio, "$nomeArquivo.pdf")
-        val outputStream = FileOutputStream(arquivo)
+        val arquivo = File(
+            diretorio,
+            "$fileName.pdf")
+        val outputStream = FileOutputStream(
+            arquivo)
         document.writeTo(outputStream)
         document.close()
         outputStream.close()
+
+        showNotification(context, fileName, "documento salvo", arquivo)
     }
 
 
@@ -114,7 +125,63 @@ class ExportPdf {
 
         context.startActivity(Intent.createChooser(shareIntent.putExtra(Intent.EXTRA_STREAM, uri), "Compartilhar PDF"))
 
+    }
+
+    // Função para mostrar a notificação
+    fun showNotification(context: Context, title: String, message: String, arquivo: File) {
+        val notificationIntent = Intent(context, HomeActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+
+        )
+
+
+        // Intent para abrir o arquivo PDF
+        val openFileIntent = Intent(Intent.ACTION_VIEW)
+        val fileUri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            arquivo
+
+        )
+        openFileIntent.setDataAndType(fileUri, "application/pdf")
+        openFileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+        val openFilePendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            openFileIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // Adicionar a ação à notificação
+//        notificationBuilder.addAction(
+//            R.drawable.logo_jdb, // Ícone para a ação
+//            "Abrir PDF", // Texto da ação
+//            openFilePendingIntent // PendingIntent para abrir o arquivo
+//        )
+
+        val notificationBuilder = NotificationCompat.Builder(context, "pdf_channel_id")
+            .setSmallIcon(R.drawable.logo_jdb)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setAutoCancel(true)
+            .setContentIntent(openFilePendingIntent)
+
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(1, notificationBuilder.build())
+
+
+
+
 
     }
+
+
+
 
 }

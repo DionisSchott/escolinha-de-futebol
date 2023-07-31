@@ -17,11 +17,13 @@ import com.dionis.escolinhajdb.databinding.FragmentRegisterEventBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
 import com.dionis.escolinhajdb.util.Extensions.datePickerReturn
 import com.dionis.escolinhajdb.util.Extensions.showObligatoryField
+import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.reflect.typeOf
 
 @AndroidEntryPoint
 class EventRegisterFragment : Fragment() {
@@ -29,6 +31,7 @@ class EventRegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterEventBinding
     private val viewModel: EventsViewModel by viewModels()
     var objEvent: Events? = null
+    private var eventList = listOf<String>("Jogo", "Confraternização", "Reunião" )
 
     //    var imageUris: MutableList<Uri> = arrayListOf()
 //    var image: String = ""
@@ -57,9 +60,14 @@ class EventRegisterFragment : Fragment() {
         getEventDate()
         setObserver()
         setupClicks()
+        spinnerEvent()
 
 
         (activity as HomeActivity).showBottomNavigation(false)
+    }
+
+    private fun spinnerEvent() {
+        spinnerAutoComplete(binding.edtEventType, eventList)
     }
 
     private fun setupClicks() {
@@ -84,6 +92,9 @@ class EventRegisterFragment : Fragment() {
                 }
                 is States.ValidateRegisterEvent.EventDescriptionEmpty -> {
                     showObligatoryField(binding.eventDescriptionLayout, R.string.obligatory_field)
+                }
+                is States.ValidateRegisterEvent.EventTypeEmpty -> {
+                    showObligatoryField(binding.eventTypeLayout, R.string.obligatory_field)
                 }
                 is States.ValidateRegisterEvent.FieldsDone -> {
                     registerEvent()
@@ -114,7 +125,8 @@ class EventRegisterFragment : Fragment() {
     private fun validateFields() {
         viewModel.validateFields(
             binding.eventName.text.toString(),
-            binding.edtEventDescription.text.toString()
+            binding.edtEventDescription.text.toString(),
+            binding.edtEventType.text.toString()
         )
     }
 
@@ -137,10 +149,10 @@ class EventRegisterFragment : Fragment() {
         return Events(
             id = "",
             title = binding.eventName.text.toString(),
-            image = "",
             description = binding.edtEventDescription.text.toString(),
             addedBy = coach!!,
-            date = date
+            date = date,
+            eventType = binding.edtEventType.text.toString()
 
         )
     }

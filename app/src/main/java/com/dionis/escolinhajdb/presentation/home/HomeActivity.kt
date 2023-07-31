@@ -1,7 +1,11 @@
 package com.dionis.escolinhajdb.presentation.home
 
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +52,20 @@ class HomeActivity : AppCompatActivity() {
 
         setupBottomNavigation()
         setShortcutUtil()
+        createNotificationChannel(this)
 
+    }
+
+    // Criação do canal de notificação (apenas para Android 8.0 Oreo e versões posteriores)
+    private fun createNotificationChannel(context: Context) {
+        val channel = NotificationChannel(
+            "pdf_channel_id",
+            "PDF Channel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
 

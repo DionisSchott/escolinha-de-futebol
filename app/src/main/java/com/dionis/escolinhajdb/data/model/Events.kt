@@ -9,9 +9,9 @@ import java.util.*
 data class Events(
     var id: String = "",
     val title: String = "",
-    val image: String = "",
     val albumLink: String = "",
     val description: String = "",
+    val eventType: String = "",
  //   val listOfNeeds: List<String> = arrayListOf(),
     val addedBy: String = "",
 

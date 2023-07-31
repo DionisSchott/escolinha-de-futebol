@@ -234,6 +234,7 @@ class RegisterPlayerFragment : Fragment() {
             responsibleType = binding.edtResponsibleType.text.toString(),
             genre = binding.genre.text.toString(),
             startDate = date,
+            contacts = binding.contactEdt.unMasked,
             category = binding.category.text.toString(),
             addedBy = coach!!
         )
