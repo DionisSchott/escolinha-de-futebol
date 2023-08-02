@@ -21,6 +21,7 @@ import com.dionis.escolinhajdb.data.model.Coach
 import com.dionis.escolinhajdb.databinding.FragmentCoachDetailsBinding
 import com.dionis.escolinhajdb.presentation.auth.ViewModel
 import com.dionis.escolinhajdb.util.Extensions.copyToClipboard
+import com.dionis.escolinhajdb.util.Extensions.makePhoneCall
 import com.squareup.picasso.Picasso
 import java.time.format.DateTimeFormatter
 
@@ -59,7 +60,7 @@ class DialogCoachDetailFragment() : DialogFragment() {
     private fun setup() {
 
         binding.imgExit.setOnClickListener { dismiss() }
-        binding.imgCoach.setOnClickListener {   }
+        binding.imgCall.setOnClickListener { makePhoneCall(requireContext(), coach.contact)  }
         binding.tvContact.setOnLongClickListener {
             copyToClipboard(requireContext(), binding.tvContact.text.toString())
         }

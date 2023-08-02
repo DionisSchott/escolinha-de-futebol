@@ -24,6 +24,7 @@ import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.PL
 import com.dionis.escolinhajdb.util.Extensions.copyToClipboard
 import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.loadImage
+import com.dionis.escolinhajdb.util.Extensions.makePhoneCall
 import com.dionis.escolinhajdb.util.Extensions.setSpinner
 import com.dionis.escolinhajdb.util.Extensions.toast
 import com.dionis.escolinhajdb.util.Permissions
@@ -139,6 +140,10 @@ class PlayerDetailFragment : Fragment() {
 
         binding.tvContact.setOnLongClickListener {
             copyToClipboard(requireContext(),  binding.tvContact.unMasked)
+        }
+
+        binding.imgCall.setOnClickListener {
+            makePhoneCall(requireContext(), playerDetail.contacts)
         }
     }
 

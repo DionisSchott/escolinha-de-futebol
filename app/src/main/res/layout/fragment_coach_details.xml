@@ -111,6 +111,18 @@
                 app:layout_constraintTop_toBottomOf="@id/tvContactTitle"
                 />
 
+
+            <ImageButton
+                android:id="@+id/imgCall"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/jdb_ultra_light"
+                android:src="@drawable/baseline_phone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvContact" />
+
             <TextView
                 android:id="@+id/tvMemberSinceTitle"
                 android:layout_width="wrap_content"

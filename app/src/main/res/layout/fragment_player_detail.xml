@@ -637,6 +637,18 @@
             </com.google.android.material.card.MaterialCardView>
 
 
+            <ImageButton
+                android:id="@+id/imgCall"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/jdb"
+                android:src="@drawable/baseline_phone"
+                app:layout_constraintBottom_toBottomOf="@+id/tvContact"
+                app:layout_constraintStart_toEndOf="@id/tvContact"
+                app:layout_constraintTop_toTopOf="@+id/tvContact" />
+
+
             <com.santalu.maskara.widget.MaskEditText
                 android:id="@+id/tvContact"
                 style="@style/Widget.AppCompat.TextView"
