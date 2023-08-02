@@ -234,9 +234,9 @@ class PlayerDetailFragment : Fragment() {
 
     private fun ageFormatter() {
         if (playerDetail.playersBirth.isNotEmpty()) {
-            val imputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val inputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             val outputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val birthDate = LocalDate.parse(playerDetail.playersBirth, imputFormat) // Converter a string em um objeto LocalDate
+            val birthDate = LocalDate.parse(playerDetail.playersBirth, inputFormat) // Converter a string em um objeto LocalDate
             val formattedBirthDate = birthDate.format(outputFormat) // Formatar a data no padrão "yyyy-MM-dd"
             val dateForCalc = LocalDate.parse(formattedBirthDate, outputFormat)
             val today = LocalDate.now()
@@ -298,6 +298,8 @@ class PlayerDetailFragment : Fragment() {
 
         playerWeightEdt.elevation = 20F
         playerHeightEdt.elevation = 20F
+
+        imgCall.visibility = View.INVISIBLE
 
     }
 

@@ -40,7 +40,7 @@ class RegisterCoachFragment : Fragment() {
 
     val TAG: String = "UserUpdateFragment"
     private lateinit var binding: FragmentRegisterBinding
-    private val viewModel: ViewModel by activityViewModels()
+    private val viewModel: ViewModel by viewModels()
     private val listViewModel: ListViewModel by activityViewModels()
     private val myCalendar = Calendar.getInstance()
     private var functionList = listOf<String>()

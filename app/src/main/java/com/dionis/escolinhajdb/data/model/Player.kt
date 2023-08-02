@@ -8,6 +8,7 @@ import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import org.w3c.dom.Text
+import java.time.LocalDate
 import java.util.*
 
 @Parcelize
@@ -37,6 +38,5 @@ data class Player(
     @ServerTimestamp
     val startDate: Date? = null,
     val isActive: Boolean = true,
-    @ServerTimestamp
     val departureDate: Date? = null,
 ) : Parcelable

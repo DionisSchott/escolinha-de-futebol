@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
@@ -25,6 +26,7 @@ import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.FragmentRegisterPlayerBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
 import com.dionis.escolinhajdb.presentation.lists.ListViewModel
+import com.dionis.escolinhajdb.util.Extensions.convertLocalDateToDate
 import com.dionis.escolinhajdb.util.Extensions.datePicker
 import com.dionis.escolinhajdb.util.Extensions.datePickerReturn
 import com.dionis.escolinhajdb.util.Extensions.firstName
@@ -36,12 +38,12 @@ import com.dionis.escolinhajdb.util.Permissions
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 @AndroidEntryPoint
@@ -49,7 +51,7 @@ class RegisterPlayerFragment : Fragment() {
 
     val TAG: String = "RegisterPlayerFragment"
     private lateinit var binding: FragmentRegisterPlayerBinding
-    private val viewModel: PlayerViewModel by activityViewModels()
+    private val viewModel: PlayerViewModel by viewModels()
     private val listViewModel: ListViewModel by activityViewModels()
     var objPlayer: Player? = null
     var imageUris: MutableList<Uri> = arrayListOf()
@@ -175,8 +177,7 @@ class RegisterPlayerFragment : Fragment() {
 
                 is States.ValidateRegisterPlayer.FieldsDone -> {
                     uploadImage()
-                    // registerPlayer()
-                    showDialog()
+
                 }
             }
         }
@@ -218,6 +219,7 @@ class RegisterPlayerFragment : Fragment() {
         viewModel.registerPlayer(
             player = getPlayerObj()
         )
+        showDialog()
     }
 
     private fun getPlayerObj(): Player {
@@ -242,12 +244,13 @@ class RegisterPlayerFragment : Fragment() {
 
     private fun getInsertionDate() {
 
+
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         binding.edtInsertionDate.setText(formatter.format(date))
 
         datePickerReturn("", binding.edtInsertionDate) {
-            date = it
-            binding.edtInsertionDate.setText(formatter.format(it))
+            date = convertLocalDateToDate(it)
+            binding.edtInsertionDate.setText(formatter.format(date))
         }
 
     }

@@ -17,6 +17,8 @@ import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ExportPdf {
 
@@ -45,6 +47,23 @@ class ExportPdf {
 
     }
 
+    private fun getUniqueFileName(directory: File, fileName: String): String {
+        val pdf = ".pdf"
+        var uniqueFileName = "$fileName$pdf"
+        var counter = 1
+
+        if (File(directory, uniqueFileName).exists())
+        while (File(directory, uniqueFileName).exists()) {
+            counter++
+            uniqueFileName = "$fileName ($counter)$pdf"
+        } else {
+            uniqueFileName = "${fileName}$pdf"
+        }
+
+        return uniqueFileName
+       // return uniqueFileName
+    }
+
     fun savePdf(
         layout: View,
         fileName: String,
@@ -54,17 +73,26 @@ class ExportPdf {
         createPdf(layout)
 
         // Salva o documento em um arquivo PDF
-        val diretorio = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val arquivo = File(
-            diretorio,
-            "$fileName.pdf")
+        val directoryName = "Escolinha" // Nome do diretório que você deseja criar
+        val directory = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), directoryName)
+
+       // val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+
+        if (!directory.exists()) {
+            directory.mkdirs() // Cria o diretório se ele não existir
+        }
+
+        val uniqueFileName = getUniqueFileName(directory,
+            fileName)
+
+        val file = File(directory, uniqueFileName)
         val outputStream = FileOutputStream(
-            arquivo)
+            file)
         document.writeTo(outputStream)
         document.close()
         outputStream.close()
 
-        showNotification(context, fileName, "documento salvo", arquivo)
+        showNotification(context, fileName, "documento salvo", file)
     }
 
 

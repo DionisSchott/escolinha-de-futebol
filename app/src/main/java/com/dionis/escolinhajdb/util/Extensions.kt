@@ -18,6 +18,7 @@ import androidx.biometric.BiometricPrompt
 import androidx.biometric.auth.AuthPromptHost
 import androidx.biometric.auth.CredentialAuthPrompt
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.oAuthCredential
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.crypto.Cipher
@@ -119,24 +121,21 @@ object Extensions {
 
     fun Fragment.datePicker(birth: String, editText: TextInputEditText) {
 
-        var currentDate = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val formattedDate = formatter.format(currentDate)
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale("pt", "BR"))
+        val formattedDate = currentDate.format(formatter)
 
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale("pt", "BR"))
 
         val date = if (birth.isNotEmpty()) {
-            sdf.parse(birth)
+            LocalDate.parse(birth, sdf)
         } else {
-            sdf.parse(formattedDate)
+            LocalDate.parse(formattedDate, sdf)
         }
-
-        val dateInMillis = date?.time
-
 
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Selecione uma data")
-            .setSelection(dateInMillis)
+            .setSelection(date.toEpochDay() * 24 * 60 * 60 * 1000) // Converte para milissegundos
             .build()
 
         editText.setOnClickListener {
@@ -144,33 +143,31 @@ object Extensions {
         }
 
         datePicker.addOnPositiveButtonClickListener {
-            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            currentDate = Date(it)
-            editText.setText(dateFormat.format(Date(it)))
+            val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale("pt", "BR"))
+            val selectedDate = LocalDate.ofEpochDay(it / (24 * 60 * 60 * 1000)) // Converte de milissegundos para dias
+            editText.setText(selectedDate.format(dateFormat))
         }
     }
 
 
-    fun Fragment.datePickerReturn(birth: String, editText: TextInputEditText, result: (Date) -> Unit) {
+    fun Fragment.datePickerReturn(birth: String, editText: TextInputEditText, result: (LocalDate) -> Unit) {
 
-        val currentDate = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val formattedDate = formatter.format(currentDate)
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale("pt", "BR"))
+        val formattedDate = currentDate.format(formatter)
 
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale("pt", "BR"))
 
         val date = if (birth.isNotEmpty()) {
-            sdf.parse(birth)
+            LocalDate.parse(birth, sdf)
         } else {
-            sdf.parse(formattedDate)
+            LocalDate.parse(formattedDate, sdf)
         }
-
-        val dateInMillis = date?.time
 
 
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Selecione uma data")
-            .setSelection(dateInMillis)
+            .setSelection(date.toEpochDay() * 24 * 60 * 60 * 1000) // Converte para milissegundos
             .build()
 
         editText.setOnClickListener {
@@ -178,8 +175,16 @@ object Extensions {
         }
 
         datePicker.addOnPositiveButtonClickListener {
-            result.invoke(Date(it))
+            val selectedDate = LocalDate.ofEpochDay(it / (24 * 60 * 60 * 1000)) // Converte de milissegundos para dias
+            editText.setText(selectedDate.format(formatter))
+
+            // Chama a função result com o objeto LocalDate como argumento
+            result.invoke(selectedDate)
         }
+    }
+
+    fun convertLocalDateToDate(localDate: LocalDate): Date {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
     }
 
     fun Fragment.openKeyboard(view: View) {

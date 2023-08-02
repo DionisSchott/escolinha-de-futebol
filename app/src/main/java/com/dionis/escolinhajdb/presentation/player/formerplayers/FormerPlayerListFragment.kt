@@ -57,7 +57,6 @@ class FormerPlayerListFragment : Fragment() {
     }
 
 
-
     private fun setPlayerObservers() {
         formerPlayerViewModel.formerPlayers.observe(viewLifecycleOwner) {
             when (it) {
@@ -113,7 +112,12 @@ class FormerPlayerListFragment : Fragment() {
             { error, errorMsg ->
                 toast("$error: $errorMsg")
             }) {
-            reactivatePlayer(player)
+            reactivatePlayer(
+                player.copy(
+                    departureDate = null,
+                    isActive = true
+                )
+            )
         }
     }
 

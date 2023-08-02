@@ -106,9 +106,9 @@ class PlayerListFragment : Fragment() {
     private fun biometricChecker(player: Player) {
 
         promptBiometricChecker(
-            "Por favor, confirme!",
-            null,
-            "cancelar",
+            title = "Por favor, confirme!",
+            message = null,
+            negativeLabel = "cancelar",
             confirmationRequired = true,
             null,
             player,
@@ -117,7 +117,12 @@ class PlayerListFragment : Fragment() {
             { error, errorMsg ->
                 toast("$error: $errorMsg")
             }) {
-            makePlayerInactive(player.copy(departureDate = Calendar.getInstance().time))
+            makePlayerInactive(
+                player.copy(
+                    departureDate = Calendar.getInstance().time,
+                    isActive = false
+                )
+            )
         }
     }
 

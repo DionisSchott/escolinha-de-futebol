@@ -133,7 +133,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvContact" />
+                app:layout_constraintTop_toBottomOf="@id/imgCall" />
 
             <TextView
                 android:id="@+id/tvMemberSince"

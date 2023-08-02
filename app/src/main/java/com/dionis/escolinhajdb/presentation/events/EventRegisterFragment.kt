@@ -15,6 +15,7 @@ import com.dionis.escolinhajdb.UiState
 import com.dionis.escolinhajdb.data.model.Events
 import com.dionis.escolinhajdb.databinding.FragmentRegisterEventBinding
 import com.dionis.escolinhajdb.presentation.home.HomeActivity
+import com.dionis.escolinhajdb.util.Extensions.convertLocalDateToDate
 import com.dionis.escolinhajdb.util.Extensions.datePickerReturn
 import com.dionis.escolinhajdb.util.Extensions.showObligatoryField
 import com.dionis.escolinhajdb.util.Extensions.spinnerAutoComplete
@@ -22,6 +23,7 @@ import com.dionis.escolinhajdb.util.Extensions.toast
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import kotlin.reflect.typeOf
 
@@ -136,8 +138,8 @@ class EventRegisterFragment : Fragment() {
         binding.edtEventDate.setText(formatter.format(date))
 
         datePickerReturn("", binding.edtEventDate) {
-            date = it
-            binding.edtEventDate.setText(formatter.format(it))
+            date = convertLocalDateToDate(it)
+            binding.edtEventDate.setText(formatter.format(date))
         }
 
     }

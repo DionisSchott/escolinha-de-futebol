@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.dionis.escolinhajdb.R
 import com.dionis.escolinhajdb.data.model.Player
 import com.dionis.escolinhajdb.databinding.ItemPlayer2Binding
 import com.dionis.escolinhajdb.databinding.ItemPlayerBinding
@@ -48,9 +49,11 @@ class PlayersListAdapter : RecyclerView.Adapter<PlayersListAdapter.Holder>() {
         fun bind(information: Player) {
             this.playerInfo = information
 
+
+
             if (playerInfo.images.isNotEmpty()) {
                 Picasso.get().load(playerInfo.images).into(binding.image)
-            }
+            } else { binding.image.setImageResource(R.drawable.person_)}
 
             binding.tvName.text = playerInfo.preferredName
 
