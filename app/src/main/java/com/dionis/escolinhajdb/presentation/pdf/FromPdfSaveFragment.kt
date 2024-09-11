@@ -2,7 +2,6 @@ package com.dionis.escolinhajdb.presentation.pdf
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +20,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.Date
 
 
 class FromPdfSaveFragment : Fragment() {
@@ -60,7 +58,7 @@ class FromPdfSaveFragment : Fragment() {
 
     private fun setInfo() {
         Picasso.get().load(playerDetail.images).into(binding.playerImg)
-        binding.playerNameEdt.text = playerDetail.playerName
+        binding.edtPlayerName.text = playerDetail.playerName
         binding.tvMemberSince.text = playerDetail.startDate.toString()
         binding.playerWeightEdt.text = playerDetail.weight.toString().plus(" Kg")
         binding.playerHeightEdt.text = playerDetail.height.toString().plus(" M")

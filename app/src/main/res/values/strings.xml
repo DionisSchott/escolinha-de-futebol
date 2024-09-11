@@ -16,7 +16,7 @@
     <string name="height">altura</string>
     <string name="m">M</string>
     <string name="genre">Sexo</string>
-    <string name="click_for_select">Selecione</string>
+    <string name="click_for_select">Clique para selecionar</string>
     <string name="indefined_position">Posição indefinida</string>
     <string name="responsible">Responsável</string>
     <string name="responsible_type">grau</string>

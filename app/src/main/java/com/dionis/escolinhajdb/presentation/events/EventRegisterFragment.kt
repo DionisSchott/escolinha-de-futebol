@@ -1,12 +1,10 @@
 package com.dionis.escolinhajdb.presentation.events
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.dionis.escolinhajdb.R
@@ -23,22 +21,20 @@ import com.dionis.escolinhajdb.util.Extensions.toast
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
-import kotlin.reflect.typeOf
 
 @AndroidEntryPoint
 class EventRegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterEventBinding
     private val viewModel: EventsViewModel by viewModels()
-    var objEvent: Events? = null
-    private var eventList = listOf<String>("Jogo", "Confraternização", "Reunião" )
+    private var objEvent: Events? = null
+    private var eventList = listOf("Jogo", "Confraternização", "Reunião" )
 
     //    var imageUris: MutableList<Uri> = arrayListOf()
 //    var image: String = ""
 //    var imageUri: Uri? = null
-    var date = Calendar.getInstance().time
+    var date: Date = Calendar.getInstance().time
 
 
     override fun onCreateView(

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.KE
 import com.dionis.escolinhajdb.presentation.pdf.FromPdfSaveFragment.Companion.PLAYER_TO_PDF
 import com.dionis.escolinhajdb.util.Extensions.copyToClipboard
 import com.dionis.escolinhajdb.util.Extensions.datePicker
+import com.dionis.escolinhajdb.util.Extensions.formatDate
 import com.dionis.escolinhajdb.util.Extensions.loadImage
 import com.dionis.escolinhajdb.util.Extensions.makePhoneCall
 import com.dionis.escolinhajdb.util.Extensions.setSpinner
@@ -34,7 +36,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @AndroidEntryPoint
 class PlayerDetailFragment : Fragment() {
@@ -54,6 +57,7 @@ class PlayerDetailFragment : Fragment() {
     private val myCalendar = Calendar.getInstance()
     private val listViewModel: ListViewModel by activityViewModels()
 
+    var date: Date = Calendar.getInstance().time
     val TAG: String = "NoteDetailFragment"
     var imageUris: MutableList<Uri> = arrayListOf()
     var image: String = ""
@@ -139,7 +143,23 @@ class PlayerDetailFragment : Fragment() {
         }
 
         binding.tvContact.setOnLongClickListener {
-            copyToClipboard(requireContext(),  binding.tvContact.unMasked)
+            copyToClipboard(requireContext(), binding.tvContact.unMasked)
+        }
+
+        binding.weightInfo.setOnClickListener {
+            if (playerDetail.weighingDate != null) {
+                Toast.makeText(requireContext(), "Pesado no dia ${formatDate(playerDetail.weighingDate!!)}", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Dado não cadastrado!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.heightInfo.setOnClickListener {
+            if (playerDetail.measurementDate != null) {
+                Toast.makeText(requireContext(), "Medido no dia ${formatDate(playerDetail.measurementDate!!)}", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Dado não cadastrado!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.imgCall.setOnClickListener {
@@ -355,7 +375,10 @@ class PlayerDetailFragment : Fragment() {
             playerBirthEdt.setText(it.playersBirth)
             playerAgeTv.text = age.toString().plus(" Anos")
 
-            tvBloodType.text = it.bloodType
+            if (it.bloodType.isNotEmpty()) {
+                tvBloodType.text = it.bloodType
+            }
+            //tvBloodType.text = it.bloodType
 
             healthNotesEdt.setText(it.healthNotes)
             SkillsNotesEdt.setText(it.skillsNotes)
@@ -387,6 +410,15 @@ class PlayerDetailFragment : Fragment() {
             height = binding.playerHeightEdt.text.toString().toFloat()
         }
 
+        var weighingDate = playerDetail.weighingDate
+        if (weight != playerDetail.weight) {
+            weighingDate = date
+        }
+
+        var measurementDate = playerDetail.measurementDate
+        if (height != playerDetail.height) {
+            measurementDate = date
+        }
 
 
         return Player(
@@ -401,7 +433,9 @@ class PlayerDetailFragment : Fragment() {
             healthNotes = binding.healthNotesEdt.text.toString(),
             skillsNotes = binding.SkillsNotesEdt.text.toString(),
             weight = weight,
+            weighingDate = weighingDate,
             height = height,
+            measurementDate = measurementDate,
             genre = binding.tvGenre.text.toString(),
             contacts = binding.contactEdt.unMasked,
             bloodType = binding.tvBloodType.text.toString(),

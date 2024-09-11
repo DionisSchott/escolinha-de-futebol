@@ -44,7 +44,7 @@
 
 
             <TextView
-                android:id="@+id/playerNameEdt"
+                android:id="@+id/edtPlayerName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -74,7 +74,7 @@
                 app:layout_constraintBottom_toTopOf="@id/playerCategory"
                 app:layout_constraintEnd_toStartOf="@id/playerHeightEdt"
                 app:layout_constraintStart_toEndOf="@id/playerImg"
-                app:layout_constraintTop_toBottomOf="@+id/playerNameEdt" />
+                app:layout_constraintTop_toBottomOf="@+id/edtPlayerName" />
 
 
             <TextView

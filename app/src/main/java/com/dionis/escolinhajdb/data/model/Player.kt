@@ -1,15 +1,9 @@
 package com.dionis.escolinhajdb.data.model
 
 import android.os.Parcelable
-import android.provider.ContactsContract
 import com.google.firebase.firestore.ServerTimestamp
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
-import org.w3c.dom.Text
-import java.time.LocalDate
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class Player(
@@ -23,7 +17,7 @@ data class Player(
     val responsibleType: String = "",
     val contacts: String = "",
     val addedBy: String = "",
-  //  val endereço: String = "",
+    //  val endereço: String = "",
 
     val position: String = "",
     val preferredFoot: String = "",
@@ -31,6 +25,7 @@ data class Player(
     val category: String = "",
 
     val weight: Float = 0f,
+    val weighingDate: Date? = null,
     val height: Float = 0f,
     val measurementDate: Date? = null,
     val bloodType: String = "",

@@ -23,7 +23,7 @@ class PlayerRepositoryImpl(
     var storageReference: StorageReference,
 ) : PlayerRepository {
 
-    override fun addPlayer(player: Player, result: (UiState<Pair<Player, String>>) -> Unit) {
+    override fun addPlayer(player: Player, result: (UiState<Pair<Player, String>>) -> Unit)  {
         val document = dataBase.collection(PLAYER).document()
         player.id = document.id
         document
@@ -75,7 +75,7 @@ class PlayerRepositoryImpl(
         val query = dataBase.collection(PLAYER)
 
 //            .whereEqualTo("category", "sub10")
-            .orderBy("playerName", Query.Direction.DESCENDING)
+            .orderBy("startDate", Query.Direction.DESCENDING)
         //.startAt(filter)
         // .endAt(filter)
 

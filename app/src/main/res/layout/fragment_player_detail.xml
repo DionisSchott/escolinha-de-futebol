@@ -190,6 +190,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvWeight" />
 
+            <ImageView
+                android:id="@+id/weightInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/playerWeightEdt"
+                app:layout_constraintBottom_toBottomOf="@id/playerWeightEdt"
+                app:layout_constraintEnd_toStartOf="@id/playerWeightEdt"
+                android:src="@drawable/baseline_info_24"
+                android:tint="@color/grey" />
+
             <TextView
                 android:id="@+id/tvKg"
                 android:layout_width="wrap_content"
@@ -229,6 +239,16 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/tvMeters"
                 app:layout_constraintTop_toTopOf="@id/playerWeightEdt" />
+
+            <ImageView
+                android:id="@+id/heightInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/playerHeightEdt"
+                app:layout_constraintBottom_toBottomOf="@id/playerHeightEdt"
+                app:layout_constraintEnd_toStartOf="@id/playerHeightEdt"
+                android:src="@drawable/baseline_info_24"
+                android:tint="@color/grey" />
 
             <TextView
                 android:id="@+id/tvMeters"
